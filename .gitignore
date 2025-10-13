@@ -6,6 +6,9 @@
 *.lo
 *.o
 *.obj
+*.dae
+*.fbx
+*.blend
 
 # Precompiled Headers
 *.gch
@@ -42,3 +45,7 @@
 
 #vs code files
 .vs/*
+
+#Images files
+*.png
+*.tga
