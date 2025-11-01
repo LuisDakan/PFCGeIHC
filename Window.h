@@ -14,15 +14,34 @@ public:
 	GLfloat getXChange();
 	GLfloat getYChange();
 	GLfloat getmuevex() { return muevex; }
+	bool getLampMode() { return isOn; }
 	bool getShouldClose() {
-		return  glfwWindowShouldClose(mainWindow);}
+		return  glfwWindowShouldClose(mainWindow);
+	}
 	bool* getsKeys() { return keys; }
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
-	
+	GLfloat getarticulacion1() { return articulacion1; }
+	GLfloat getarticulacion2() { return articulacion2; }
+	GLfloat getarticulacion3() { return articulacion3; }
+	GLfloat getarticulacion4() { return articulacion4; }
+	GLfloat getarticulacion5() { return articulacion5; }
+	GLfloat getarticulacion6() { return articulacion6; }
+	GLfloat getarticulacion7() { return articulacion7; }
+	GLfloat getarticulacion8() { return articulacion8; }
+	GLfloat getarticulacion9() { return articulacion9; }
+	GLfloat getarticulacion10() { return articulacion10; }
+	bool AntorchOn() { return antorch; }
+	bool RayGunOn() { return raygun; }
+
+	GLfloat forward() { return front; }
 	~Window();
 private: 
 	GLFWwindow *mainWindow;
+	GLfloat rotax, rotay, rotaz, articulacion1, articulacion2, articulacion3, articulacion4, articulacion5, articulacion6, articulacion7, articulacion8, articulacion9, articulacion10;
 	GLint width, height;
+	bool isOn,antorch,raygun;
+
+	bool front;
 	bool keys[1024];
 	GLint bufferWidth, bufferHeight;
 	void createCallbacks();

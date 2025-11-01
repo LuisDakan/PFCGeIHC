@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <algorithm>
 
 Window::Window()
 {
@@ -21,13 +22,27 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 }
 int Window::Initialise()
 {
-	//Inicialización de GLFW
+	//Inicializaciï¿½n de GLFW
 	if (!glfwInit())
 	{
-		printf("Falló inicializar GLFW");
+		printf("Fallï¿½ inicializar GLFW");
 		glfwTerminate();
 		return 1;
 	}
+	isOn = true;
+	front = true;
+	antorch = false;
+	raygun = false;
+	articulacion1 = 0.0f;
+	articulacion2 = 0.0f;
+	articulacion3 = 0.0f;
+	articulacion4 = 0.0f;
+	articulacion5 = 0.0f;
+	articulacion6 = 0.0f;
+	articulacion7 = 0.0f;
+	articulacion8 = 0.0f;
+	articulacion9 = 0.0f;
+	articulacion10 = 0.0f;
 	//Asignando variables de GLFW y propiedades de ventana
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -44,7 +59,7 @@ int Window::Initialise()
 		glfwTerminate();
 		return 1;
 	}
-	//Obtener tamaño de Buffer
+	//Obtener tamaï¿½o de Buffer
 	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
 
 	//asignar el contexto
@@ -59,7 +74,7 @@ int Window::Initialise()
 
 	if (glewInit() != GLEW_OK)
 	{
-		printf("Falló inicialización de GLEW");
+		printf("Fallï¿½ inicializaciï¿½n de GLEW");
 		glfwDestroyWindow(mainWindow);
 		glfwTerminate();
 		return 1;
@@ -70,7 +85,7 @@ int Window::Initialise()
 							 
 							 //Asignar Viewport
 	glViewport(0, 0, bufferWidth, bufferHeight);
-	//Callback para detectar que se está usando la ventana
+	//Callback para detectar que se estï¿½ usando la ventana
 	glfwSetWindowUserPointer(mainWindow, this);
 }
 
@@ -106,14 +121,71 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_Y)
 	{
-		theWindow-> muevex += 1.0;
+		theWindow-> muevex -= 1.0;
+		theWindow->front = true;
 	}
 	if (key == GLFW_KEY_U)
 	{
-		theWindow-> muevex -= 1.0;
+		theWindow-> muevex += 1.0;
+		theWindow->front = false;
+	}
+	if (key == GLFW_KEY_F)
+	{
+		theWindow->articulacion1 += 9.0f;
+		//printf("Valor:%f\n", theWindow->articulacion1);
 	}
 
+	if (key == GLFW_KEY_G)
+	{
+		theWindow->articulacion1 -= 9.0f;
+		//printf("Valor:%f\n", theWindow->articulacion1);
+	}
+	if (key == GLFW_KEY_H)
+	{
 
+		theWindow->articulacion2 += 9.0;
+	}
+	if (key == GLFW_KEY_J)
+	{
+
+		theWindow->articulacion2 -= 9.0;
+	}
+	if (key == GLFW_KEY_K)
+	{
+
+		theWindow->articulacion3 += 9.0;
+	}
+	if (key == GLFW_KEY_L)
+	{
+		theWindow->articulacion3 -= 10.0;
+	}
+	if (key == GLFW_KEY_Z) {
+		theWindow->articulacion4 += 9.0;
+	}
+	if (key == GLFW_KEY_X) {
+		theWindow->articulacion4 -= 9.0;
+	}
+	if (key == GLFW_KEY_C) {
+		theWindow->articulacion5 += 9.0;
+		theWindow->articulacion5 = std::min(theWindow->articulacion5, 45.0f);
+	}
+	if (key == GLFW_KEY_V) {
+		theWindow->articulacion5 -= 9.0;
+		theWindow->articulacion5 = std::max(theWindow->articulacion5, 0.0f);
+	}
+
+	if (key == GLFW_KEY_B && action == GLFW_RELEASE) {
+		theWindow->antorch = !theWindow->antorch;
+	}
+
+	if (key == GLFW_KEY_N && action == GLFW_RELEASE) {
+		theWindow->raygun = !theWindow->raygun;
+	}
+
+	if (key == GLFW_KEY_M && action == GLFW_RELEASE) {
+		theWindow->isOn=!theWindow->isOn;
+	}
+	
 
 	if (key >= 0 && key < 1024)
 	{

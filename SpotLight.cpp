@@ -1,5 +1,7 @@
 #include "SpotLight.h"
-
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
 
 
 SpotLight::SpotLight() : PointLight()
@@ -39,6 +41,7 @@ void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLo
 	glUniform3f(directionLocation, direction.x, direction.y, direction.z);
 	glUniform1f(edgeLocation, procEdge);
 }
+
 
 void SpotLight::SetFlash(glm::vec3 pos, glm::vec3 dir)
 {

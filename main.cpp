@@ -9,7 +9,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include <cmath>
 #include <vector>
 #include <math.h>
-
+#include <map>
 #include <glew.h>
 #include <glfw3.h>
 
@@ -27,6 +27,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include "Sphere.h"
 #include"Model.h"
 #include "Skybox.h"
+#include <algorithm>
 
 //para iluminaci�n
 #include "CommonValues.h"
@@ -41,9 +42,7 @@ std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
 Camera camera;
-
-
-
+Model piso;
 Skybox skybox;
 
 //materiales
@@ -61,6 +60,8 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+
+std::vector<std::string> spots(MAX_SPOT_LIGHTS),points(MAX_POINT_LIGHTS);
 
 // Vertex Shader
 static const char* vShader = "shaders/shader_light.vert";
@@ -171,6 +172,60 @@ void CreateObjects()
 
 }
 
+Mesh* crearDado8() {
+	GLfloat octaedro_vertices[] = {
+		 0.0f,  1.0f,  0.0f,	0.125f,	0.99f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f,  1.0f,	0.01f,	0.76f,	0.0f,	0.0f,	0.0f,
+		 1.0f,  0.0f,  0.0f,	0.24f,	0.76f,	0.0f,	0.0f,	0.0f,
+
+		 0.0f,  1.0f,  0.0f,	0.375f,	0.99f,	0.0f,	0.0f,	0.0f,
+		-1.0f,  0.0f,  0.0f,	0.26f,	0.76f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f,  1.0f,	0.49f,	0.76f,	0.0f,	0.0f,	0.0f,
+
+		 0.0f,  1.0f,  0.0f,	0.625f,	0.99f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f, -1.0f,	0.51f,	0.76f,	0.0f,	0.0f,	0.0f,
+		-1.0f,  0.0f,  0.0f,	0.74f,	0.76f,	0.0f,	0.0f,	0.0f,
+
+		 0.0f,  1.0f,  0.0f,	0.875f,	0.99f,	0.0f,	0.0f,	0.0f,
+		 1.0f,  0.0f,  0.0f,	0.76f,	0.76f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f, -1.0f,	0.99f,	0.76f,	0.0f,	0.0f,	0.0f,
+
+		 0.0f, -1.0f,  0.0f,	0.125f,	0.51f,	0.0f,	0.0f,	0.0f,
+		 1.0f,  0.0f,  0.0f,	0.24f,	0.74f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f,  1.0f,	0.01f,	0.74f,	0.0f,	0.0f,	0.0f,
+
+		 0.0f, -1.0f,  0.0f,	0.125f,	0.26f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f,  1.0f,	0.24f,	0.49f,	0.0f,	0.0f,	0.0f,
+		-1.0f,  0.0f,  0.0f,	0.01f,	0.49f,	0.0f,	0.0f,	0.0f,
+
+		 0.0f, -1.0f,  0.0f,	0.125f,	0.01f,	0.0f,	0.0f,	0.0f,
+		-1.0f,  0.0f,  0.0f,	0.24f,	0.24f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f, -1.0f,	0.01f,	0.24f,	0.0f,	0.0f,	0.0f,
+
+		 0.0f, -1.0f,  0.0f,	0.375f,	0.01f,	0.0f,	0.0f,	0.0f,
+		 0.0f,  0.0f, -1.0f,	0.49f,	0.24f,	0.0f,	0.0f,	0.0f,
+		 1.0f,  0.0f,  0.0f,	0.26f,	0.24f,	0.0f,	0.0f,	0.0f
+	};
+	
+	unsigned int octaedro_indices[] = {
+		2, 1, 0,
+		5, 4, 3,
+		8, 7, 6,
+		11, 10, 9,
+		12, 14, 13,
+		15, 17, 16,
+		18, 20, 19,
+		21, 23, 22
+	};
+	
+	calcAverageNormals(octaedro_indices, 24, octaedro_vertices, 192, 8, 5);
+	
+	Mesh* dado8 = new Mesh();
+	dado8->CreateMesh(octaedro_vertices, octaedro_indices, 192, 24);
+	return dado8;
+}
+
+
 
 void CreateShaders()
 {
@@ -179,18 +234,105 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+int searchPoint(std::string id) {
+	for (int i = 0;i < MAX_POINT_LIGHTS;i++) {
+		if (points[i] == id) return i;
+	}
+	printf("NO SE ENCONTRO LA LUZ PointLight\n");
+	return -1;
+}
+
+void turnOffPoint(std::string id, unsigned int& pointLightCount)
+{
+	if (pointLightCount <= 0) {
+		return;
+	}
+	int idx=-1;
+	for(int i=0;i<pointLightCount;i++){
+		if(points[i]==id){
+			idx=i;
+			break;
+		}
+	}
+	if (idx == -1) return;
+	std::swap(pointLights[idx], pointLights[--pointLightCount]);
+	std::swap(points[idx], points[pointLightCount]);
+
+}
+
+void turnOnPoint(std::string id, unsigned int& pointLightCount) {
+	if (pointLightCount >= MAX_POINT_LIGHTS) {
+		return;
+	}
+	int idx =-1;
+	for(int i=pointLightCount;i<MAX_POINT_LIGHTS;i++){
+		if(points[i]==id){
+			idx=i;
+			break;
+		}
+	}
+	if (idx == -1) return;
+	std::swap(pointLights[idx], pointLights[pointLightCount]);
+	std::swap(points[idx], points[pointLightCount]);
+	pointLightCount++;
+}
+
+int searchSpot(std::string id) {
+	for (int i = 0;i < MAX_SPOT_LIGHTS;i++) {
+		if (spots[i] == id) return i;
+	}
+	printf("NO SE ENCONTRO LA LUZ SpotLight\n");
+	return -1;
+}
+
+void turnOffSpot(std::string id, unsigned int& spotLightCount) {
+    if (spotLightCount <= 0) {
+		return;
+	}
+	int idx=-1;
+	for(int i=0;i<spotLightCount;i++){
+		if(spots[i]==id){
+			idx=i;
+			break;
+		}
+	}
+	if (idx == -1) return;
+	std::swap(spotLights[idx], spotLights[--spotLightCount]);
+	std::swap(spots[idx], spots[spotLightCount]);
+}
+
+void turnOnSpot(std::string id, unsigned int& spotLightCount) {
+    if (spotLightCount >= MAX_SPOT_LIGHTS) {
+		return;
+	}
+	int idx =-1;
+	for(int i=spotLightCount;i<MAX_SPOT_LIGHTS;i++){
+		if(spots[i]==id){
+			idx=i;
+			break;
+		}
+	}
+	if (idx == -1) return;
+	std::swap(spotLights[idx], spotLights[spotLightCount]);
+	std::swap(spots[idx], spots[spotLightCount]);
+	spotLightCount++;
+}
 
 
 int main()
 {
-	mainWindow = Window(1366, 768); 
+	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
 	mainWindow.Initialise();
 
 	CreateObjects();
 	CreateShaders();
-
+	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
+	
+
+	piso=Model();
+	piso.LoadModel("Models/pisot.obj");
 
 
 	std::vector<std::string> skyboxFaces;
@@ -213,43 +355,73 @@ int main()
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
-	//Declaraci�n de primer luz puntual
-	/*
-	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
+	//Lampara
+	pointLights[0] = PointLight(1.0f, 1.0f, 0.0f,
 		0.0f, 1.0f,
 		-6.0f, 1.5f, 1.5f,
-		0.3f, 0.2f, 0.1f);
+		0.1f, 0.01f, 0.01f);
+	points[pointLightCount] = "antorcha";
 	pointLightCount++;
-	*/
-
+	//Laser
+	pointLights[1] = PointLight(1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,
+		0.3f, 0.02f, 0.02f
+	);
+	points[pointLightCount] = "laser";
+	//pointLightCount++;
+	
 	unsigned int spotLightCount = 0;
 	//linterna
-	/*
 	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
 		0.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		5.0f);
+	spots[spotLightCount]="linterna";
 	spotLightCount++;
-	*/
-
-	//luz fija
-	/*
+	
+	//luz cofre
 	spotLights[1] = SpotLight(0.0f, 1.0f, 0.0f,
 		1.0f, 2.0f,
 		5.0f, 10.0f, 0.0f,
-		0.0f, -5.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
+		1.0f, 0.05f, 0.05f,
 		15.0f);
+	spots[spotLightCount] = "linternaCofre";
 	spotLightCount++;
-	*/
+
+	//faro delantero
+	spotLights[2] = SpotLight(0.0f, 0.0f, 1.0f,
+		1.0f, 2.0f,
+		0.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		0.4f, 0.01f, 0.01f,
+		15.0f);
+	spots[spotLightCount] = "faroDelantero";
+	spotLightCount++;
 	
+
+	//faro trasero
+	spotLights[3] = SpotLight(0.0f, 0.0f, 1.0f,
+		1.0f, 2.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		0.4f, 0.01f, 0.01f,
+		15.0f);
+	spots[spotLightCount] = "faroTrasero";
+	spotLightCount++;
+
+
+	int idx;
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
+	glm::vec3 p;
+	glm::vec4 rot;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -285,24 +457,34 @@ int main()
 
 		// luz ligada a la c�mara de tipo flash
 		//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
-		/*
-		glm::vec3 lowerLight = camera.getCameraPosition();
+			glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
-		*/
 
 		//informaci�n al shader de fuentes de iluminaci�n
 		shaderList[0].SetDirectionalLight(&mainLight);
+
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-
-
 
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 		
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+
+		//Piso 
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -100.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		piso.RenderModel();
+
+		
+		
+
+		glDisable(GL_BLEND);
 
 		glUseProgram(0);
 
