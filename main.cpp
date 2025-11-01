@@ -49,11 +49,14 @@ Skybox skybox;
 Material Material_brillante;
 Material Material_opaco;
 
+bool day=true;
+
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
+std::vector<Mesh*> lamps;
 
 // luz direccional
 DirectionalLight mainLight;
@@ -318,6 +321,26 @@ void turnOnSpot(std::string id, unsigned int& spotLightCount) {
 	spotLightCount++;
 }
 
+void setNight(std::vector<std::string> skyboxNight)
+{
+	skybox = Skybox(skyboxNight);
+	// Luz direccional azulada, baja intensidad
+	mainLight = DirectionalLight(
+		0.4f, 0.5f, 1.0f,   // Azul tenue
+		0.15f, 0.15f,       // Intensidad baja
+		0.0f, 0.0f, -1.0f   // Dirección
+	);
+}
+
+void setDay(std::vector<std::string> skyboxDay){
+	skybox = Skybox(skyboxDay);
+	// Luz direccional blanca, intensidad moderada
+	mainLight = DirectionalLight(
+		1.0f, 1.0f, 1.0f,   // Blanco
+		0.5f, 0.5f,         // Intensidad moderada
+		0.0f, 0.0f, -1.0f   // Dirección
+	);
+}
 
 int main()
 {
@@ -329,19 +352,33 @@ int main()
 	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
-	
-
 	piso=Model();
 	piso.LoadModel("Models/pisot.obj");
 
 
-	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	//Cycle day
+
+	//Skybox Night
+
+	std::vector<std::string> skyboxNight;
+	skyboxNight.push_back("Textures/Skybox/Zona_Nebulosa.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Planeta.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Luna.png");
+
+	//Skybox Day
+	std::vector<std::string> skyboxDay;
+	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
+
+
+	std::vector<std::string> skyboxFaces = skyboxDay;
 
 	skybox = Skybox(skyboxFaces);
 
@@ -416,7 +453,8 @@ int main()
 
 	int idx;
 	//se crean mas luces puntuales y spotlight 
-
+	float lastSwitchTime = 0.0f;
+	float switchInterval = 5.0f;
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
@@ -430,6 +468,19 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+
+		if (now - lastSwitchTime > switchInterval) {
+			day = !day;
+			lastSwitchTime = now;
+		}
+		if (day) {
+			printf("Llego el dia\n");
+			setDay(skyboxDay);
+		}
+		else {
+			printf("Llego la noche\n");
+			setNight(skyboxNight);
+		}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
@@ -461,6 +512,8 @@ int main()
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
+		
+
 		//informaci�n al shader de fuentes de iluminaci�n
 		shaderList[0].SetDirectionalLight(&mainLight);
 
@@ -478,6 +531,7 @@ int main()
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -100.0f, 0.0f));
+		model = glm::scale(model,glm::vec3(0.1f,0.1,0.1f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
