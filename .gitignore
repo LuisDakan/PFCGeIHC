@@ -58,3 +58,11 @@
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+
+#Eliminando carpetas de bibliotecas
+
+Debug/*
+glm/*
+include/*
+x64/*
+
