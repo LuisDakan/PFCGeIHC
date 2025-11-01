@@ -9,6 +9,8 @@
 *.dae
 *.fbx
 *.blend
+*.3ds
+*.mtl
 
 # Precompiled Headers
 *.gch
