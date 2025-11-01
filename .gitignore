@@ -51,3 +51,10 @@
 #Images files
 *.png
 *.tga
+*.jpg
+
+# Eliminar los archivos del proyecto de visual studio
+
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
