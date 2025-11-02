@@ -1,3 +1,4 @@
+
 /*
 Pr�ctica 7: Iluminaci�n 1 
 */
@@ -27,6 +28,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include "Sphere.h"
 #include"Model.h"
 #include "Skybox.h"
+#include "TorchSystem.h"
 #include <algorithm>
 
 //para iluminaci�n
@@ -37,12 +39,23 @@ Pr�ctica 7: Iluminaci�n 1
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
+// Declaraciones globales para comunicación de eventos
+bool g_addTorchRequest = false;
+glm::vec3 g_pendingTorchPos = glm::vec3(0.0f, 0.0f, 0.0f);
+bool g_removeTorchRequest = false;
+glm::vec3 g_removeTorchPos = glm::vec3(0.0f, 0.0f, 0.0f);
+bool g_removeLastTorchRequest = false;
+glm::mat4 projection = glm::mat4(1.0f);
+
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
 Camera camera;
 Model piso;
+Model torchModel;
+// Variables globales para comunicación de eventos
+// (Eliminadas duplicadas)
 Skybox skybox;
 
 //materiales
@@ -320,7 +333,10 @@ void turnOnSpot(std::string id, unsigned int& spotLightCount) {
 
 
 int main()
+	
 {
+	
+	// No lambdas: usaremos Window::ManejaMouseClick y Window::ManejaTeclado
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
 	mainWindow.Initialise();
 
@@ -329,7 +345,9 @@ int main()
 	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
-	
+	// Cargar modelo de antorcha
+	torchModel = Model();
+	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 
 	piso=Model();
 	piso.LoadModel("Models/pisot.obj");
@@ -422,10 +440,25 @@ int main()
 	GLuint uniformColor = 0;
 	glm::vec3 p;
 	glm::vec4 rot;
-	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
+		projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
-	while (!mainWindow.getShouldClose())
-	{
+	while (!mainWindow.getShouldClose()){
+		// Procesar solicitudes de agregar/quitar antorchas
+		if (g_addTorchRequest) {
+			AddTorch(g_pendingTorchPos);
+			g_addTorchRequest = false;
+		}
+		if (g_removeTorchRequest) {
+			RemoveTorch(g_removeTorchPos);
+			g_removeTorchRequest = false;
+		}
+		if (g_removeLastTorchRequest) {
+			RemoveLastTorch();
+			g_removeLastTorchRequest = false;
+		}
+
+		
+	
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
@@ -452,7 +485,8 @@ int main()
 		uniformShininess = shaderList[0].GetShininessLocation();
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+		glm::mat4 view = camera.calculateViewMatrix();
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(view));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
 		// luz ligada a la c�mara de tipo flash
@@ -481,7 +515,14 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
-		
+		// Renderizar antorchas (escala 30,30,30)
+		for (const auto& torch : torches) {
+			glm::mat4 torchModelMat = glm::mat4(1.0f);
+			torchModelMat = glm::translate(torchModelMat, torch.position);
+			torchModelMat = glm::scale(torchModelMat, glm::vec3(30.0f, 30.0f, 30.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(torchModelMat));
+			torchModel.RenderModel();
+		}
 		
 
 		glDisable(GL_BLEND);

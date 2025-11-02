@@ -1,5 +1,24 @@
+
 #include "Window.h"
+
 #include <algorithm>
+#include <glew.h>
+#include <glfw3.h>
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
+
+
+
+// Variables globales para comunicación de eventos
+extern bool g_addTorchRequest;
+extern glm::vec3 g_pendingTorchPos;
+extern bool g_removeTorchRequest;
+extern glm::vec3 g_removeTorchPos;
+extern bool g_removeLastTorchRequest;
+extern glm::mat4 projection;
+#include "Camera.h"
+extern Camera camera;
 
 Window::Window()
 {
@@ -93,6 +112,7 @@ void Window::createCallbacks()
 {
 	glfwSetKeyCallback(mainWindow, ManejaTeclado);
 	glfwSetCursorPosCallback(mainWindow, ManejaMouse);
+	glfwSetMouseButtonCallback(mainWindow, ManejaMouseClick);
 }
 GLfloat Window::getXChange()
 {
@@ -218,6 +238,41 @@ void Window::ManejaMouse(GLFWwindow* window, double xPos, double yPos)
 
 	theWindow->lastX = xPos;
 	theWindow->lastY = yPos;
+	// Guardar posición global del mouse
+	theWindow->lastMouseX = xPos;
+	theWindow->lastMouseY = yPos;
+}
+
+// Callback para clicks de mouse
+void Window::ManejaMouseClick(GLFWwindow* window, int button, int action, int mods)
+{
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+		double xpos = win->lastMouseX;
+		double ypos = win->lastMouseY;
+		int width = (int)win->getBufferWidth();
+		int height = (int)win->getBufferHeight();
+		float x = (2.0f * float(xpos)) / width - 1.0f;
+		float y = 1.0f - (2.0f * float(ypos)) / height;
+		glm::vec4 ray_clip = glm::vec4(x, y, -1.0f, 1.0f);
+	glm::mat4 invProj = glm::inverse(projection);
+	glm::vec4 ray_eye = invProj * ray_clip;
+	ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0f, 0.0f);
+	glm::mat4 viewMat = camera.calculateViewMatrix();
+	glm::mat4 invView = glm::inverse(viewMat);
+	glm::vec4 ray_wor = invView * ray_eye;
+		glm::vec3 ray_dir = glm::normalize(glm::vec3(ray_wor));
+		glm::vec3 cam_pos = camera.getCameraPosition();
+		float t = -cam_pos.y / ray_dir.y;
+		glm::vec3 worldPos = cam_pos + t * ray_dir;
+		g_addTorchRequest = true;
+		g_pendingTorchPos = worldPos;
+	}
+	// Eliminar última antorcha con botón derecho
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+		g_removeLastTorchRequest = true;
+	}
 }
 
 
