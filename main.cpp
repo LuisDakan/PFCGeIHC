@@ -63,6 +63,73 @@ Material Material_brillante;
 Material Material_opaco;
 
 
+std::vector<glm::vec3> coords={
+	{7.64,0.00,-9.30},
+	{9.07,0.00,-10.94},
+	{10.73,0.00,-12.89},
+	{8.37,0.00,-8.88},
+	{9.73,0.00,-10.55},
+	{11.22,0.00,-12.35},
+	    {1.52,0.00,3.64},
+    {-1.53,0.00,3.66},
+    {-3.57,0.00,1.52},
+    {-3.59,0.00,-1.67},
+    {3.84,0.00,1.62},
+    {3.80,0.00,-1.73},
+    {1.58,0.00,-3.88},
+    {-1.58,0.00,-3.99},
+    {0.00,0.00,0.00},
+    {5.94,0.00,-3.86},
+    {4.00,0.00,-6.57},
+    {5.67,0.00,-9.62},
+    {8.76,0.00,-6.62},
+    {-6.10,-0.00,3.47},
+    {-3.52,0.00,6.65},
+    {-6.39,0.00,9.21},
+    {-8.47,0.00,6.76},
+    {-6.03,0.00,-3.93},
+    {-8.23,0.00,-7.06},
+    {-6.00,0.00,-9.88},
+    {-3.48,0.00,-6.86},
+    {-8.30,0.00,4.81},
+    {-9.62,0.00,3.12},
+    {-10.88,0.00,1.43},
+    {-7.57,0.00,4.00},
+    {-8.85,0.00,2.33},
+    {-10.24,0.00,0.78},
+    {10.49,0.00,12.89},
+    {9.38,0.00,11.31},
+    {8.00,0.00,9.69},
+    {8.79,-0.00,9.13},
+    {10.05,0.00,10.57},
+    {11.33,0.00,12.19},
+	    {-4.35,0.00,9.46},
+    {-3.12,0.00,10.83},
+    {-1.77,0.00,12.37},
+    {-1.09,0.00,11.85},
+    {-2.44,-0.00,10.20},
+    {-3.72,0.00,8.57},
+	    {-0.38,0.00,4.64},
+    {0.42,0.00,4.62},
+    {-0.39,-0.00,7.03},
+    {0.42,0.00,7.14},
+    {-0.34,0.00,9.05},
+    {0.43,0.00,9.18},
+    {-0.33,0.00,11.05},
+    {0.40,0.00,11.04},
+    {0.89,0.00,12.22},
+    {1.43,0.00,12.76},
+    {2.22,0.00,11.97},
+    {1.68,0.00,11.27},
+    {3.19,0.00,10.74},
+    {2.68,0.00,10.12},
+    {4.21,0.00,9.48},
+    {3.69,0.00,8.88},
+    {-3.96,-0.00,3.46},
+    {-3.23,0.00,4.10},
+};
+
+
 //Sphere cabeza = Sphere(0.5, 20, 20);
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -350,7 +417,7 @@ int main()
 	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 
 	piso=Model();
-	piso.LoadModel("Models/pisot.obj");
+	piso.LoadModel("Models/piso.obj");
 
 
 	std::vector<std::string> skyboxFaces;
@@ -511,7 +578,7 @@ int main()
 		//Piso 
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -100.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
@@ -519,17 +586,38 @@ int main()
 		for (const auto& torch : torches) {
 			glm::mat4 torchModelMat = glm::mat4(1.0f);
 			torchModelMat = glm::translate(torchModelMat, torch.position);
-			torchModelMat = glm::scale(torchModelMat, glm::vec3(30.0f, 30.0f, 30.0f));
+			torchModelMat = glm::scale(torchModelMat, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(torchModelMat));
 			torchModel.RenderModel();
 		}
 		
+		for (const auto& coor : coords) {
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, coor);
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			torchModel.RenderModel();
+		}
 
 		glDisable(GL_BLEND);
 
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
+	}
+
+	// Exportar coordenadas de antorchas a archivo txt
+	FILE* file = NULL;
+	errno_t err = fopen_s(&file, "torch_positions.txt", "w");
+	if (err == 0 && file != NULL) {
+		//fprintf(file, "# Coordenadas de antorchas (x, y, z)\n");
+		for (const auto& torch : torches) {
+			fprintf(file, "%.2f,%.2f,%.2f\n", torch.position.x, torch.position.y, torch.position.z);
+		}
+		fclose(file);
+		printf("Coordenadas exportadas a torch_positions.txt\n");
+	} else {
+		printf("Error: No se pudo crear el archivo torch_positions.txt\n");
 	}
 
 	return 0;
