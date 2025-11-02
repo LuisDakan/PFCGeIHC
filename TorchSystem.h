@@ -1,13 +1,19 @@
 #include <vector>
 #include <glm.hpp>
+#include <string>
 
-// Estructura para almacenar la posición de una antorcha
-struct TorchInstance {
+// Estructura para almacenar instancias de modelos
+struct ModelInstance {
     glm::vec3 position;
+    glm::vec3 scale;
 };
 
-extern std::vector<TorchInstance> torches;
+extern std::vector<ModelInstance> modelInstances;
+extern std::string currentModelPath;
+extern glm::vec3 currentScale;
 
-void AddTorch(const glm::vec3& pos);
-void RemoveTorch(const glm::vec3& pos, float threshold = 1.0f);
-void RemoveLastTorch();
+void SetCurrentModel(const std::string& modelPath);
+void AddModelInstance(const glm::vec3& pos);
+void RemoveModelInstance(const glm::vec3& pos, float threshold = 1.0f);
+void ScaleCurrentModel(float delta);
+void ExportModelPositions(const char* filename);

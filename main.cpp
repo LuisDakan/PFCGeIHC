@@ -40,11 +40,10 @@ Pr�ctica 7: Iluminaci�n 1
 const float toRadians = 3.14159265f / 180.0f;
 
 // Declaraciones globales para comunicación de eventos
-bool g_addTorchRequest = false;
-glm::vec3 g_pendingTorchPos = glm::vec3(0.0f, 0.0f, 0.0f);
-bool g_removeTorchRequest = false;
-glm::vec3 g_removeTorchPos = glm::vec3(0.0f, 0.0f, 0.0f);
-bool g_removeLastTorchRequest = false;
+bool g_addModelRequest = false;
+glm::vec3 g_pendingModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
+bool g_removeModelRequest = false;
+glm::vec3 g_removeModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::mat4 projection = glm::mat4(1.0f);
 
 Window mainWindow;
@@ -53,7 +52,8 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 Model piso;
-Model torchModel;
+Model ak;
+Model currentModel;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -467,10 +467,12 @@ int main()
 	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
-	// Cargar modelo de antorcha
-	torchModel = Model();
-	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
-
+	// Configurar modelo actual a colocar
+	SetCurrentModel("Models/EscenarioAkuAku.obj");
+	currentModel = Model();
+	currentModel.LoadModel(currentModelPath.c_str());
+	ak = Model();
+	ak.LoadModel("Models/EscenarioAkuAku.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
 
@@ -565,18 +567,14 @@ int main()
 		projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose()){
-		// Procesar solicitudes de agregar/quitar antorchas
-		if (g_addTorchRequest) {
-			AddTorch(g_pendingTorchPos);
-			g_addTorchRequest = false;
+		// Procesar solicitudes de agregar/quitar modelos
+		if (g_addModelRequest) {
+			AddModelInstance(g_pendingModelPos);
+			g_addModelRequest = false;
 		}
-		if (g_removeTorchRequest) {
-			RemoveTorch(g_removeTorchPos);
-			g_removeTorchRequest = false;
-		}
-		if (g_removeLastTorchRequest) {
-			RemoveLastTorch();
-			g_removeLastTorchRequest = false;
+		if (g_removeModelRequest) {
+			RemoveModelInstance(g_removeModelPos);
+			g_removeModelRequest = false;
 		}
 
 		
@@ -638,22 +636,20 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
-		// Renderizar antorchas (escala 30,30,30)
-		for (const auto& torch : torches) {
-			glm::mat4 torchModelMat = glm::mat4(1.0f);
-			torchModelMat = glm::translate(torchModelMat, torch.position);
-			torchModelMat = glm::scale(torchModelMat, glm::vec3(5.0f, 5.0f, 5.0f));
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(torchModelMat));
-			torchModel.RenderModel();
-		}
+		// Renderizar instancias de modelos
 		
 		for (const auto& coor : coords) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0]*2,coor[1],coor[2]*1.5));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			torchModel.RenderModel();
+			currentModel.RenderModel();
 		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ak.RenderModel();
 
 		glDisable(GL_BLEND);
 
@@ -662,19 +658,8 @@ int main()
 		mainWindow.swapBuffers();
 	}
 
-	// Exportar coordenadas de antorchas a archivo txt
-	FILE* file = NULL;
-	errno_t err = fopen_s(&file, "torch_positions.txt", "w");
-	if (err == 0 && file != NULL) {
-		//fprintf(file, "# Coordenadas de antorchas (x, y, z)\n");
-		for (const auto& torch : torches) {
-			fprintf(file, "%.2f,%.2f,%.2f\n", torch.position.x, torch.position.y, torch.position.z);
-		}
-		fclose(file);
-		printf("Coordenadas exportadas a torch_positions.txt\n");
-	} else {
-		printf("Error: No se pudo crear el archivo torch_positions.txt\n");
-	}
+	// Exportar coordenadas de modelos a archivo txt
+	ExportModelPositions("model_positions.txt");
 
 	return 0;
 }

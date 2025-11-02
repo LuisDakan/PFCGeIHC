@@ -8,14 +8,13 @@
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
 
-
+#include "TorchSystem.h"
 
 // Variables globales para comunicación de eventos
-extern bool g_addTorchRequest;
-extern glm::vec3 g_pendingTorchPos;
-extern bool g_removeTorchRequest;
-extern glm::vec3 g_removeTorchPos;
-extern bool g_removeLastTorchRequest;
+extern bool g_addModelRequest;
+extern glm::vec3 g_pendingModelPos;
+extern bool g_removeModelRequest;
+extern glm::vec3 g_removeModelPos;
 extern glm::mat4 projection;
 #include "Camera.h"
 extern Camera camera;
@@ -139,15 +138,18 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-	if (key == GLFW_KEY_Y)
+	if (key == GLFW_KEY_Y && action == GLFW_PRESS)
 	{
-		theWindow-> muevex -= 1.0;
-		theWindow->front = true;
+		ScaleCurrentModel(0.1f);
 	}
-	if (key == GLFW_KEY_U)
+	if (key == GLFW_KEY_U && action == GLFW_PRESS)
 	{
-		theWindow-> muevex += 1.0;
-		theWindow->front = false;
+		ScaleCurrentModel(-0.1f);
+	}
+	if (key == GLFW_KEY_R && action == GLFW_PRESS)
+	{
+		g_removeModelRequest = true;
+		g_removeModelPos = camera.getCameraPosition();
 	}
 	if (key == GLFW_KEY_F)
 	{
@@ -266,12 +268,31 @@ void Window::ManejaMouseClick(GLFWwindow* window, int button, int action, int mo
 		glm::vec3 cam_pos = camera.getCameraPosition();
 		float t = -cam_pos.y / ray_dir.y;
 		glm::vec3 worldPos = cam_pos + t * ray_dir;
-		g_addTorchRequest = true;
-		g_pendingTorchPos = worldPos;
+		g_addModelRequest = true;
+		g_pendingModelPos = worldPos;
 	}
-	// Eliminar última antorcha con botón derecho
+	// Eliminar modelo más cercano con botón derecho
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-		g_removeLastTorchRequest = true;
+		Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+		double xpos = win->lastMouseX;
+		double ypos = win->lastMouseY;
+		int width = (int)win->getBufferWidth();
+		int height = (int)win->getBufferHeight();
+		float x = (2.0f * float(xpos)) / width - 1.0f;
+		float y = 1.0f - (2.0f * float(ypos)) / height;
+		glm::vec4 ray_clip = glm::vec4(x, y, -1.0f, 1.0f);
+		glm::mat4 invProj = glm::inverse(projection);
+		glm::vec4 ray_eye = invProj * ray_clip;
+		ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0f, 0.0f);
+		glm::mat4 viewMat = camera.calculateViewMatrix();
+		glm::mat4 invView = glm::inverse(viewMat);
+		glm::vec4 ray_wor = invView * ray_eye;
+		glm::vec3 ray_dir = glm::normalize(glm::vec3(ray_wor));
+		glm::vec3 cam_pos = camera.getCameraPosition();
+		float t = -cam_pos.y / ray_dir.y;
+		glm::vec3 worldPos = cam_pos + t * ray_dir;
+		g_removeModelRequest = true;
+		g_removeModelPos = worldPos;
 	}
 }
 
