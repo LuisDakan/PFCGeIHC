@@ -472,14 +472,14 @@ int main()
 		if (now - lastSwitchTime > switchInterval) {
 			day = !day;
 			lastSwitchTime = now;
-		}
-		if (day) {
-			printf("Llego el dia\n");
-			setDay(skyboxDay);
-		}
-		else {
-			printf("Llego la noche\n");
-			setNight(skyboxNight);
+			if (day) {
+				printf("Llego el dia\n");
+				setDay(skyboxDay);
+			}
+			else {
+				printf("Llego la noche\n");
+				setNight(skyboxNight);
+			}
 		}
 
 		//Recibir eventos del usuario
