@@ -1,0 +1,32 @@
+﻿  Camera.cpp
+  main.cpp
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "main.cpp")
+  
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "main.cpp")
+  
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(105,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(261,15): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(303,15): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(475,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(477,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(462,6): warning C4101: 'idx': variable local sin referencia
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(469,12): warning C4101: 'p': variable local sin referencia
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\main.cpp(470,12): warning C4101: 'rot': variable local sin referencia
+  Window.cpp
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "Window.cpp")
+  
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "Window.cpp")
+  
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.cpp(169,22): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.cpp(170,22): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.cpp(174,28): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.cpp(175,40): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.cpp(177,21): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.cpp(178,21): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+  Generando código...
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\PF\Window.cpp(90,1): warning C4715: 'Window::Initialise': no todas las rutas de acceso de control devuelven un valor
+  PF.vcxproj -> C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\x64\Debug\PF.exe
