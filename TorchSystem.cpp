@@ -54,13 +54,14 @@ void ExportModelPositions(const char* filename) {
     FILE* file = NULL;
     errno_t err = fopen_s(&file, filename, "w");
     if (err == 0 && file != NULL) {
-        fprintf(file, "# Model positions and scales (x, y, z, scale)\n");
+        fprintf(file, "# Model positions and scales (x, y, z, s1, s2, s3)\n");
         for (const auto& instance : modelInstances) {
-            fprintf(file, "%.2f,%.2f,%.2f,%.2f\n", 
-                instance.position.x, instance.position.y, instance.position.z, instance.scale.x);
+            fprintf(file, "%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", 
+                instance.position.x, instance.position.y, instance.position.z,
+                instance.scale.x, instance.scale.y, instance.scale.z);
         }
         fclose(file);
-        printf("Coordenadas exportadas a %s\n", filename);
+        printf("Coordenadas exportadas a %s (%zu modelos)\n", filename, modelInstances.size());
     } else {
         printf("Error: No se pudo crear el archivo %s\n", filename);
     }

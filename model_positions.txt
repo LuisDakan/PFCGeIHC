@@ -1,2 +1,2 @@
-# Model positions and scales (x, y, z, scale)
-2.83,0.00,-3.60,1.00
+# Model positions and scales (x, y, z, s1, s2, s3)
+5.23,0.00,2.88,2.10,2.10,2.10
