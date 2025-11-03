@@ -19,7 +19,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include <gtc\type_ptr.hpp>
 //para probar el importer
 //#include<assimp/Importer.hpp>
-
+#include "animations.cpp"
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader_light.h"
@@ -37,6 +37,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
+
 const float toRadians = 3.14159265f / 180.0f;
 
 // Declaraciones globales para comunicación de eventos
@@ -56,6 +57,8 @@ Model ak;
 Model currentModel;
 Model barco;
 Model tori;
+Model torchModel;
+Model palmera_doble;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -184,6 +187,19 @@ std::vector<glm::vec3> coords={
     {-9.72,0.00,10.42},
     {-10.57,0.00,12.84},
     {-11.20,-0.00,12.20},
+};
+
+//matriz con posiciones y escalas de palmeras (x,y,z,s1,s2,s3)
+//cada vector interno representa una palmera
+std::vector<std::vector<GLfloat>> coordsPalm= {
+	{981.38,0.00,-53.59,20.00,20.00,20.00},
+	{1125.47,0.00,-306.81,20.00,20.00,20.00},
+	{495.39,0.00,-154.64,20.00,20.00,20.00},
+	{801.01,0.00,-666.71,23.10,23.10,23.10},
+	{218.78,0.00,-523.34,17.60,17.60,17.60},
+	{- 415.46,0.00,739.16,19.20,19.20,19.20 },
+	{-677.91,0.00,-238.19,22.70,22.70,22.70}
+
 };
 
 
@@ -479,6 +495,10 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
+	torchModel = Model();
+	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
+	palmera_doble = Model();
+	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -639,27 +659,27 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
-		// Renderizar instancias de modelos colocados con clicks
-		for (const auto& instance : modelInstances) {
-			model = glm::mat4(1.0f);
-			model = glm::translate(model, instance.position);
-			model = glm::scale(model, instance.scale);
+		for (std::vector <GLfloat> v : coordsPalm) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1]+7.0, v[2]));
+			model = glm::scale(model, glm::vec3(v[3], v[4], v[5]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			currentModel.RenderModel();
+			//palmera_doble.RenderModel();
+
 		}
 
-		// Renderizar coordenadas predefinidas (opcional, descomentado si quieres verlas)
-		/*
-		for (const auto& coor : coords) {
+		for (const auto& coor : coords) 
+		{
 			model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(coor[0]*2,coor[1],coor[2]*1.5));
+			model = glm::translate(model, glm::vec3(coor[0]*2,coor[1],coor[2]*1.5)*1.5f);
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			currentModel.RenderModel();
+			//torchModel.RenderModel();
 		}
-		*/
+
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-694.59f,0.00,-418.33f));
+		model = AnimationShip(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		barco.RenderModel();
 
