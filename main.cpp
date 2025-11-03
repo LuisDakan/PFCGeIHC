@@ -468,22 +468,22 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/EscenarioAkuAku.obj");
+	SetCurrentModel("Models/Antorcha_Sonic.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 	ak = Model();
-	ak.LoadModel("Models/EscenarioAkuAku.obj");
+	ak.LoadModel("Models/Antorcha_Sonic.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
 
 
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
 
 	skybox = Skybox(skyboxFaces);
 
@@ -636,8 +636,17 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
-		// Renderizar instancias de modelos
-		
+		// Renderizar instancias de modelos colocados con clicks
+		for (const auto& instance : modelInstances) {
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, instance.position);
+			model = glm::scale(model, instance.scale);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			currentModel.RenderModel();
+		}
+
+		// Renderizar coordenadas predefinidas (opcional, descomentado si quieres verlas)
+		/*
 		for (const auto& coor : coords) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0]*2,coor[1],coor[2]*1.5));
@@ -645,6 +654,7 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			currentModel.RenderModel();
 		}
+		*/
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
