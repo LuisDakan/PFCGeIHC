@@ -56,6 +56,7 @@ Model barco;
 Model tori;
 Model torchModel;
 Model palmera_doble;
+Model palmera_tres;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -199,6 +200,21 @@ std::vector<std::vector<GLfloat>> coordsPalm = {
 
 };
 
+//matriz con posiciones de palmeras de tres troncos (x,y,z)
+std::vector<std::vector<GLfloat>> coordsPalmtres = {
+	{ -559.54,0.00,-653.03},
+	{ -928.46,0.00,-435.60},
+	{ -1040.85,0.00,-85.37},
+	{1092.84,0.00,470.01},
+	{494.46,0.00,748.56},
+	{127.89,0.00,616.22},
+	{533.59,0.00,192.92},
+	{-197.24,0.00,482.37},
+	{-1012.27,0.00,-309.12},
+	{-118.02,0.00,-700.87},
+	{-198.34,0.00,-326.08}
+
+};
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
 GLfloat deltaTime = 0.0f;
@@ -493,6 +509,8 @@ int main()
 	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 	torchModel = Model();
 	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
+	palmera_tres = Model();
+	palmera_tres.LoadModel("Models/Palmera3.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -659,6 +677,16 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			torchModel.RenderModel();
 		}
+
+		//ciclo for para palmeratres
+		for (std::vector <GLfloat> v : coordsPalmtres) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1] + 7.0, v[2]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			palmera_tres.RenderModel();
+		
+		}
+		
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-694.59f, 0.00, -418.33f));
