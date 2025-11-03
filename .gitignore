@@ -52,6 +52,7 @@
 *.png
 *.tga
 *.jpg
+*.jpeg
 
 # Eliminar los archivos del proyecto de visual studio
 
@@ -66,3 +67,5 @@ glm/*
 include/*
 x64/*
 
+#Ignorar zip
+*.zip

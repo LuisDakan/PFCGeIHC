@@ -35,6 +35,11 @@ public:
 
 	GLfloat forward() { return front; }
 	~Window();
+public:
+	// Para obtener la posición del mouse
+	double lastMouseX = 0.0, lastMouseY = 0.0;
+	// Para callback de mouse
+	static void ManejaMouseClick(GLFWwindow* window, int button, int action, int mods);
 private: 
 	GLFWwindow *mainWindow;
 	GLfloat rotax, rotay, rotaz, articulacion1, articulacion2, articulacion3, articulacion4, articulacion5, articulacion6, articulacion7, articulacion8, articulacion9, articulacion10;
