@@ -56,6 +56,7 @@ Model ak;
 Model currentModel;
 Model barco;
 Model tori;
+Model palmera_doble;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -64,8 +65,16 @@ Skybox skybox;
 Material Material_brillante;
 Material Material_opaco;
 
-
-std::vector<glm::vec3> coords={
+//matriz con posiciones y escalas de palmeras (x,y,z,s1,s2,s3)
+//cada vector interno representa una palmera
+std::vector<std::vector<GLfloat>> coordsPalm= {
+	{981.38,0.00,-53.59,20.00,20.00,20.00},
+	{1125.47,0.00,-306.81,20.00,20.00,20.00},
+	{495.39,0.00,-154.64,20.00,20.00,20.00},
+	{801.01,0.00,-666.71,23.10,23.10,23.10},
+	{218.78,0.00,-523.34,17.60,17.60,17.60},
+	{- 415.46,0.00,739.16,19.20,19.20,19.20 },
+	{-677.91,0.00,-238.19,22.70,22.70,22.70}
 
 };
 
@@ -353,15 +362,19 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Tori.obj");
+	SetCurrentModel("Models/PalmeraDoble.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
+
+	//
 	barco = Model();
 	barco.LoadModel("Models/Barco.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
+	palmera_doble = Model();
+	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -550,6 +563,18 @@ int main()
 		model = glm::translate(model, glm::vec3(1142.11, 0.00, 1.83));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tori.RenderModel();
+
+		//ciclo for para palmeras dobles
+		for (std::vector <GLfloat> v : coordsPalm) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1]+7.0, v[2]));
+			model = glm::scale(model, glm::vec3(v[3], v[4], v[5]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			palmera_doble.RenderModel();
+
+		}
+		
+		
 
 		glDisable(GL_BLEND);
 

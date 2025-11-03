@@ -1,0 +1,147 @@
+﻿  main.cpp
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "main.cpp")
+  
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "main.cpp")
+  
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,3): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,3): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,3): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,3): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,3): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,15): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,15): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,15): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,15): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(70,15): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,3): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,3): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,3): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,3): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,3): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,16): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,16): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,16): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,16): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(71,16): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,3): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,3): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,3): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,3): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,3): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,15): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,15): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,15): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,15): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(72,15): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,3): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,3): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,3): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,3): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,3): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,15): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,15): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,15): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,15): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,15): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,23): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,23): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,23): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,23): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,23): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,29): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,29): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,29): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,29): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,29): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,35): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,35): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,35): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,35): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(73,35): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,3): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,3): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,3): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,3): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,3): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,15): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,15): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,15): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,15): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,15): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,23): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,23): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,23): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,23): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,23): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,29): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,29): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,29): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,29): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,29): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,35): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,35): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,35): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,35): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(74,35): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,3): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,3): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,3): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,3): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,3): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,17): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,17): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,17): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,17): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,17): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,24): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,24): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,24): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,24): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,24): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,30): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,30): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,30): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,30): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,30): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,36): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,36): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,36): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,36): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(75,36): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,3): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,3): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,3): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,3): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,3): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,16): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,16): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,16): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,16): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,16): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,24): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,24): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,24): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,24): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,24): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,30): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,30): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,30): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,30): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,30): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,36): warning C4305: 'inicializando': truncamiento de 'double' a '_Ty'
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,36): warning C4305:         with
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,36): warning C4305:         [
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,36): warning C4305:             _Ty=GLfloat
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(76,36): warning C4305:         ]
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(123,24): warning C4267: 'inicializando': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(279,15): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(321,15): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(480,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(482,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(457,6): warning C4101: 'idx': variable local sin referencia
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(463,12): warning C4101: 'p': variable local sin referencia
+C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\main.cpp(464,12): warning C4101: 'rot': variable local sin referencia
+LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
+  PF.vcxproj -> C:\Users\osbal\OneDrive\Escritorio\Universidad\SeptimoSemestre\Computacion_Grafica\PFCGeIHC\PF\x64\Debug\PF.exe
