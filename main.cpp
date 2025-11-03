@@ -54,6 +54,8 @@ Camera camera;
 Model piso;
 Model ak;
 Model currentModel;
+Model barco;
+Model tori;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -468,14 +470,15 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Antorcha_Sonic.obj");
+	SetCurrentModel("Models/Tori.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
-	ak = Model();
-	ak.LoadModel("Models/Antorcha_Sonic.obj");
+	barco = Model();
+	barco.LoadModel("Models/Barco.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
-
+	tori = Model();
+	tori.LoadModel("Models/Tori.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -632,7 +635,7 @@ int main()
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 1.0f, 1.5f));
+		model = glm::scale(model, glm::vec3(2.0f, 1.0f, 2.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
@@ -655,11 +658,15 @@ int main()
 			currentModel.RenderModel();
 		}
 		*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-694.59f,0.00,-418.33f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		barco.RenderModel();
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1142.11, 0.00, 1.83));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		ak.RenderModel();
+		tori.RenderModel();
 
 		glDisable(GL_BLEND);
 
