@@ -20,9 +20,34 @@ void RemoveModelInstance(const glm::vec3& pos, float threshold) {
     modelInstances.erase(it, modelInstances.end());
 }
 
+void RemoveLastModelInstance() {
+    if (!modelInstances.empty()) {
+        modelInstances.pop_back();
+        printf("Modelo eliminado. Modelos restantes: %zu\n", modelInstances.size());
+    } else {
+        printf("No hay modelos para eliminar.\n");
+    }
+}
+
 void ScaleCurrentModel(float delta) {
     currentScale += glm::vec3(delta, delta, delta);
     if (currentScale.x < 0.1f) currentScale = glm::vec3(0.1f, 0.1f, 0.1f);
+}
+
+void ScaleLastModel(float delta) {
+    if (!modelInstances.empty()) {
+        // Escalar el último modelo colocado
+        modelInstances.back().scale += glm::vec3(delta, delta, delta);
+        // Limitar escala mínima
+        if (modelInstances.back().scale.x < 0.1f) {
+            modelInstances.back().scale = glm::vec3(0.1f, 0.1f, 0.1f);
+        }
+        printf("Escala del ultimo modelo: %.2f\n", modelInstances.back().scale.x);
+    } else {
+        // Si no hay modelos, modificar la escala para el próximo
+        ScaleCurrentModel(delta);
+        printf("No hay modelos colocados. Escala para el proximo: %.2f\n", currentScale.x);
+    }
 }
 
 void ExportModelPositions(const char* filename) {

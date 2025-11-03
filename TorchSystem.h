@@ -15,5 +15,7 @@ extern glm::vec3 currentScale;
 void SetCurrentModel(const std::string& modelPath);
 void AddModelInstance(const glm::vec3& pos);
 void RemoveModelInstance(const glm::vec3& pos, float threshold = 1.0f);
+void RemoveLastModelInstance();
 void ScaleCurrentModel(float delta);
+void ScaleLastModel(float delta);
 void ExportModelPositions(const char* filename);
