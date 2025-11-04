@@ -660,7 +660,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
-		for (std::vector <GLfloat> v : coordsPalm) {
+		for (const auto& v : coordsPalm) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1] + 7.0, v[2]));
 			model = glm::scale(model, glm::vec3(v[3], v[4], v[5]));
