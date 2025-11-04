@@ -7,7 +7,14 @@
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
-#include "Camera.h"
+
+
+// Variables globales para comunicación de eventos
+extern bool g_addModelRequest;
+extern glm::vec3 g_pendingModelPos;
+extern bool g_removeModelRequest;
+extern glm::vec3 g_removeModelPos;
+extern glm::mat4 projection;
 
 
 Window::Window()
