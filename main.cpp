@@ -61,6 +61,7 @@ Model palmera_tres;
 Model arbol_seis;
 Model arbusto_grande;
 Model arbusto_largo;
+Model arbol_tronco;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -167,6 +168,24 @@ std::vector<std::vector<GLfloat>> coordsBushlong= {
 {-658.70,0.00,136.44,1.00,1.00,1.00},
 {-861.86,0.00,226.13,1.00,1.00,1.00},
 {-462.07,0.00,68.47,1.00,1.00,1.00},
+
+};
+
+std::vector<std::vector<GLfloat>> coordsTreetrunk = {
+	{451.74,0.00,133.87},
+{ 117.15,0.00,717.37 },
+{ -715.52,0.00,680.17},
+{ -1011.89,0.00,796.28 },
+{ -1118.37,0.00,423.22},
+{ -252.82,0.00,-510.33 },
+{ 214.29,0.00,-391.25 },
+{ 631.03,0.00,-182.21 },
+{ 1066.55,0.00,-417.04 },
+{ 651.85,-0.00,-754.06 },
+{ 317.42,0.00,555.41 },
+{ 221.68,0.00,447.60}, 
+{ -233.05, 0.00, 626.71 },
+{ -101.99, 0.00, 427.04}
 
 };
 
@@ -453,7 +472,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Arbusto_largo.obj");
+	SetCurrentModel("Models/Arbol12.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -474,6 +493,8 @@ int main()
 	arbusto_grande.LoadModel("Models/Arbusto_grande.obj");
 	arbusto_largo = Model();
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
+	arbol_tronco = Model();
+	arbol_tronco.LoadModel("Models/Arbol12.obj");
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -703,6 +724,14 @@ int main()
 			//model = glm::scale(model, glm::vec3(v[3], v[4], v[5]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbusto_largo.RenderModel();
+		}
+
+		//cliclo for para los troncos de los arboles
+		for (std::vector <GLfloat> v : coordsTreetrunk) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			arbol_tronco.RenderModel();
 		}
 		
 
