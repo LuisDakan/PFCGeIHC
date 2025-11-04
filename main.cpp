@@ -45,6 +45,10 @@ bool g_removeModelRequest = false;
 glm::vec3 g_removeModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::mat4 projection = glm::mat4(1.0f);
 
+// Variable para contador de rounds (0 a 14)
+int roundCounter = 0,firstDigit,secondDigit;
+
+Texture numeros;
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
@@ -207,8 +211,8 @@ static const char* vShader = "shaders/shader_light.vert";
 
 // Fragment Shader
 static const char* fShader = "shaders/shader_light.frag";
-
-
+glm::vec2 getUVNumber(int num);
+void CreateMeshNumber();
 //funci�n de calculo de normales por promedio de v�rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
@@ -468,10 +472,10 @@ int main()
 
 	CreateObjects();
 	CreateShaders();
-	
+	CreateMeshNumber();
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
-	//
+	
 	barco = Model();
 	barco.LoadModel("Models/Barco.obj");
 	piso=Model();
@@ -506,7 +510,7 @@ int main()
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
 
-
+	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
 	//luz direccional, s�lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
@@ -571,12 +575,12 @@ int main()
 	spots[spotLightCount] = "faroTrasero";
 	spotLightCount++;
 
-
+	glm::vec2 offset;
 	int idx;
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformSpecularIntensity = 0, uniformShininess = 0;
+		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
 	GLuint uniformColor = 0;
 	glm::vec3 p;
 	glm::vec4 rot;
@@ -605,8 +609,9 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
+		uniformTextureOffset = shaderList[0].getOffsetLocation();
 		
-		//informaci�n en el shader de intensidad especular y brillo
+		//información en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -706,10 +711,83 @@ int main()
 
 		glDisable(GL_BLEND);
 
+
+
+
+
+
+
+		
+		// Renderizar contador de rounds - DÍGITO DE DECENAS
+		firstDigit = roundCounter / 10;
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(5.0f, 10.0f, 0.0f)); // Ajusta Y para visibilidad
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
+		offset = getUVNumber(firstDigit);
+		
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		numeros.UseTexture();
+		meshList[4]->RenderMesh();
+
+		// Renderizar contador de rounds - DÍGITO DE UNIDADES
+		secondDigit = roundCounter % 10;
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(10.0f, 10.0f, 0.0f)); // Separación entre dígitos
+		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
+		offset = getUVNumber(secondDigit);
+		
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		numeros.UseTexture();
+		meshList[4]->RenderMesh();
+
+		offset = glm::vec2(0.0f,0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
 	}
 
 	return 0;
+}
+
+void CreateMeshNumber()
+{
+		// Mesh para dígitos del contador (plano rectangular)
+	unsigned int digitIndices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	GLfloat digitVertices[] = {
+		//	x      y      z		u	  v			nx	  ny    nz
+		-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 1.0f, -1.0f, 0.0f,		0.2f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 1.0f,  1.0f, 0.0f,		0.2f, 0.5f,		0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f,		0.0f, 0.5f,		0.0f, 0.0f, 1.0f
+	};
+
+	Mesh *digitMesh = new Mesh();
+	digitMesh->CreateMesh(digitVertices, digitIndices, 32, 6);
+	meshList.push_back(digitMesh);
+
+}
+
+glm::vec2 getUVNumber(int num){
+	
+	// Layout de textura: Fila superior [1][2][3][4][5], Fila inferior [6][7][8][9][0]
+	
+	if(num == 0){
+		return glm::vec2(0.8f, 0.0f); // Dígito 0 en fila inferior, última columna
+	}
+	
+	int fila = (num - 1) / 5;  // 1-5 = fila 0 (superior), 6-9 = fila 1 (inferior)
+	int columna = (num - 1) % 5;
+	
+	float offsetx = 0.2f * (float)columna;
+	float offsety = 0.5f - (0.5f * (float)fila); // 0.5 para superior, 0.0 para inferior
+	
+	return glm::vec2(offsetx, offsety);
 }

@@ -15,6 +15,7 @@ extern glm::vec3 g_pendingModelPos;
 extern bool g_removeModelRequest;
 extern glm::vec3 g_removeModelPos;
 extern glm::mat4 projection;
+extern int roundCounter;  // Contador de rounds
 
 
 Window::Window()
@@ -59,6 +60,7 @@ int Window::Initialise()
 	articulacion8 = 0.0f;
 	articulacion9 = 0.0f;
 	articulacion10 = 0.0f;
+
 	//Asignando variables de GLFW y propiedades de ventana
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -171,14 +173,7 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_X) {
 		theWindow->articulacion4 -= 9.0;
 	}
-	if (key == GLFW_KEY_C) {
-		theWindow->articulacion5 += 9.0;
-		theWindow->articulacion5 = std::min(theWindow->articulacion5, 45.0f);
-	}
-	if (key == GLFW_KEY_V) {
-		theWindow->articulacion5 -= 9.0;
-		theWindow->articulacion5 = std::max(theWindow->articulacion5, 0.0f);
-	}
+	
 
 	if (key == GLFW_KEY_B && action == GLFW_RELEASE) {
 		theWindow->antorch = !theWindow->antorch;
@@ -192,6 +187,11 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		theWindow->isOn=!theWindow->isOn;
 	}
 	
+	// Control del contador de rounds (tecla Q para incrementar)
+	if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
+		printf("Presionado\n");
+		roundCounter=(roundCounter+1)%15;
+	}
 
 	if (key >= 0 && key < 1024)
 	{
