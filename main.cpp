@@ -60,6 +60,7 @@ Model palmera_doble;
 Model palmera_tres;
 Model arbol_seis;
 Model arbusto_grande;
+Model arbusto_largo;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -137,6 +138,35 @@ std::vector<std::vector<GLfloat>> coordsBushlarge= {
 { -73.37,0.00,-323.11,1.00,1.00,1.00 },
 { 305.41,0.00,-636.02,1.00,1.00,1.00 },
 { 114.49,0.00,317.36,1.00,1.00,1.00 },
+
+};
+
+std::vector<std::vector<GLfloat>> coordsBushlong= {
+	{ -317.86,0.00,-427.51},
+{-218.40,0.00,-573.61},
+{-262.53,0.00,-235.30},
+{323.68,-0.00,403.69},
+{111.71,0.00,492.16},
+{269.91,0.00,664.26},
+{693.59,0.00,797.74},
+{840.47,0.00,723.05},
+{1065.82,0.00,557.96},
+{1172.86,0.00,350.22},
+{1097.65,0.00,241.89},
+{705.75,0.00,256.33},
+{874.20,0.00,119.12,1.00,1.00,1.00},
+{1005.71,0.00,-280.25,1.00,1.00,1.00},
+{1139.65,0.00,-160.09,1.00,1.00,1.00},
+{939.78,0.00,-406.51,1.00,1.00,1.00},
+{694.75,0.00,-649.27,1.00,1.00,1.00},
+{57.93,0.00,-626.86,1.00,1.00,1.00},
+{-417.69,0.00,-92.67,1.00,1.00,1.00},
+{-602.80,0.00,-56.39,1.00,1.00,1.00},
+{-802.82,0.00,-126.97,1.00,1.00,1.00},
+{-925.67,0.00,-68.77,1.00,1.00,1.00},
+{-658.70,0.00,136.44,1.00,1.00,1.00},
+{-861.86,0.00,226.13,1.00,1.00,1.00},
+{-462.07,0.00,68.47,1.00,1.00,1.00},
 
 };
 
@@ -423,7 +453,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Arbusto_grande.obj");
+	SetCurrentModel("Models/Arbusto_largo.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -442,6 +472,8 @@ int main()
 	arbol_seis.LoadModel("Models/Arbol6.obj");
 	arbusto_grande = Model();
 	arbusto_grande.LoadModel("Models/Arbusto_grande.obj");
+	arbusto_largo = Model();
+	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -663,6 +695,14 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbusto_grande.RenderModel();
 
+		}
+		//ciclo for para arbustos largos
+		for (std::vector <GLfloat> v : coordsBushlong) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			//model = glm::scale(model, glm::vec3(v[3], v[4], v[5]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			arbusto_largo.RenderModel();
 		}
 		
 
