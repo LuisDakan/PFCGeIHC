@@ -79,6 +79,7 @@ std::vector<std::vector<GLfloat>> coordsPalm= {
 
 };
 
+//matriz con posiciones de palmeras de tres troncos (x,y,z)
 std::vector<std::vector<GLfloat>> coordsPalmtres = {
 	{ -559.54,0.00,-653.03},
 	{ -928.46,0.00,-435.60},
@@ -591,7 +592,7 @@ int main()
 
 		}
 
-		//ciclo for para palmeras dobles
+		//ciclo for para palmeratres
 		for (std::vector <GLfloat> v : coordsPalmtres) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1] + 7.0, v[2]));
