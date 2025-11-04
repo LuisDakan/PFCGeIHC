@@ -649,7 +649,6 @@ int main()
 
 		}
 		//ciclo for para arboles seis
-				//ciclo for para palmeratres
 		for (std::vector <GLfloat> v : coordsTreesix) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
@@ -657,7 +656,7 @@ int main()
 			arbol_seis.RenderModel();
 
 		}
-		
+		//ciclo for para arbustos grandes
 		for (std::vector <GLfloat> v : coordsBushlarge) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
