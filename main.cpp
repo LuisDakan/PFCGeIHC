@@ -19,7 +19,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include <gtc\type_ptr.hpp>
 //para probar el importer
 //#include<assimp/Importer.hpp>
-
+#include "animations.cpp"
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader_light.h"
