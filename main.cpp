@@ -58,6 +58,7 @@ Model barco;
 Model tori;
 Model palmera_doble;
 Model palmera_tres;
+Model arbol_seis;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -92,6 +93,23 @@ std::vector<std::vector<GLfloat>> coordsPalmtres = {
 	{-1012.27,0.00,-309.12},
 	{-118.02,0.00,-700.87},
 	{-198.34,0.00,-326.08}
+
+};
+
+std::vector<std::vector<GLfloat>> coordsTreesix = {
+	{964.97,0.00,-485.81},
+	{444.38,0.00,-758.24},
+	{ -952.37,0.00,99.83},
+	{ -471.97,0.00,119.55},
+	{ -1089.71,-0.00,609.70},
+	{ -846.79,0.00,672.76},
+	{ -388.39,0.00,494.02},
+	{252.41,0.00,-248.32},
+	{433.80,0.00,-332.91},
+	{761.71,0.00,-216.86},
+	{ 99.81,0.00,-726.70 },
+	{-60.19,0.00,-510.63},
+	{-703.17,0.00,244.07}
 
 };
 
@@ -379,7 +397,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Palmera3.obj");
+	SetCurrentModel("Models/Arbol6.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -394,6 +412,8 @@ int main()
 	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 	palmera_tres = Model();
 	palmera_tres.LoadModel("Models/Palmera3.obj");
+	arbol_seis = Model();
+	arbol_seis.LoadModel("Models/Arbol6.obj");
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -598,6 +618,15 @@ int main()
 			model = glm::translate(model, glm::vec3(v[0], v[1] + 7.0, v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			palmera_tres.RenderModel();
+
+		}
+		//ciclo for para arboles seis
+				//ciclo for para palmeratres
+		for (std::vector <GLfloat> v : coordsTreesix) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			arbol_seis.RenderModel();
 
 		}
 		
