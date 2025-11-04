@@ -59,6 +59,7 @@ Model tori;
 Model palmera_doble;
 Model palmera_tres;
 Model arbol_seis;
+Model arbusto_grande;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -113,6 +114,31 @@ std::vector<std::vector<GLfloat>> coordsTreesix = {
 
 };
 
+std::vector<std::vector<GLfloat>> coordsBushlarge= {
+	{ -1078.04,0.00,-785.81,1.00,1.00,1.00},
+{-343.41,0.00,-764.77,1.00,1.00,1.00},
+{-702.20,0.00,-637.29,1.00,1.00,1.00},
+{-1081.57,0.00,-639.51,1.00,1.00,1.00},
+{-1109.23,0.00,-300.75,1.00,1.00,1.00},
+{-816.10,0.00,97.18,1.00,1.00,1.00},
+{-1075.79,-0.00,309.58,1.00,1.00,1.00},
+{ -1162.39,0.00,544.71,1.00,1.00,1.00 },
+{ -573.94,0.00,775.06,1.00,1.00,1.00 },
+{ -905.24,0.00,776.70,1.00,1.00,1.00 },
+{ -182.01,0.00,284.04,1.00,1.00,1.00 },
+{ -82.91,0.00,768.35,1.00,1.00,1.00 },
+{ -560.38,0.00,224.83,1.00,1.00,1.00 },
+{ 1182.31,0.00,161.66,1.00,1.00,1.00 },
+{ 977.09,0.00,328.17,1.00,1.00,1.00 },
+{ 1105.20,0.00,703.26,1.00,1.00,1.00 },
+{ 1101.46,0.00,-590.96,1.00,1.00,1.00 },
+{ 925.29,0.00,-141.23,1.00,1.00,1.00 },
+{ 594.86,0.00,-82.81,1.00,1.00,1.00 },
+{ -73.37,0.00,-323.11,1.00,1.00,1.00 },
+{ 305.41,0.00,-636.02,1.00,1.00,1.00 },
+{ 114.49,0.00,317.36,1.00,1.00,1.00 },
+
+};
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
 GLfloat deltaTime = 0.0f;
@@ -397,7 +423,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Arbol6.obj");
+	SetCurrentModel("Models/Arbusto_grande.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -414,6 +440,8 @@ int main()
 	palmera_tres.LoadModel("Models/Palmera3.obj");
 	arbol_seis = Model();
 	arbol_seis.LoadModel("Models/Arbol6.obj");
+	arbusto_grande = Model();
+	arbusto_grande.LoadModel("Models/Arbusto_grande.obj");
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -630,6 +658,13 @@ int main()
 
 		}
 		
+		for (std::vector <GLfloat> v : coordsBushlarge) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			arbusto_grande.RenderModel();
+
+		}
 		
 
 		glDisable(GL_BLEND);
