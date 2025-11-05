@@ -375,26 +375,23 @@ void CreateObjects()
 		10.0f, 0.0f, 10.0f,		10.0f, 10.0f,	0.0f, -1.0f, 0.0f
 	};
 
-	unsigned int vegetacionIndices[] = {
-	   0, 1, 2,
-	   0, 2, 3,
-	   4,5,6,
-	   4,6,7
+		// Billboard para explosión (plano que siempre mira a la cámara)
+	unsigned int billboardIndices[] = {
+		0, 1, 2,
+		0, 2, 3
 	};
 
-	GLfloat vegetacionVertices[] = {
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.0f,		1.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f,		0.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-
-		0.0f, -0.5f, -0.5f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, -0.5f, 0.5f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, 0.5f, 0.5f,		1.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, 0.5f, -0.5f,		0.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-
-
+	GLfloat billboardVertices[] = {
+		//	x      y      z		u	  v			nx	  ny    nz
+		-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 1.0f, -1.0f, 0.0f,		1.0f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 1.0f,  1.0f, 0.0f,		1.0f, 1.0f,		0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f,		0.0f, 1.0f,		0.0f, 0.0f, 1.0f
 	};
+
+	Mesh *billboard = new Mesh();
+	billboard->CreateMesh(billboardVertices, billboardIndices, 32, 6);
+	meshList.push_back(billboard);
 	
 	Mesh *obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
@@ -414,7 +411,7 @@ void CreateObjects()
 
 	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
-	calcAverageNormals(vegetacionIndices, 12, vegetacionVertices, 64, 8, 5);
+	
 
 }
 
