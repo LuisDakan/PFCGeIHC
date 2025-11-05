@@ -70,6 +70,7 @@ Model arbusto_grande;
 Model arbusto_largo;
 Model arbol_tronco;
 Model ring;
+Model piramide;
 Model TNT,tapa;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
@@ -649,6 +650,8 @@ int main()
 	arbol_tronco.LoadModel("Models/Arbol12.obj");
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
+	piramide = Model();
+	piramide.LoadModel("Models/Piramide.obj");
 	
 	TNT = Model();
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
@@ -932,6 +935,12 @@ int main()
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ring.RenderModel();
+		
+		//piramide
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(696.86, 0.00, -413.49));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		piramide.RenderModel();
 
 
 
