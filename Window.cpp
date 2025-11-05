@@ -16,7 +16,7 @@ extern bool g_removeModelRequest;
 extern glm::vec3 g_removeModelPos;
 extern glm::mat4 projection;
 extern int roundCounter;  // Contador de rounds
-
+extern void StartTNTAnimation();
 
 Window::Window()
 {
@@ -174,23 +174,15 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		theWindow->articulacion4 -= 9.0;
 	}
 	
-
-	if (key == GLFW_KEY_B && action == GLFW_RELEASE) {
-		theWindow->antorch = !theWindow->antorch;
-	}
-
-	if (key == GLFW_KEY_N && action == GLFW_RELEASE) {
-		theWindow->raygun = !theWindow->raygun;
-	}
-
-	if (key == GLFW_KEY_M && action == GLFW_RELEASE) {
-		theWindow->isOn=!theWindow->isOn;
-	}
 	
 	// Control del contador de rounds (tecla Q para incrementar)
 	if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
 		printf("Presionado\n");
 		roundCounter=(roundCounter+1)%15;
+	}
+
+	if (key == GLFW_KEY_T && action == GLFW_RELEASE) {
+		StartTNTAnimation();
 	}
 
 	if (key >= 0 && key < 1024)

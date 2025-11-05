@@ -67,10 +67,11 @@ Model arbusto_grande;
 Model arbusto_largo;
 Model arbol_tronco;
 Model torchAce, torchCrash, torchSonic;
+Model TNT,tapa;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
-
+Texture explosion;
 //materiales
 Material Material_brillante;
 Material Material_opaco;
@@ -389,9 +390,6 @@ void CreateObjects()
 		-1.0f,  1.0f, 0.0f,		0.0f, 1.0f,		0.0f, 0.0f, 1.0f
 	};
 
-	Mesh *billboard = new Mesh();
-	billboard->CreateMesh(billboardVertices, billboardIndices, 32, 6);
-	meshList.push_back(billboard);
 	
 	Mesh *obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
@@ -405,9 +403,10 @@ void CreateObjects()
 	obj3->CreateMesh(floorVertices, floorIndices, 32, 6);
 	meshList.push_back(obj3);
 
-	Mesh* obj4 = new Mesh();
-	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
-	meshList.push_back(obj4);
+
+	Mesh *billboard = new Mesh();
+	billboard->CreateMesh(billboardVertices, billboardIndices, 32, 6);
+	meshList.push_back(billboard);
 
 	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
@@ -561,6 +560,27 @@ void turnOnSpot(std::string id, unsigned int& spotLightCount) {
 	spotLightCount++;
 }
 
+// Función para crear una matriz billboard que siempre mira hacia la cámara
+glm::mat4 CreateBillboardMatrix(glm::vec3 position, glm::vec3 cameraPos, glm::vec3 cameraUp,glm::vec3 trans)
+{
+	// Vector que apunta de la posición del billboard hacia la cámara
+	glm::vec3 look = glm::normalize(cameraPos - position);
+	
+	// Vector derecha (perpendicular a look y up)
+	glm::vec3 right = glm::normalize(glm::cross(cameraUp, look));
+	
+	// Vector arriba recalculado (perpendicular a look y right)
+	glm::vec3 up = glm::cross(look, right);
+
+	// Construir matriz de transformación
+	glm::mat4 billboardMatrix(1.0f);
+	billboardMatrix[0] = glm::vec4(right, 0.0f);
+	billboardMatrix[1] = glm::vec4(up, 0.0f);
+	billboardMatrix[2] = glm::vec4(look, 0.0f);
+	billboardMatrix[3] = glm::vec4(position, 1.0f);
+	billboardMatrix = glm::translate(billboardMatrix,trans);
+	return billboardMatrix;
+}
 
 int main()
 	
@@ -602,6 +622,11 @@ int main()
 	torchCrash.LoadModel("Models/antorcha_crash.obj");
 	torchSonic = Model();
 	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
+	TNT = Model();
+	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
+	tapa = Model();
+	tapa.LoadModel("Models/tapa_TNT.obj");
+	
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -617,6 +642,7 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
+	explosion = Texture("Textures/Explosion.png"); explosion.LoadTextureA();
 	//luz direccional, s�lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
@@ -843,6 +869,45 @@ int main()
 
 		glDisable(GL_BLEND);
 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = AnimationTNT(model);  // Aplicar tambaleo
+		modelaux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		TNT.RenderModel();
+
+		// Animación tapa: elevación
+		model = modelaux;
+		model = AnimationTapa(model);  // Aplicar elevación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		tapa.RenderModel();
+		
+		// Billboard de explosión (aparece progresivamente desde el segundo 4)
+		if (explosionScale > 0.0f) {
+			// Activar blending para transparencia
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			
+			// Posición del billboard (encima de la TNT)
+			glm::vec3 explosionPos = glm::vec3(0.0f, 15.0f, 0.0f); // Ajusta altura según necesites
+			
+			// Crear matriz billboard que siempre mira a la cámara
+			model = CreateBillboardMatrix(explosionPos, camera.getCameraPosition(), glm::vec3(0.0f, 1.0f, 0.0f),glm::vec3(0.0f,2.5f,0.0f));
+			
+			// Escalar según explosionScale (crece progresivamente con la tapa)
+			float currentScale = 25.0f * explosionScale; // Escala de 2.0 (10% de 20) hasta 20.0 (100%)
+			model = glm::scale(model, glm::vec3(currentScale, currentScale, 1.0f));
+			
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			
+			// Usar textura de explosión
+			explosion.UseTexture();
+			
+			// Renderizar el billboard (mesh index 3 - el que agregamos en CreateObjects)
+			meshList[3]->RenderMesh();
+			
+			glDisable(GL_BLEND);
+		}
 
 
 
@@ -930,13 +995,13 @@ int main()
 
 
 
-
+		
 
 		
 		// Renderizar contador de rounds - DÍGITO DE DECENAS
 		firstDigit = roundCounter / 10;
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-1.7f, 10.0f, 0.0f)); // Ajusta Y para visibilidad
+		model = glm::translate(model, glm::vec3(-15.0f, 10.0f, 0.0f)); // Ajusta Y para visibilidad
 		modelaux = model;
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(firstDigit);
@@ -960,6 +1025,7 @@ int main()
 
 		offset = glm::vec2(0.0f,0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		
 		
 		glUseProgram(0);
 
