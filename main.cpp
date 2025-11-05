@@ -65,7 +65,10 @@ Model arbusto_largo;
 Model arbol_tronco;
 Model ring;
 Model piramide;
-Model juzgado;
+Model columna_juzgado;
+Model lugar_juzgado;
+Model valla_juzgado;
+Model silla_juzgado;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -577,7 +580,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Juzgado.obj");
+	SetCurrentModel("Models/SillaJuzgado.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -610,8 +613,14 @@ int main()
 	ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
 	piramide.LoadModel("Models/Piramide.obj");
-	juzgado = Model();
-	juzgado.LoadModel("Models/Juzgado.obj");
+	columna_juzgado = Model();
+	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
+	lugar_juzgado = Model();
+	lugar_juzgado.LoadModel("Models/JuezLugar.obj");
+	valla_juzgado = Model();
+	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
+	silla_juzgado = Model();
+	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -697,6 +706,9 @@ int main()
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
+	glm::mat4 model(1.0);
+	glm::mat4 modeljuz(1.0);
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 p;
 	glm::vec4 rot;
 		projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
@@ -756,15 +768,12 @@ int main()
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
-		glm::mat4 model(1.0);
-		glm::mat4 modelaux(1.0);
-		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+		
 
 		
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
 		//Piso 
-
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(2.0f, 1.0f, 2.0f));
@@ -895,9 +904,28 @@ int main()
 
 		//juzgado
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-802.82, 0.00, -126.97));
+		model = glm::translate(model, glm::vec3(-678.49, 0.00, 345.40));
+		modeljuz = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));	
-		//juzgado.RenderModel();
+		columna_juzgado.RenderModel();
+
+		model = modeljuz;
+		model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 61.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lugar_juzgado.RenderModel();
+	
+		model = modeljuz;
+		model = glm::translate(model, glm::vec3(-5.99f, 0.0f, 118.85f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		valla_juzgado.RenderModel();
+		
+		model = modeljuz;
+		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla_juzgado.RenderModel();
+
+		//-688.27, 0.00, 534.08
+
 
 		glDisable(GL_BLEND);
 
