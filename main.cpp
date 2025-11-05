@@ -62,6 +62,7 @@ Model arbol_seis;
 Model arbusto_grande;
 Model arbusto_largo;
 Model arbol_tronco;
+Model ring;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -472,7 +473,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Arbol12.obj");
+	SetCurrentModel("Models/Boxing Ring.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -495,6 +496,8 @@ int main()
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
 	arbol_tronco.LoadModel("Models/Arbol12.obj");
+	ring = Model();
+	ring.LoadModel("Models/Boxing Ring.obj");
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -733,7 +736,11 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
 		}
-		
+		//ring
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ring.RenderModel();
 
 		glDisable(GL_BLEND);
 
