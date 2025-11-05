@@ -622,12 +622,13 @@ int main()
 	silla_juzgado = Model();
 	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
+
+	skyboxFaces.push_back("Textures/Skybox/sh_rt.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_lf.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_dn.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_up.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_bk.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_ft.png");
 
 	skybox = Skybox(skyboxFaces);
 
@@ -923,8 +924,6 @@ int main()
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla_juzgado.RenderModel();
-
-		//-688.27, 0.00, 534.08
 
 
 		glDisable(GL_BLEND);
