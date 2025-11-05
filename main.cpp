@@ -629,12 +629,12 @@ int main()
 	
 
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
+	skyboxFaces.push_back("Textures/Skybox/sh_rt.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_lf.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_dn.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_up.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_bk.png");
+	skyboxFaces.push_back("Textures/Skybox/sh_ft.png");
 
 	skybox = Skybox(skyboxFaces);
 
