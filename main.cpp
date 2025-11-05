@@ -48,7 +48,7 @@ glm::mat4 projection = glm::mat4(1.0f);
 // Variable para contador de rounds (0 a 14)
 int roundCounter = 0,firstDigit,secondDigit;
 
-Texture numeros;
+Texture numeros,mascaras;
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
@@ -67,6 +67,7 @@ Model arbusto_grande;
 Model arbusto_largo;
 Model arbol_tronco;
 Model torchAce, torchCrash, torchSonic;
+Model ring;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -605,6 +606,8 @@ int main()
 	torchCrash.LoadModel("Models/antorcha_crash.obj");
 	torchSonic = Model();
 	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
+	ring = Model();
+	ring.LoadModel("Models/Boxing Ring.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -618,7 +621,7 @@ int main()
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
-
+	mascaras = Texture("Textures/Masks.png");
 	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
 	//luz direccional, s�lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
@@ -992,6 +995,10 @@ void CreateMeshNumber()
 	digitMesh->CreateMesh(digitVertices, digitIndices, 32, 6);
 	meshList.push_back(digitMesh);
 
+}
+
+void CreateRingMesh(){
+	
 }
 
 glm::vec2 getUVNumber(int num){
