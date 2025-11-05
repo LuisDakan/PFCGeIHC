@@ -778,6 +778,7 @@ int main()
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-694.59f,0.00,-418.33f));
+		model = AnimationShip(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		barco.RenderModel();
 
