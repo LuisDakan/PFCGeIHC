@@ -65,6 +65,8 @@ Model columna_juzgado;
 Model lugar_juzgado;
 Model valla_juzgado;
 Model silla_juzgado;
+Model casa_aku_aku;
+Model cueva_aku_aku;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -602,7 +604,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/EscenarioAkuAku.obj");
+	SetCurrentModel("Models/CabezaOlmeca.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -643,6 +645,10 @@ int main()
 	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
 	silla_juzgado = Model();
 	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
+	casa_aku_aku = Model();
+	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
+	cueva_aku_aku = Model();
+	cueva_aku_aku.LoadModel("Models/CuevaCrash.obj");
 
 	//Cycle day
 
@@ -861,7 +867,7 @@ int main()
 		model = glm::translate(model, glm::vec3(1142.11, 0.00, 1.83));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tori.RenderModel();
-
+		
 		//antorchas
 		aux = 0;
 		for (const auto& coor : coordTorch) {
@@ -976,6 +982,12 @@ int main()
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla_juzgado.RenderModel();
+
+		//escenario aku aku 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(640.59, 0.00, 456.90));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		casa_aku_aku.RenderModel();
 
 
 		glDisable(GL_BLEND);
