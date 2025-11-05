@@ -942,7 +942,8 @@ int main()
 		// Renderizar contador de rounds - DÍGITO DE DECENAS
 		firstDigit = roundCounter / 10;
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(5.0f, 10.0f, 0.0f)); // Ajusta Y para visibilidad
+		model = glm::translate(model, glm::vec3(-1.7f, 10.0f, 0.0f)); // Ajusta Y para visibilidad
+		modelaux = model;
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(firstDigit);
 		
@@ -953,8 +954,8 @@ int main()
 
 		// Renderizar contador de rounds - DÍGITO DE UNIDADES
 		secondDigit = roundCounter % 10;
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(10.0f, 10.0f, 0.0f)); // Separación entre dígitos
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f)); // Separación entre dígitos
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(secondDigit);
 		
