@@ -208,7 +208,7 @@ std::vector<std::vector<GLfloat>> coordsTreesix = {
 	{444.38,0.00,-758.24},
 	{ -952.37,0.00,99.83},
 	{ -471.97,0.00,119.55},
-	{ -1089.71,-0.00,609.70},
+	{ -1089.71,0.00,609.70},
 	{ -846.79,0.00,672.76},
 	{ -388.39,0.00,494.02},
 	{252.41,0.00,-248.32},
@@ -683,7 +683,9 @@ int main()
 
 	int idx,aux=0;
 	//se crean mas luces puntuales y spotlight 
-
+	glm::mat4 model(1.0);
+	glm::mat4 modelaux(1.0);
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
@@ -735,11 +737,6 @@ int main()
 
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-
-		glm::mat4 model(1.0);
-		glm::mat4 modelaux(1.0);
-		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
-
 		
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
@@ -782,7 +779,7 @@ int main()
 		//ciclo for para arboles seis
 		for (std::vector <GLfloat> v : coordsTreesix) {
 			model = glm::mat4(1.0);
-			model = glm::translate(model, glm::vec3(v[0], v[1] + 7.0, v[2]));
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_seis.RenderModel();
 
