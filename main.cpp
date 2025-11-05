@@ -62,13 +62,14 @@ Model currentModel;
 Model barco;
 Model tori;
 Model torchModel;
+Model torchAce, torchCrash, torchSonic;
 Model palmera_doble;
 Model palmera_tres;
 Model arbol_seis;
 Model arbusto_grande;
 Model arbusto_largo;
 Model arbol_tronco;
-Model torchAce, torchCrash, torchSonic;
+Model ring;
 Model TNT,tapa;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
@@ -626,6 +627,12 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
+	torchAce = Model();
+	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
+	torchCrash = Model();
+	torchCrash.LoadModel("Models/antorcha_crash.obj");
+	torchSonic = Model();
+	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
 	palmera_doble = Model();
 	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 	torchModel = Model();
@@ -640,16 +647,14 @@ int main()
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
 	arbol_tronco.LoadModel("Models/Arbol12.obj");
-	torchAce = Model();
-	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
-	torchCrash = Model();
-	torchCrash.LoadModel("Models/antorcha_crash.obj");
-	torchSonic = Model();
-	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
+	ring = Model();
+	ring.LoadModel("Models/Boxing Ring.obj");
+	
 	TNT = Model();
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
+
 
 
 		//Cycle day
@@ -841,6 +846,36 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tori.RenderModel();
 
+				aux = 0;
+		for (const auto& coor : coordTorch) {
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
+			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			switch (aux) {
+			case 0:
+				break;
+			case 1:
+				model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
+				break;
+			case 2:
+				break;
+			}
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			switch (aux) {
+			case 0:
+				torchAce.RenderModel();
+				break;
+			case 1:
+				torchCrash.RenderModel();
+				break;
+			case 2:
+				torchSonic.RenderModel();
+				break;
+			}
+			aux = (aux + 1) % 3;
+
+		}
+
 		//ciclo for para palmeras dobles
 		for (std::vector <GLfloat> v : coordsPalm) {
 			model = glm::mat4(1.0);
@@ -891,35 +926,13 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
 		}
-		aux = 0;
-		for (const auto& coor : coordTorch) {
-			model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
-			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
-			switch (aux) {
-			case 0:
-				break;
-			case 1:
-				model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
-				break;
-			case 2:
-				break;
-			}
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			switch (aux) {
-			case 0:
-				torchAce.RenderModel();
-				break;
-			case 1:
-				torchCrash.RenderModel();
-				break;
-			case 2:
-				torchSonic.RenderModel();
-				break;
-			}
-			aux = (aux + 1) % 3;
 
-		}
+		//ring
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ring.RenderModel();
+
 
 
 		glDisable(GL_BLEND);
