@@ -71,6 +71,10 @@ Model arbusto_largo;
 Model arbol_tronco;
 Model ring;
 Model piramide;
+Model columna_juzgado;
+Model lugar_juzgado;
+Model valla_juzgado;
+Model silla_juzgado;
 Model TNT,tapa;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
@@ -652,7 +656,14 @@ int main()
 	ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
 	piramide.LoadModel("Models/Piramide.obj");
-	
+	columna_juzgado = Model();
+	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
+	lugar_juzgado = Model();
+	lugar_juzgado.LoadModel("Models/JuezLugar.obj");
+	valla_juzgado = Model();
+	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
+	silla_juzgado = Model();
+	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	TNT = Model();
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
@@ -942,6 +953,27 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piramide.RenderModel();
 
+		//juzgado
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-678.49, 0.00, 345.40));
+		modeljuz = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));	
+		columna_juzgado.RenderModel();
+
+		model = modeljuz;
+		model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 61.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lugar_juzgado.RenderModel();
+	
+		model = modeljuz;
+		model = glm::translate(model, glm::vec3(-5.99f, 0.0f, 118.85f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		valla_juzgado.RenderModel();
+		
+		model = modeljuz;
+		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla_juzgado.RenderModel();
 
 
 		glDisable(GL_BLEND);
