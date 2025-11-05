@@ -77,6 +77,8 @@ Skybox skybox;
 Material Material_brillante;
 Material Material_opaco;
 
+bool day = true;
+
 //posiciones de antorchas
 std::vector<std::vector<float>> coordTorch = {
 	{110.53, 0.00, 189.66},
@@ -565,6 +567,27 @@ void turnOnSpot(std::string id, unsigned int& spotLightCount) {
 	spotLightCount++;
 }
 
+void setNight(std::vector<std::string> skyboxNight)
+{
+	skybox = Skybox(skyboxNight);
+	// Luz direccional azulada, baja intensidad
+	mainLight = DirectionalLight(
+		0.4f, 0.5f, 1.0f,   // Azul tenue
+		0.15f, 0.15f,       // Intensidad baja
+		0.0f, 0.0f, -1.0f   // Dirección
+	);
+}
+
+void setDay(std::vector<std::string> skyboxDay) {
+	skybox = Skybox(skyboxDay);
+	// Luz direccional blanca, intensidad moderada
+	mainLight = DirectionalLight(
+		1.0f, 1.0f, 1.0f,   // Blanco
+		0.5f, 0.5f,         // Intensidad moderada
+		0.0f, 0.0f, -1.0f   // Dirección
+	);
+}
+
 
 int main()
 	
@@ -580,7 +603,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/SillaJuzgado.obj");
+	SetCurrentModel("Models/EscenarioAkuAku.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -621,15 +644,29 @@ int main()
 	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
 	silla_juzgado = Model();
 	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
-	std::vector<std::string> skyboxFaces;
 
-	skyboxFaces.push_back("Textures/Skybox/sh_rt.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_lf.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_dn.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_up.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_bk.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_ft.png");
+	//Cycle day
 
+	//Skybox Night
+
+	std::vector<std::string> skyboxNight;
+	skyboxNight.push_back("Textures/Skybox/Zona_Nebulosa.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Planeta.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Luna.png");
+
+	//Skybox Day
+	std::vector<std::string> skyboxDay;
+	skyboxDay.push_back("Textures/Skybox/sh_rt.png");
+	skyboxDay.push_back("Textures/Skybox/sh_lf.png");
+	skyboxDay.push_back("Textures/Skybox/sh_dn.png");
+	skyboxDay.push_back("Textures/Skybox/sh_up.png");
+	skyboxDay.push_back("Textures/Skybox/sh_bk.png");
+	skyboxDay.push_back("Textures/Skybox/sh_ft.png");
+
+	std::vector<std::string> skyboxFaces = skyboxDay;
 	skybox = Skybox(skyboxFaces);
 
 	Material_brillante = Material(4.0f, 256);
@@ -702,6 +739,9 @@ int main()
 
 
 	int idx, aux=0;
+
+	float lastSwitchTime = 0.0f;
+	float switchInterval = 5.0f;
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -731,6 +771,19 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+
+		if (now - lastSwitchTime > switchInterval) {
+			day = !day;
+			lastSwitchTime = now;
+			if (day) {
+				printf("Llego el dia\n");
+				setDay(skyboxDay);
+			}
+			else {
+				printf("Llego la noche\n");
+				setNight(skyboxNight);
+			}
+		}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
