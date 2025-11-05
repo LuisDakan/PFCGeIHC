@@ -1,7 +1,3 @@
-
-/*
-Pr�ctica 7: Iluminaci�n 1 
-*/
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -589,6 +585,9 @@ void setDay(std::vector<std::string> skyboxDay) {
 }
 
 
+
+
+
 int main()
 	
 {
@@ -741,7 +740,7 @@ int main()
 	int idx, aux=0;
 
 	float lastSwitchTime = 0.0f;
-	float switchInterval = 5.0f;
+	float switchInterval = 300.0f;//5 minutos
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
