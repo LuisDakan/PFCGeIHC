@@ -16,6 +16,7 @@ extern bool g_removeModelRequest;
 extern glm::vec3 g_removeModelPos;
 extern glm::mat4 projection;
 extern int roundCounter;  // Contador de rounds
+extern int maskRotation;  // Rotación de texturas de máscaras
 
 
 Window::Window()
@@ -191,6 +192,12 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
 		printf("Presionado\n");
 		roundCounter=(roundCounter+1)%15;
+	}
+	
+	// Tecla W para rotar texturas de máscaras en las paredes del ring
+	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		maskRotation = (maskRotation + 1) % 4;  // Ciclar entre 0-3
+		printf("Rotacion de mascaras: %d\n", maskRotation);
 	}
 
 	if (key >= 0 && key < 1024)

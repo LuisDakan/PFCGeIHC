@@ -48,6 +48,9 @@ glm::mat4 projection = glm::mat4(1.0f);
 // Variable para contador de rounds (0 a 14)
 int roundCounter = 0,firstDigit,secondDigit;
 
+// Variable para rotación de texturas de máscaras (0-3)
+int maskRotation = 0;
+
 Texture numeros,mascaras;
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -317,6 +320,8 @@ static const char* vShader = "shaders/shader_light.vert";
 static const char* fShader = "shaders/shader_light.frag";
 glm::vec2 getUVNumber(int num);
 void CreateMeshNumber();
+void CreateRingWalls();
+glm::vec2 getMaskUVOffset(int wallIndex);
 //funci�n de calculo de normales por promedio de v�rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
@@ -577,6 +582,7 @@ int main()
 	CreateObjects();
 	CreateShaders();
 	CreateMeshNumber();
+	CreateRingWalls();
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	
@@ -621,7 +627,7 @@ int main()
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
-	mascaras = Texture("Textures/Masks.png");
+	mascaras = Texture("Textures/Masks.png"); mascaras.LoadTextureA();
 	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
 	//luz direccional, s�lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
@@ -964,6 +970,38 @@ int main()
 		numeros.UseTexture();
 		meshList[4]->RenderMesh();
 
+		// Renderizar paredes del ring con texturas de máscaras
+		mascaras.UseTexture();
+		
+		// Pared Norte (meshList[5])
+		model = glm::mat4(1.0);
+		offset = getMaskUVOffset(0);  // Pared 0
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[5]->RenderMesh();
+		
+		// Pared Este (meshList[6])
+		model = glm::mat4(1.0);
+		offset = getMaskUVOffset(1);  // Pared 1
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+
+		meshList[6]->RenderMesh();
+		
+		// Pared Sur (meshList[7])
+		model = glm::mat4(1.0);
+		offset = getMaskUVOffset(2);  // Pared 2
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[7]->RenderMesh();
+		
+		// Pared Oeste (meshList[8])
+		model = glm::mat4(1.0);
+		offset = getMaskUVOffset(3);  // Pared 3
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[8]->RenderMesh();
+
 		offset = glm::vec2(0.0f,0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 		
@@ -997,8 +1035,75 @@ void CreateMeshNumber()
 
 }
 
-void CreateRingMesh(){
+void CreateRingWalls()
+{
+	// Crear 4 paredes alrededor del ring (Norte, Este, Sur, Oeste)
+	// Cada pared es un rectángulo vertical con UVs que apuntan a una fila diferente de la textura
+	// La textura tiene 4 filas (cada una 0.25 de altura)
 	
+	float wallWidth = 50.0f;   // Ancho de cada pared
+	float wallHeight = 15.0f;  // Altura de cada pared
+	float ringRadius = 40.0f;  // Distancia desde el centro del ring
+	
+	// Índices para un rectángulo (2 triángulos)
+	unsigned int wallIndices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+	
+	// PARED NORTE (frente, mirando al +Z)
+	GLfloat wallNorthVertices[] = {
+		//	x					y				z				u		v				nx		ny		nz
+		-wallWidth/2.0f,	0.0f,			ringRadius,		0.0f,	0.0f,			0.0f,	0.0f,	-1.0f,
+		 wallWidth/2.0f,	0.0f,			ringRadius,		1.0f,	0.0f,			0.0f,	0.0f,	-1.0f,
+		 wallWidth/2.0f,	wallHeight,		ringRadius,		1.0f,	0.25f,			0.0f,	0.0f,	-1.0f,
+		-wallWidth/2.0f,	wallHeight,		ringRadius,		0.0f,	0.25f,			0.0f,	0.0f,	-1.0f
+	};
+	
+	// PARED ESTE (derecha, mirando al +X)
+	GLfloat wallEastVertices[] = {
+		ringRadius,			0.0f,			wallWidth/2.0f,		0.0f,	0.25f,		-1.0f,	0.0f,	0.0f,
+		ringRadius,			0.0f,			-wallWidth/2.0f,	1.0f,	0.25f,		-1.0f,	0.0f,	0.0f,
+		ringRadius,			wallHeight,		-wallWidth/2.0f,	1.0f,	0.5f,		-1.0f,	0.0f,	0.0f,
+		ringRadius,			wallHeight,		wallWidth/2.0f,		0.0f,	0.5f,		-1.0f,	0.0f,	0.0f
+	};
+	
+	// PARED SUR (atrás, mirando al -Z)
+	GLfloat wallSouthVertices[] = {
+		wallWidth/2.0f,		0.0f,			-ringRadius,	0.0f,	0.5f,		0.0f,	0.0f,	1.0f,
+		-wallWidth/2.0f,	0.0f,			-ringRadius,	1.0f,	0.5f,		0.0f,	0.0f,	1.0f,
+		-wallWidth/2.0f,	wallHeight,		-ringRadius,	1.0f,	0.75f,		0.0f,	0.0f,	1.0f,
+		wallWidth/2.0f,		wallHeight,		-ringRadius,	0.0f,	0.75f,		0.0f,	0.0f,	1.0f
+	};
+	
+	// PARED OESTE (izquierda, mirando al -X)
+	GLfloat wallWestVertices[] = {
+		-ringRadius,		0.0f,			-wallWidth/2.0f,	0.0f,	0.75f,		1.0f,	0.0f,	0.0f,
+		-ringRadius,		0.0f,			wallWidth/2.0f,		1.0f,	0.75f,		1.0f,	0.0f,	0.0f,
+		-ringRadius,		wallHeight,		wallWidth/2.0f,		1.0f,	1.0f,		1.0f,	0.0f,	0.0f,
+		-ringRadius,		wallHeight,		-wallWidth/2.0f,	0.0f,	1.0f,		1.0f,	0.0f,	0.0f
+	};
+	
+	// Crear meshes y agregarlos a la lista
+	Mesh *wallNorth = new Mesh();
+	wallNorth->CreateMesh(wallNorthVertices, wallIndices, 32, 6);
+	meshList.push_back(wallNorth);  // índice 5
+	
+	Mesh *wallEast = new Mesh();
+	wallEast->CreateMesh(wallEastVertices, wallIndices, 32, 6);
+	meshList.push_back(wallEast);   // índice 6
+	
+	Mesh *wallSouth = new Mesh();
+	wallSouth->CreateMesh(wallSouthVertices, wallIndices, 32, 6);
+	meshList.push_back(wallSouth);  // índice 7
+	
+	Mesh *wallWest = new Mesh();
+	wallWest->CreateMesh(wallWestVertices, wallIndices, 32, 6);
+	meshList.push_back(wallWest);   // índice 8
+}
+
+void CreateRingMesh(){
+
 }
 
 glm::vec2 getUVNumber(int num){
@@ -1017,3 +1122,23 @@ glm::vec2 getUVNumber(int num){
 	
 	return glm::vec2(offsetx, offsety);
 }
+
+// Función para calcular el offset UV de las máscaras según la pared y la rotación
+// wallIndex: 0=Norte, 1=Este, 2=Sur, 3=Oeste
+// La textura tiene 4 filas (0.25 de altura cada una)
+glm::vec2 getMaskUVOffset(int wallIndex)
+{
+	// Aplicar rotación: cada pared muestra una fila diferente
+	// La rotación es cíclica (0->1->2->3->0)
+	int textureRow = (wallIndex + maskRotation) % 4;
+	
+	// El offset Y determina qué fila de la textura usar
+	// Fila 0: Y offset = 0.0 (parte superior de la imagen)
+	// Fila 1: Y offset = 0.25
+	// Fila 2: Y offset = 0.5
+	// Fila 3: Y offset = 0.75
+	float offsetY = 0.25f * textureRow;
+	
+	return glm::vec2(0.0f, offsetY);
+}
+
