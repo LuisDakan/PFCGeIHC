@@ -458,7 +458,9 @@ int main()
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
-
+	torchCrash.LoadModel("Models/antorcha_crash.obj");
+	torchSonic = Model();
+	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -634,6 +636,15 @@ int main()
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0],coor[1],coor[2]));
 			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			switch (aux) {
+			case 0:
+				break;
+			case 1:
+				model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
+				break;
+			case 2:
+				break;
+			}
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			switch (aux) {
 				case 0:
