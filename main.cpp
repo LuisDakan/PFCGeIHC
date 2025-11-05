@@ -62,6 +62,7 @@ Model arbol_seis;
 Model arbusto_grande;
 Model arbusto_largo;
 Model arbol_tronco;
+Model torchAce, torchCrash, torchSonic;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -69,6 +70,108 @@ Skybox skybox;
 //materiales
 Material Material_brillante;
 Material Material_opaco;
+
+//posiciones de antorchas
+std::vector<std::vector<float>> coordTorch = {
+	{110.53, 0.00, 189.66},
+	{-170.60, 0.00, 186.27},
+	{-403.51, 0.00, 80.53},
+	{-425.57, 0.00, 161.16},
+	{-390.37, 0.00, 218.64},
+	{-682.14, 0.00, 190.84},
+	{-463.45, 0.00, 322.64},
+	{-679.58, -0.00, 497.43},
+	{-982.96, 0.00, 318.62},
+	{-1021.20, 0.00, 482.89},
+	{-998.45, 0.00, 536.70},
+	{-940.59, 0.00, 227.71},
+	{-912.70, 0.00, 173.24},
+	{-1028.78, 0.00, 117.73},
+	{-1056.01, 0.00, 164.21},
+	{-1171.08, 0.00, 27.96},
+	{-1171.70, 0.00, -31.83},
+	{-1018.60, 0.00, 36.61},
+	{-417.33, 0.00, -87.05},
+	{-440.10, 0.00, -163.30},
+	{-397.27, 0.00, -230.64},
+	{-1040.92, 0.00, -485.72},
+	{-999.45, 0.00, -540.02},
+	{-929.10, 0.00, -349.26},
+	{-714.32, 0.00, -461.43},
+	{-713.58, 0.00, -195.47},
+	{-418.54, 0.00, -353.95},
+	{-396.25, 0.00, -454.34},
+	{-420.96, 0.00, -512.78},
+	{-210.54, 0.00, -551.62},
+	{-240.86, 0.00, -613.61},
+	{-158.38, 0.00, -194.14},
+	{161.06, 0.00, -200.07},
+	{413.01, 0.00, -336.59},
+	{426.64, 0.00, -433.54},
+	{465.18, 0.00, -482.65},
+	{211.61, 0.00, -549.73},
+	{240.17, 0.00, -599.78},
+	{668.71, 0.00, -474.49},
+	{927.73, -0.00, -334.00},
+	{542.86, 0.00, -200.93},
+	{711.57, 0.00, -179.81},
+	{897.09, 0.00, -488.01},
+	{941.59, 0.00, -444.43},
+	{1175.34, 0.00, -570.88},
+	{1135.66, 0.00, -615.76},
+	{907.55, 0.00, -239.31},
+	{879.97, 0.00, -194.78},
+	{987.86, 0.00, -138.41},
+	{1010.80, 0.00, -182.92},
+	{1170.75, 0.00, 33.67},
+	{1175.82, 0.00, -32.86},
+	{888.69, 0.00, -33.35},
+	{902.99, 0.00, 30.06},
+	{719.20, 0.00, 29.94},
+	{715.81, 0.00, -28.15},
+	{573.43, 0.00, -28.31},
+	{568.87, 0.00, 28.76},
+	{396.10, 0.00, -78.83},
+	{385.64, 0.00, 85.20},
+	{416.51, 0.00, 172.02},
+	{386.60, 0.00, 216.31},
+	{-42.49, 0.00, 272.90},
+	{41.21, 0.00, 270.99},
+	{-45.36, 0.00, 556.17},
+	{30.97, 0.00, 555.43},
+	{-483.80, 0.00, 471.92},
+	{-447.79, 0.00, 427.35},
+	{-339.00, 0.00, 548.55},
+	{-300.99, 0.00, 503.00},
+	{261.81, 0.00, 593.04},
+	{224.91, 0.00, 538.23},
+	{448.41, -0.00, 489.54},
+	{424.85, -0.00, 431.41},
+	{954.87, 0.00, 518.85},
+	{996.53, 0.00, 485.79},
+	{1008.87, 0.00, 181.70},
+	{988.65, 0.00, 137.30},
+	{678.07, 0.00, 198.28},
+	{409.99, 0.00, 334.87},
+	{621.50, 0.00, 492.90},
+	{822.05, 0.00, 450.69},
+	{880.02, 0.00, 420.03},
+	{395.58, 0.00, -220.54},
+	{415.25, 0.00, -169.53},
+	{39.69, 0.00, -218.90},
+	{-45.83, 0.00, -230.14},
+	{35.73, 0.00, -416.47},
+	{-44.57, 0.00, -411.97},
+	{-1012.90, 0.00, -194.52},
+	{-999.22, -0.00, -141.55},
+	{-897.80, 0.00, -27.26},
+	{-905.90, 0.00, 32.49},
+	{-619.28, 0.00, 37.07},
+	{-618.94, 0.00, -29.59},
+	{-452.40, 0.00, 26.76},
+	{-451.58, 0.00, -27.17}
+};
+
 
 //matriz con posiciones y escalas de palmeras (x,y,z,s1,s2,s3)
 //cada vector interno representa una palmera
@@ -492,6 +595,12 @@ int main()
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
 	arbol_tronco.LoadModel("Models/Arbol12.obj");
+	torchAce = Model();
+	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
+	torchCrash = Model();
+	torchCrash.LoadModel("Models/antorcha_crash.obj");
+	torchSonic = Model();
+	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia_despejado.jpg");
@@ -572,7 +681,7 @@ int main()
 	spotLightCount++;
 
 
-	int idx;
+	int idx,aux=0;
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -702,7 +811,36 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
 		}
-		
+		aux = 0;
+		for (const auto& coor : coordTorch) {
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
+			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			switch (aux) {
+			case 0:
+				break;
+			case 1:
+				model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
+				break;
+			case 2:
+				break;
+			}
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			switch (aux) {
+			case 0:
+				torchAce.RenderModel();
+				break;
+			case 1:
+				torchCrash.RenderModel();
+				break;
+			case 2:
+				torchSonic.RenderModel();
+				break;
+			}
+			aux = (aux + 1) % 3;
+
+		}
+
 
 		glDisable(GL_BLEND);
 
