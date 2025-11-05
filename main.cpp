@@ -45,6 +45,8 @@ bool g_removeModelRequest = false;
 glm::vec3 g_removeModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::mat4 projection = glm::mat4(1.0f);
 
+//ciclo 
+bool day = true;
 // Variable para contador de rounds (0 a 14)
 int roundCounter = 0,firstDigit,secondDigit;
 
@@ -560,6 +562,28 @@ void turnOnSpot(std::string id, unsigned int& spotLightCount) {
 	spotLightCount++;
 }
 
+//funciones para el ciclo de día
+void setNight(std::vector<std::string> skyboxNight)
+{
+	skybox = Skybox(skyboxNight);
+	// Luz direccional azulada, baja intensidad
+	mainLight = DirectionalLight(
+		0.4f, 0.5f, 1.0f,   // Azul tenue
+		0.15f, 0.15f,       // Intensidad baja
+		0.0f, 0.0f, -1.0f   // Dirección
+	);
+}
+
+void setDay(std::vector<std::string> skyboxDay) {
+	skybox = Skybox(skyboxDay);
+	// Luz direccional blanca, intensidad moderada
+	mainLight = DirectionalLight(
+		1.0f, 1.0f, 1.0f,   // Blanco
+		0.5f, 0.5f,         // Intensidad moderada
+		0.0f, 0.0f, -1.0f   // Dirección
+	);
+}
+
 // Función para crear una matriz billboard que siempre mira hacia la cámara
 glm::mat4 CreateBillboardMatrix(glm::vec3 position, glm::vec3 cameraPos, glm::vec3 cameraUp,glm::vec3 trans)
 {
@@ -626,16 +650,30 @@ int main()
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
-	
 
-	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/sh_rt.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_lf.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_dn.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_up.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_bk.png");
-	skyboxFaces.push_back("Textures/Skybox/sh_ft.png");
 
+		//Cycle day
+
+	//Skybox Night
+
+	std::vector<std::string> skyboxNight;
+	skyboxNight.push_back("Textures/Skybox/Zona_Nebulosa.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Planeta.png");
+	skyboxNight.push_back("Textures/Skybox/Zona_Luna.png");
+
+	//Skybox Day
+	std::vector<std::string> skyboxDay;
+	skyboxDay.push_back("Textures/Skybox/sh_rt.png");
+	skyboxDay.push_back("Textures/Skybox/sh_lf.png");
+	skyboxDay.push_back("Textures/Skybox/sh_dn.png");
+	skyboxDay.push_back("Textures/Skybox/sh_up.png");
+	skyboxDay.push_back("Textures/Skybox/sh_bk.png");
+	skyboxDay.push_back("Textures/Skybox/sh_ft.png");
+
+	std::vector<std::string> skyboxFaces = skyboxDay;
 	skybox = Skybox(skyboxFaces);
 
 	Material_brillante = Material(4.0f, 256);
@@ -709,6 +747,9 @@ int main()
 
 	glm::vec2 offset;
 	int idx,aux;
+	//variables para el ciclo de dia y noche
+	float lastSwitchTime = 0.0f;
+	float switchInterval = 300.0f;//5 minutos
 	//se crean mas luces puntuales y spotlight 
 	glm::mat4 model(1.0);
 	glm::mat4 modelaux(1.0);
@@ -727,6 +768,19 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+
+		if (now - lastSwitchTime > switchInterval) {
+				day = !day;
+				lastSwitchTime = now;
+				if (day) {
+					printf("Llego el dia\n");
+					setDay(skyboxDay);
+			}
+			else {
+				printf("Llego la noche\n");
+				setNight(skyboxNight);
+				}
+			}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
