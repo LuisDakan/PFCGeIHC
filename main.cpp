@@ -61,12 +61,14 @@ Model arbusto_largo;
 Model arbol_tronco;
 Model ring;
 Model piramide;
+Model cabeza_olmeca;
 Model columna_juzgado;
 Model lugar_juzgado;
 Model valla_juzgado;
 Model silla_juzgado;
 Model casa_aku_aku;
 Model cueva_aku_aku;
+Model gemaAzul, gemaRoja, gemaPurpura, gemaAmarilla;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -279,6 +281,8 @@ std::vector<std::vector<GLfloat>> coordsBushlong= {
 
 };
 
+
+
 std::vector<std::vector<GLfloat>> coordsTreetrunk = {
 	{451.74,0.00,133.87},
 { 117.15,0.00,717.37 },
@@ -296,11 +300,34 @@ std::vector<std::vector<GLfloat>> coordsTreetrunk = {
 { -101.99, 0.00, 427.04}
 
 };
+std::vector<std::vector<GLfloat>> coordsOlmechead = {
 
+	{666.64,0.00,-48.79},
+	{ 1076.91,0.00,-232.93},
+	{ 677.18,0.00,-704.11 },
+	{ 266.90,0.00,-684.57},
+	{ 490.30,0.00,-618.25 },
+	{ 490.30,0.00,-618.25 },
+	{ 43.11,0.00,-397.37},
+	{ 223.25,0.00,-442.40 },
+	{ 331.48,0.00,-267.44},
+	{ 443.99,0.00,-46.41 },
+	{ 1081.12,0.00,-37.61}
+
+};
+std::vector<glm::vec3> gemPositions = {
+	glm::vec3(620.13f, 0.00f, 261.66f),
+	glm::vec3(417.91f, 0.00f, 465.00f),
+	glm::vec3(691.92f, 0.00f, 660.75f),
+	glm::vec3(915.13f, 0.00f, 455.44f)
+};
 //Sphere cabeza = Sphere(0.5, 20, 20);
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
+
+float lastGemRotationTime = 0.0f;
+float gemRotationInterval = 3.0f;
 
 // luz direccional
 DirectionalLight mainLight;
@@ -604,7 +631,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/CabezaOlmeca.obj");
+	SetCurrentModel("Models/CuevaCrash.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -637,6 +664,8 @@ int main()
 	ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
 	piramide.LoadModel("Models/Piramide.obj");
+	cabeza_olmeca = Model();
+	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
@@ -649,6 +678,14 @@ int main()
 	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
 	cueva_aku_aku = Model();
 	cueva_aku_aku.LoadModel("Models/CuevaCrash.obj");
+	gemaAzul = Model();
+	gemaAzul.LoadModel("Models/GemaAzul.obj");
+	gemaRoja = Model();
+	gemaRoja.LoadModel("Models/GemaRojo.obj");
+	gemaPurpura = Model();
+	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
+	gemaAmarilla = Model();
+	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
 
 	//Cycle day
 
@@ -961,6 +998,14 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piramide.RenderModel();
 
+		//ciclo for para cabezas olmecas
+		for (std::vector <GLfloat> v : coordsOlmechead) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cabeza_olmeca.RenderModel();
+		}
+
 		//juzgado
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-678.49, 0.00, 345.40));
@@ -989,6 +1034,42 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		casa_aku_aku.RenderModel();
 
+		// Rotar posiciones de las gemas
+		if (now - lastGemRotationTime > gemRotationInterval) {
+			lastGemRotationTime = now;
+
+			// Rotar las posiciones
+			glm::vec3 temp = gemPositions[3];
+			gemPositions[3] = gemPositions[2];
+			gemPositions[2] = gemPositions[1];
+			gemPositions[1] = gemPositions[0];
+			gemPositions[0] = temp;
+		}
+
+		// Renderizar cada gema en su posición
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[0]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaAzul.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[1]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaRoja.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[2]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaPurpura.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[3]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaAmarilla.RenderModel();
 
 		glDisable(GL_BLEND);
 
