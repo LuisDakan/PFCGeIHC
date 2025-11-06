@@ -78,6 +78,9 @@ Material Material_brillante;
 Material Material_opaco;
 
 bool day = true;
+float lastGemRotationTime = 0.0f;
+float gemRotationInterval = 3.0f;
+
 
 //posiciones de antorchas
 std::vector<std::vector<float>> coordTorch = {
@@ -326,8 +329,7 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
 
-float lastGemRotationTime = 0.0f;
-float gemRotationInterval = 3.0f;
+
 
 // luz direccional
 DirectionalLight mainLight;
@@ -686,6 +688,7 @@ int main()
 	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
 	gemaAmarilla = Model();
 	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
+
 
 	//Cycle day
 
@@ -1070,6 +1073,9 @@ int main()
 		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaAmarilla.RenderModel();
+
+
+
 
 		glDisable(GL_BLEND);
 
