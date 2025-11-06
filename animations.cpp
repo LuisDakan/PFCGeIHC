@@ -15,6 +15,8 @@ const float C = 50.0f;
 const int numberRings = 10;
 const float phaseRing = 360.0f / (float)numberRings;
 const float heightR = 25.0f;
+const float maxOpaRadio= 20.0f;
+
 
 float WShip = 0.0f;
 float WRing = 0.0f;
@@ -24,6 +26,21 @@ bool TNTExploded = false;  // Estado de la explosión
 float explosionScale = 0.1f;  // Escala de la explosión (0.0 a 1.0)
 bool TNTAnimationActive = false;  // Indica si la animación está activa
 bool TNTAnimationComplete = false;  // Indica si la animación terminó completamente
+float opaRadio = 0.0f;
+float maxHigh=25.0f;
+bool animationOpa=false;
+float velocity=0.02;
+float curHigh=0.0f;
+float curWalk=0.0f;
+float maxWalk=25.0f;
+int stateOpa = 0;
+// Variables para continuidad entre estados
+glm::vec3 lastSpiralPos = glm::vec3(0.0f);
+float lastSpiralAngle = 0.0f;
+float lastAngleOpa = 0.0f;
+double pauseStartTime = -1.0; // Tiempo de inicio de pausa entre estados
+glm::vec3 lastCurvePos = glm::vec3(0.0f); // Posición final de la curva
+float lastCurveAngle = 0.0f; // Ángulo final de la curva
 
 // Funciones de animación
 
@@ -178,3 +195,205 @@ glm::mat4 AnimationTapa(glm::mat4 model)
     return model;
 }
 
+glm::mat4 AnimationOpa(glm::mat4 model)
+{
+    // La animación siempre está activa (ciclo continuo)
+    switch (stateOpa)
+    {
+        case 0: // Estado 1: Elevarse con suavizado
+        {
+            curHigh += velocity;
+            if (curHigh >= maxHigh) {
+                stateOpa = 1; // Pasar a avanzar con espiral
+                curWalk = 0.0f; // Resetear contador para avance
+            }
+            
+            // Aplicar ease-in-out para suavizar inicio y final
+            float progress = curHigh / maxHigh; // 0 a 1
+            float easedProgress = progress * progress * (3.0f - 2.0f * progress); // smoothstep
+            float smoothHeight = maxHigh * easedProgress;
+            
+            model = glm::translate(model, glm::vec3(0.0f, smoothHeight, 0.0f));
+            break;
+        }
+        
+        case 1: // Estado 2: Avanzar en línea recta mientras forma espiral que se cierra
+        {
+            // Desacelerar al final: usar velocidad variable
+            float spiralProgress = curWalk / maxWalk; // 0 a 1
+            
+            // Calcular velocidad con desaceleración al final (ease-out)
+            // La velocidad disminuye gradualmente al acercarse al final
+            float velocityMultiplier = 1.0f - (spiralProgress * spiralProgress); // 1.0 → 0.0 cuadrático
+            float adjustedVelocity = velocity * glm::max(0.3f, velocityMultiplier); // Mínimo 30% de velocidad
+            
+            curWalk += adjustedVelocity;
+            
+            // Ease-in para inicio suave desde estado 0
+            float easedProgress = spiralProgress * spiralProgress; // ease-in cuadrático
+            opaRadio = maxOpaRadio * easedProgress; // Radio pequeño → grande con suavizado
+            
+            // Ángulo de rotación de la espiral (muchas vueltas)
+            float angle = curWalk * 30.0f; // Mayor velocidad angular para más vueltas
+            
+            // Calcular posición: avanza en X + movimiento circular en YZ
+            float forwardDistance = curWalk;
+            float x = forwardDistance;
+            float y = opaRadio * glm::sin(glm::radians(angle));
+            float z = opaRadio * glm::cos(glm::radians(angle));
+            
+            // Guardar la última posición y ángulo antes de cambiar de estado
+            if (curWalk >= maxWalk) {
+                lastSpiralPos = glm::vec3(z, curHigh + y, -x);
+                lastSpiralAngle = angle;
+                stateOpa = 15; // Pasar a pausa antes de la curva
+                curWalk = 0.0f;
+                pauseStartTime = glfwGetTime(); // Iniciar cronómetro de pausa
+            }
+            
+            model = glm::translate(model, glm::vec3(z, curHigh + y, -x));
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+            break;
+        }
+        
+        case 15: // Estado de pausa: esperar 0.5 segundos antes de la curva
+        {
+            double currentTime = glfwGetTime();
+            double elapsedTime = currentTime - pauseStartTime;
+            
+            if (elapsedTime >= 0.5) {
+                stateOpa = 2; // Pasar a la curva después de 0.5 segundos
+                curWalk = 0.0f;
+            }
+            
+            // Mantener posición final de la espiral sin moverse
+            model = glm::translate(model, lastSpiralPos);
+            model = glm::rotate(model, glm::radians(lastSpiralAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+            break;
+        }
+        
+        case 2: // Estado 3: Dar una vuelta suave (180 grados) con suavizado
+        {
+            curWalk += velocity * 0.5f; // Más lento para transición suave
+            float turnDuration = maxWalk * 0.8f;
+            
+            // Aplicar ease-in-out para curva muy suave
+            float turnProgress = curWalk / turnDuration; // 0 a 1
+            float easedTurnProgress = turnProgress * turnProgress * (3.0f - 2.0f * turnProgress); // smoothstep
+            float turnAngle = 360.0f * easedTurnProgress - lastSpiralAngle;
+            
+            // Radio de la curva
+            float turnRadius = 5.0f;
+            
+            // Calcular offset de la curva
+            float curveOffsetX = turnRadius * glm::sin(glm::radians(turnAngle));
+            float curveOffsetZ = -turnRadius * (1.0f - glm::cos(glm::radians(turnAngle)));
+            
+            // Posición = última posición de espiral + offset de curva
+            float x = lastSpiralPos.x + curveOffsetZ;
+            float y = lastSpiralPos.y;
+            float z = lastSpiralPos.z - curveOffsetX;
+            
+            // Guardar posición y ángulo final de la curva ANTES de cambiar de estado
+            if (curWalk >= turnDuration) {
+                lastCurvePos = glm::vec3(x, y, z);
+                lastCurveAngle = lastSpiralAngle + turnAngle;
+                stateOpa = 25; // Pasar a estado de pausa antes del regreso
+                pauseStartTime = glfwGetTime(); // Reiniciar cronómetro de pausa
+                curWalk = 0.0f;
+            }
+            
+            model = glm::translate(model, glm::vec3(x, y, z));
+            model = glm::rotate(model, glm::radians(lastSpiralAngle + turnAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::rotate(model, glm::radians(turnAngle / 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            lastAngleOpa = lastSpiralAngle + turnAngle;
+            break;
+        }
+        
+        case 25: // Estado de pausa: esperar 0.5 segundos antes de regresar
+        {
+            double currentTime = glfwGetTime();
+            double elapsedTime = currentTime - pauseStartTime;
+            
+            if (elapsedTime >= 0.5) {
+                stateOpa = 3; // Pasar a regresar después de 0.5 segundos
+                curWalk = 0.0f;
+            }
+            
+            // Mantener posición final de la curva sin moverse
+            model = glm::translate(model, lastCurvePos);
+            model = glm::rotate(model, glm::radians(lastCurveAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::rotate(model, glm::radians((360.0f - lastSpiralAngle) / 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            break;
+        }
+        
+        case 3: // Estado 4: Regresar al punto de inicio con suavizado
+        {
+            curWalk += velocity;
+            if (curWalk >= maxWalk) {
+                stateOpa = 4; // Pasar a descender
+                curWalk = 0.0f;
+            }
+            
+            // Aplicar ease-in-out para regreso suave
+            float returnProgress = curWalk / maxWalk; // 0 a 1
+            float easedReturnProgress = returnProgress * returnProgress * (3.0f - 2.0f * returnProgress); // smoothstep
+            
+            // Interpolar desde lastCurvePos (posición final de la curva) hacia el origen con suavizado
+            float x = lastCurvePos.x * (1.0f - easedReturnProgress);
+            float y = lastCurvePos.y;
+            float z = lastCurvePos.z * (1.0f - easedReturnProgress);
+           
+            model = glm::translate(model, glm::vec3(x, y, z));
+            model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            break;
+        }
+        
+        case 4: // Estado 5: Descender con suavizado
+        {
+            curHigh -= velocity;
+            if (curHigh <= 0.0f) {
+                // Reiniciar ciclo (animación continua)
+                stateOpa = 0;
+                curHigh = 0.0f;
+                curWalk = 0.0f;
+                opaRadio = 0.0f;
+                lastSpiralPos = glm::vec3(0.0f);
+                lastSpiralAngle = 0.0f;
+                lastCurvePos = glm::vec3(0.0f);
+                lastCurveAngle = 0.0f;
+                pauseStartTime = -1.0;
+            }
+            
+            // Aplicar ease-in-out para descenso suave
+            float progress = curHigh / maxHigh; // 1 a 0
+            float easedProgress = progress * progress * (3.0f - 2.0f * progress); // smoothstep
+            float smoothHeight = maxHigh * easedProgress;
+            
+            model = glm::translate(model, glm::vec3(0.0f, smoothHeight, 0.0f));
+            break;
+        }
+        
+        default:
+            break;
+    }
+    
+    return model;
+}
+
+// Función para iniciar la animación de Opa-Opa (opcional, ya que es continua)
+void StartOpaAnimation()
+{
+    // Resetear al estado inicial si se desea reiniciar manualmente
+    stateOpa = 0;
+    curHigh = 0.0f;
+    curWalk = 0.0f;
+    opaRadio = 0.0f;
+    lastSpiralPos = glm::vec3(0.0f);
+    lastSpiralAngle = 0.0f;
+    lastAngleOpa = 0.0f;
+    lastCurvePos = glm::vec3(0.0f);
+    lastCurveAngle = 0.0f;
+    pauseStartTime = -1.0;
+    printf("Animacion Opa-Opa reiniciada!\n");
+}
