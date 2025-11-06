@@ -51,6 +51,7 @@ bool day = true;
 int roundCounter = 0,firstDigit,secondDigit;
 
 Texture numeros;
+Texture mascaras;
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
@@ -325,6 +326,8 @@ static const char* vShader = "shaders/shader_light.vert";
 static const char* fShader = "shaders/shader_light.frag";
 glm::vec2 getUVNumber(int num);
 void CreateMeshNumber();
+void CreateRingWalls();
+glm::vec2 getMaskUVOffset(int wallIndex);
 //funci�n de calculo de normales por promedio de v�rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
