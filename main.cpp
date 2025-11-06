@@ -608,7 +608,7 @@ void setDay(std::vector<std::string> skyboxDay) {
 	// Luz direccional blanca, intensidad moderada
 	mainLight = DirectionalLight(
 		1.0f, 1.0f, 1.0f,   // Blanco
-		0.5f, 0.5f,         // Intensidad moderada
+		0.8f, 0.5f,         // Intensidad moderada
 		0.0f, 0.0f, -1.0f   // Dirección
 	);
 }
@@ -637,35 +637,35 @@ int main()
 
 	//
 	barco = Model();
-	barco.LoadModel("Models/Barco.obj");
+	//barco.LoadModel("Models/Barco.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
-	tori.LoadModel("Models/Tori.obj");
+	//tori.LoadModel("Models/Tori.obj");
 	torchAce = Model();
-	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
+	//torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
-	torchCrash.LoadModel("Models/antorcha_crash.obj");
+	//torchCrash.LoadModel("Models/antorcha_crash.obj");
 	torchSonic = Model();
-	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
+	//torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
 	palmera_doble = Model();
-	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
+	//palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 	palmera_tres = Model();
-	palmera_tres.LoadModel("Models/Palmera3.obj");
+	//palmera_tres.LoadModel("Models/Palmera3.obj");
 	arbol_seis = Model();
-	arbol_seis.LoadModel("Models/Arbol6.obj");
+	//arbol_seis.LoadModel("Models/Arbol6.obj");
 	arbusto_grande = Model();
-	arbusto_grande.LoadModel("Models/Arbusto_grande.obj");
+	//arbusto_grande.LoadModel("Models/Arbusto_grande.obj");
 	arbusto_largo = Model();
-	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
+	//arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
-	arbol_tronco.LoadModel("Models/Arbol12.obj");
+	//arbol_tronco.LoadModel("Models/Arbol12.obj");
 	ring = Model();
-	ring.LoadModel("Models/Boxing Ring.obj");
+	//ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
 	piramide.LoadModel("Models/Piramide.obj");
 	cabeza_olmeca = Model();
-	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
+	//cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
@@ -679,13 +679,13 @@ int main()
 	cueva_aku_aku = Model();
 	cueva_aku_aku.LoadModel("Models/CuevaCrash.obj");
 	gemaAzul = Model();
-	gemaAzul.LoadModel("Models/GemaAzul.obj");
+	//gemaAzul.LoadModel("Models/GemaAzul.obj");
 	gemaRoja = Model();
-	gemaRoja.LoadModel("Models/GemaRojo.obj");
+	//gemaRoja.LoadModel("Models/GemaRojo.obj");
 	gemaPurpura = Model();
-	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
+	//gemaPurpura.LoadModel("Models/GemaPurpura.obj");
 	gemaAmarilla = Model();
-	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
+	//gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
 
 	//Cycle day
 
@@ -717,7 +717,7 @@ int main()
 
 	//luz direccional, s�lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.3f, 0.3f,
+		0.5f, 0.5f,
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
@@ -1033,6 +1033,11 @@ int main()
 		model = glm::translate(model, glm::vec3(640.59, 0.00, 456.90));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		casa_aku_aku.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(664.71, 3.00, 361.07));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cueva_aku_aku.RenderModel();
 
 		// Rotar posiciones de las gemas
 		if (now - lastGemRotationTime > gemRotationInterval) {
