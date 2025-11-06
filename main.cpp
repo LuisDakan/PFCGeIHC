@@ -945,10 +945,60 @@ int main()
 
 
 		
+		
+		
+		
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
+		modelaux=model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ring.RenderModel();
+
+		// Renderizar paredes del ring con texturas de máscaras
+		mascaras.UseTexture();
+		
+		// Pared Norte (meshList[5])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(0.0f,1.5f,0.0f));
+		offset = getMaskUVOffset(0);  // Pared 0
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[5]->RenderMesh();
+		
+		// Pared Este (meshList[6])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(0.0f,1.5f,-22.7f));
+		offset = getMaskUVOffset(1);  // Pared 1
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+
+		meshList[6]->RenderMesh();
+		
+		// Pared Sur (meshList[7])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(-0.8f,1.5f,0.0f));
+		offset = getMaskUVOffset(2);  // Pared 2
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[7]->RenderMesh();
+		
+		// Pared Oeste (meshList[8])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(0.0f,1.5f,22.7f));
+		offset = getMaskUVOffset(3);  // Pared 3
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[8]->RenderMesh();
+
+		offset = glm::vec2(0.0f,0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		
 		// Renderizar contador de rounds - DÍGITO DE DECENAS
 		firstDigit = roundCounter / 10;
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-1.7f, 10.0f, 0.0f)); // Ajusta Y para visibilidad
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-96.7+195.f+mainWindow.getarticulacion1(), 50.0f, -97.5f+mainWindow.getarticulacion2())); // Ajusta Y para visibilidad
+		model = glm::rotate(model,glm::radians(90.0f),glm::vec3(0.0,-1.0,0.0));
 		modelaux = model;
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(firstDigit);
@@ -961,50 +1011,14 @@ int main()
 		// Renderizar contador de rounds - DÍGITO DE UNIDADES
 		secondDigit = roundCounter % 10;
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f)); // Separación entre dígitos
+		model = glm::translate(model, glm::vec3(8.0f, 0.0f, 0.0f)); // Separación entre dígitos
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(secondDigit);
-		
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 		numeros.UseTexture();
 		meshList[4]->RenderMesh();
 
-		// Renderizar paredes del ring con texturas de máscaras
-		mascaras.UseTexture();
-		
-		// Pared Norte (meshList[5])
-		model = glm::mat4(1.0);
-		offset = getMaskUVOffset(0);  // Pared 0
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-		meshList[5]->RenderMesh();
-		
-		// Pared Este (meshList[6])
-		model = glm::mat4(1.0);
-		offset = getMaskUVOffset(1);  // Pared 1
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-
-		meshList[6]->RenderMesh();
-		
-		// Pared Sur (meshList[7])
-		model = glm::mat4(1.0);
-		offset = getMaskUVOffset(2);  // Pared 2
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-		meshList[7]->RenderMesh();
-		
-		// Pared Oeste (meshList[8])
-		model = glm::mat4(1.0);
-		offset = getMaskUVOffset(3);  // Pared 3
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-		meshList[8]->RenderMesh();
-
-		offset = glm::vec2(0.0f,0.0f);
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-		
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
@@ -1023,10 +1037,10 @@ void CreateMeshNumber()
 
 	GLfloat digitVertices[] = {
 		//	x      y      z		u	  v			nx	  ny    nz
-		-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,
-		 1.0f, -1.0f, 0.0f,		0.2f, 0.0f,		0.0f, 0.0f, 1.0f,
-		 1.0f,  1.0f, 0.0f,		0.2f, 0.5f,		0.0f, 0.0f, 1.0f,
-		-1.0f,  1.0f, 0.0f,		0.0f, 0.5f,		0.0f, 0.0f, 1.0f
+		-2.0f, -2.0f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 2.0f, -2.0f, 0.0f,		0.2f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 2.0f,  2.0f, 0.0f,		0.2f, 0.5f,		0.0f, 0.0f, 1.0f,
+		-2.0f,  2.0f, 0.0f,		0.0f, 0.5f,		0.0f, 0.0f, 1.0f
 	};
 
 	Mesh *digitMesh = new Mesh();
@@ -1041,9 +1055,9 @@ void CreateRingWalls()
 	// Cada pared es un rectángulo vertical con UVs que apuntan a una fila diferente de la textura
 	// La textura tiene 4 filas (cada una 0.25 de altura)
 	
-	float wallWidth = 50.0f;   // Ancho de cada pared
-	float wallHeight = 15.0f;  // Altura de cada pared
-	float ringRadius = 40.0f;  // Distancia desde el centro del ring
+	float wallWidth = 125.0f;   // Ancho de cada pared
+	float wallHeight = 20.0f;  // Altura de cada pared
+	float ringRadius = 100.0f;  // Distancia desde el centro del ring
 	
 	// Índices para un rectángulo (2 triángulos)
 	unsigned int wallIndices[] = {
