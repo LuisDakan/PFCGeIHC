@@ -1,7 +1,12 @@
 //Archivo para guardar las animaciones
 
-#include <glm.hpp>
+#include <glew.h>
 #include <glfw3.h>
+
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
+
 #include "Model.h"
 
 const float A = 300.0f;

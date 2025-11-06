@@ -19,7 +19,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include <gtc\type_ptr.hpp>
 //para probar el importer
 //#include<assimp/Importer.hpp>
-#include "animations.cpp"
+#include "animations.h"
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader_light.h"
@@ -79,8 +79,7 @@ Model lugar_juzgado;
 Model valla_juzgado;
 Model silla_juzgado;
 Model TNT,tapa;
-Model torchAce, torchCrash, torchSonic;
-Model ring;
+
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -1169,7 +1168,7 @@ int main()
 		firstDigit = roundCounter / 10;
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-96.7+195.f+mainWindow.getarticulacion1(), 50.0f, -97.5f+mainWindow.getarticulacion2())); // Ajusta Y para visibilidad
-		model = glm::rotate(model,glm::radians(90.0f),glm::vec3(0.0,-1.0,0.0));
+		model = glm::rotate(model,glm::radians(90.0f),glm::vec3(0.0,1.0,0.0));
 		modelaux = model;
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(firstDigit);
