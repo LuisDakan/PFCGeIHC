@@ -1,4 +1,5 @@
-
+#include <glew.h>
+#include "animations.h"
 /*
 Pr�ctica 7: Iluminaci�n 1 
 */
@@ -11,7 +12,6 @@ Pr�ctica 7: Iluminaci�n 1
 #include <vector>
 #include <math.h>
 #include <map>
-#include <glew.h>
 #include <glfw3.h>
 
 #include <glm.hpp>
@@ -19,7 +19,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include <gtc\type_ptr.hpp>
 //para probar el importer
 //#include<assimp/Importer.hpp>
-#include "animations.cpp"
+
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader_light.h"
@@ -36,6 +36,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
+
 const float toRadians = 3.14159265f / 180.0f;
 
 // Declaraciones globales para comunicación de eventos
@@ -50,6 +51,7 @@ bool day = true;
 // Variable para contador de rounds (0 a 14)
 int roundCounter = 0,firstDigit,secondDigit;
 
+int maskRotation = 0; 
 Texture numeros;
 Texture mascaras;
 Window mainWindow;
@@ -80,7 +82,7 @@ Model TNT,tapa;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
-Texture explosion;
+Texture explosion,mask;
 //materiales
 Material Material_brillante;
 Material Material_opaco;
@@ -626,6 +628,7 @@ int main()
 	CreateObjects();
 	CreateShaders();
 	CreateMeshNumber();
+	CreateRingWalls();
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	
@@ -700,7 +703,7 @@ int main()
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
-
+	mascaras = Texture("Textures/Masks.png"); mask.LoadTextureA();
 	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
 	explosion = Texture("Textures/Explosion.png"); explosion.LoadTextureA();
 	//luz direccional, s�lo 1 y siempre debe de existir
@@ -864,8 +867,8 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tori.RenderModel();
 
-				aux = 0;
-		for (const auto& coor : coordTorch) {
+		aux = 0;
+		/*for (const auto& coor : coordTorch) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
 			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
@@ -943,41 +946,37 @@ int main()
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
-		}
+		}*/
 
-		//ring
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		ring.RenderModel();
+		
 		
 		//piramide
-		model = glm::mat4(1.0);
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(696.86, 0.00, -413.49));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		piramide.RenderModel();
+		//piramide.RenderModel();
 
 		//juzgado
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-678.49, 0.00, 345.40));
 		modeljuz = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));	
-		columna_juzgado.RenderModel();
+		//columna_juzgado.RenderModel();
 
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 61.1f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		lugar_juzgado.RenderModel();
+		//lugar_juzgado.RenderModel();
 	
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(-5.99f, 0.0f, 118.85f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		valla_juzgado.RenderModel();
+		//valla_juzgado.RenderModel();
 		
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla_juzgado.RenderModel();
+		//silla_juzgado.RenderModel();*/
 
 
 		glDisable(GL_BLEND);
@@ -1104,17 +1103,57 @@ int main()
 
 
 
+		//ring
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
+		modelaux=model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ring.RenderModel();
 
-
-
-
+		// Renderizar paredes del ring con texturas de máscaras
+		mascaras.UseTexture();
 		
+		// Pared Norte (meshList[5])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(0.0f,1.5f,0.0f));
+		offset = getMaskUVOffset(0);  // Pared 0
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[5]->RenderMesh();
+		
+		// Pared Este (meshList[6])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(0.0f,1.5f,-22.7f));
+		offset = getMaskUVOffset(1);  // Pared 1
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 
+		meshList[6]->RenderMesh();
+		
+		// Pared Sur (meshList[7])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(-0.8f,1.5f,0.0f));
+		offset = getMaskUVOffset(2);  // Pared 2
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[7]->RenderMesh();
+		
+		// Pared Oeste (meshList[8])
+		model = modelaux;
+		model = glm::translate(model,glm::vec3(0.0f,1.5f,22.7f));
+		offset = getMaskUVOffset(3);  // Pared 3
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		meshList[8]->RenderMesh();
+
+		offset = glm::vec2(0.0f,0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 		
 		// Renderizar contador de rounds - DÍGITO DE DECENAS
 		firstDigit = roundCounter / 10;
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-15.0f, 10.0f, 0.0f)); // Ajusta Y para visibilidad
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-96.7+195.f+mainWindow.getarticulacion1(), 50.0f, -97.5f+mainWindow.getarticulacion2())); // Ajusta Y para visibilidad
+		model = glm::rotate(model,glm::radians(90.0f),glm::vec3(0.0,-1.0,0.0));
 		modelaux = model;
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(firstDigit);
@@ -1127,10 +1166,9 @@ int main()
 		// Renderizar contador de rounds - DÍGITO DE UNIDADES
 		secondDigit = roundCounter % 10;
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f)); // Separación entre dígitos
+		model = glm::translate(model, glm::vec3(8.0f, 0.0f, 0.0f)); // Separación entre dígitos
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
 		offset = getUVNumber(secondDigit);
-		
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 		numeros.UseTexture();
@@ -1138,8 +1176,6 @@ int main()
 
 		offset = glm::vec2(0.0f,0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-		
-		
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
@@ -1169,6 +1205,94 @@ void CreateMeshNumber()
 	meshList.push_back(digitMesh);
 
 }
+
+// Función para calcular el offset UV de las máscaras según la pared y la rotación
+// wallIndex: 0=Norte, 1=Este, 2=Sur, 3=Oeste
+// La textura tiene 4 filas (0.25 de altura cada una)
+glm::vec2 getMaskUVOffset(int wallIndex)
+{
+	// Aplicar rotación: cada pared muestra una fila diferente
+	// La rotación es cíclica (0->1->2->3->0)
+	int textureRow = (wallIndex + maskRotation) % 4;
+	
+	// El offset Y determina qué fila de la textura usar
+	// Fila 0: Y offset = 0.0 (parte superior de la imagen)
+	// Fila 1: Y offset = 0.25
+	// Fila 2: Y offset = 0.5
+	// Fila 3: Y offset = 0.75
+	float offsetY = 0.25f * textureRow;
+	
+	return glm::vec2(0.0f, offsetY);
+}
+
+
+void CreateRingWalls()
+{
+	// Crear 4 paredes alrededor del ring (Norte, Este, Sur, Oeste)
+	// Cada pared es un rectángulo vertical con UVs que apuntan a una fila diferente de la textura
+	// La textura tiene 4 filas (cada una 0.25 de altura)
+	
+	float wallWidth = 125.0f;   // Ancho de cada pared
+	float wallHeight = 20.0f;  // Altura de cada pared
+	float ringRadius = 100.0f;  // Distancia desde el centro del ring
+	
+	// Índices para un rectángulo (2 triángulos)
+	unsigned int wallIndices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+	
+	// PARED NORTE (frente, mirando al +Z)
+	GLfloat wallNorthVertices[] = {
+		//	x					y				z				u		v				nx		ny		nz
+		-wallWidth/2.0f,	0.0f,			ringRadius,		0.0f,	0.0f,			0.0f,	0.0f,	-1.0f,
+		 wallWidth/2.0f,	0.0f,			ringRadius,		1.0f,	0.0f,			0.0f,	0.0f,	-1.0f,
+		 wallWidth/2.0f,	wallHeight,		ringRadius,		1.0f,	0.25f,			0.0f,	0.0f,	-1.0f,
+		-wallWidth/2.0f,	wallHeight,		ringRadius,		0.0f,	0.25f,			0.0f,	0.0f,	-1.0f
+	};
+	
+	// PARED ESTE (derecha, mirando al +X)
+	GLfloat wallEastVertices[] = {
+		ringRadius,			0.0f,			wallWidth/2.0f,		0.0f,	0.25f,		-1.0f,	0.0f,	0.0f,
+		ringRadius,			0.0f,			-wallWidth/2.0f,	1.0f,	0.25f,		-1.0f,	0.0f,	0.0f,
+		ringRadius,			wallHeight,		-wallWidth/2.0f,	1.0f,	0.5f,		-1.0f,	0.0f,	0.0f,
+		ringRadius,			wallHeight,		wallWidth/2.0f,		0.0f,	0.5f,		-1.0f,	0.0f,	0.0f
+	};
+	
+	// PARED SUR (atrás, mirando al -Z)
+	GLfloat wallSouthVertices[] = {
+		wallWidth/2.0f,		0.0f,			-ringRadius,	0.0f,	0.5f,		0.0f,	0.0f,	1.0f,
+		-wallWidth/2.0f,	0.0f,			-ringRadius,	1.0f,	0.5f,		0.0f,	0.0f,	1.0f,
+		-wallWidth/2.0f,	wallHeight,		-ringRadius,	1.0f,	0.75f,		0.0f,	0.0f,	1.0f,
+		wallWidth/2.0f,		wallHeight,		-ringRadius,	0.0f,	0.75f,		0.0f,	0.0f,	1.0f
+	};
+	
+	// PARED OESTE (izquierda, mirando al -X)
+	GLfloat wallWestVertices[] = {
+		-ringRadius,		0.0f,			-wallWidth/2.0f,	0.0f,	0.75f,		1.0f,	0.0f,	0.0f,
+		-ringRadius,		0.0f,			wallWidth/2.0f,		1.0f,	0.75f,		1.0f,	0.0f,	0.0f,
+		-ringRadius,		wallHeight,		wallWidth/2.0f,		1.0f,	1.0f,		1.0f,	0.0f,	0.0f,
+		-ringRadius,		wallHeight,		-wallWidth/2.0f,	0.0f,	1.0f,		1.0f,	0.0f,	0.0f
+	};
+	
+	// Crear meshes y agregarlos a la lista
+	Mesh *wallNorth = new Mesh();
+	wallNorth->CreateMesh(wallNorthVertices, wallIndices, 32, 6);
+	meshList.push_back(wallNorth);  // índice 5
+	
+	Mesh *wallEast = new Mesh();
+	wallEast->CreateMesh(wallEastVertices, wallIndices, 32, 6);
+	meshList.push_back(wallEast);   // índice 6
+	
+	Mesh *wallSouth = new Mesh();
+	wallSouth->CreateMesh(wallSouthVertices, wallIndices, 32, 6);
+	meshList.push_back(wallSouth);  // índice 7
+	
+	Mesh *wallWest = new Mesh();
+	wallWest->CreateMesh(wallWestVertices, wallIndices, 32, 6);
+	meshList.push_back(wallWest);   // índice 8
+}
+
 
 glm::vec2 getUVNumber(int num){
 	

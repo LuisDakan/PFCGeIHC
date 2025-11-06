@@ -1,8 +1,7 @@
-
+#include <glew.h>
 #include "Window.h"
 
 #include <algorithm>
-#include <glew.h>
 #include <glfw3.h>
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
@@ -17,7 +16,7 @@ extern glm::vec3 g_removeModelPos;
 extern glm::mat4 projection;
 extern int roundCounter;  // Contador de rounds
 extern void StartTNTAnimation();
-
+extern int maskRotation;
 Window::Window()
 {
 	width = 800;
@@ -183,6 +182,11 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 
 	if (key == GLFW_KEY_T && action == GLFW_RELEASE) {
 		StartTNTAnimation();
+	}
+
+	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		maskRotation = (maskRotation + 1) % 4;  // Ciclar entre 0-3
+		//printf("Rotacion de mascaras: %d\n", maskRotation);
 	}
 
 	if (key >= 0 && key < 1024)
