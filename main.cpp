@@ -657,7 +657,7 @@ int main()
 	arbusto_largo = Model();
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
-	arbol_tronco.LoadModel("Models/Arbol12.obj");
+	arbol_tronco.LoadModel("Models/Arbol12.obj");*/
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
@@ -703,7 +703,7 @@ int main()
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
-	mascaras = Texture("Textures/Masks.png"); mask.LoadTextureA();
+	mascaras = Texture("Textures/Masks.png"); mascaras.LoadTextureA();
 	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
 	explosion = Texture("Textures/Explosion.png"); explosion.LoadTextureA();
 	//luz direccional, s�lo 1 y siempre debe de existir
@@ -868,7 +868,7 @@ int main()
 		tori.RenderModel();
 
 		aux = 0;
-		/*for (const auto& coor : coordTorch) {
+		for (const auto& coor : coordTorch) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
 			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
@@ -976,7 +976,7 @@ int main()
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		//silla_juzgado.RenderModel();*/
+		//silla_juzgado.RenderModel();
 
 
 		glDisable(GL_BLEND);
@@ -1194,10 +1194,10 @@ void CreateMeshNumber()
 
 	GLfloat digitVertices[] = {
 		//	x      y      z		u	  v			nx	  ny    nz
-		-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,
-		 1.0f, -1.0f, 0.0f,		0.2f, 0.0f,		0.0f, 0.0f, 1.0f,
-		 1.0f,  1.0f, 0.0f,		0.2f, 0.5f,		0.0f, 0.0f, 1.0f,
-		-1.0f,  1.0f, 0.0f,		0.0f, 0.5f,		0.0f, 0.0f, 1.0f
+		-2.0f, -2.0f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 2.0f, -2.0f, 0.0f,		0.2f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 2.0f,  2.0f, 0.0f,		0.2f, 0.5f,		0.0f, 0.0f, 1.0f,
+		-2.0f,  2.0f, 0.0f,		0.0f, 0.5f,		0.0f, 0.0f, 1.0f
 	};
 
 	Mesh *digitMesh = new Mesh();
