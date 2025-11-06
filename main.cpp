@@ -987,7 +987,7 @@ int main()
 		glDisable(GL_BLEND);
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(248.0f, 0.0f, 31.0f));
 		model = AnimationTNT(model);  // Aplicar tambaleo
 		modelaux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1005,14 +1005,36 @@ int main()
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			
-			// Posición del billboard (encima de la TNT)
-			glm::vec3 explosionPos = glm::vec3(0.0f, 15.0f, 0.0f); // Ajusta altura según necesites
+			// JERARQUÍA: Partir de la transformación del padre (TNT)
+			model = modelaux; // modelaux tiene la posición y animación de la TNT
 			
-			// Crear matriz billboard que siempre mira a la cámara
-			model = CreateBillboardMatrix(explosionPos, camera.getCameraPosition(), glm::vec3(0.0f, 1.0f, 0.0f),glm::vec3(0.0f,2.5f,0.0f));
+			// Offset relativo respecto a la TNT (subir 15 unidades en Y)
+			glm::vec3 explosionOffset = glm::vec3(0.0f, 15.0f, 0.0f);
+			model = glm::translate(model, explosionOffset);
+			
+			// Extraer la posición mundial del billboard para calcular dirección a cámara
+			glm::vec3 explosionWorldPos = glm::vec3(model[3]);
+			
+			// Calcular vectores para orientar el billboard hacia la cámara
+			glm::vec3 toCamera = glm::normalize(camera.getCameraPosition() - explosionWorldPos);
+			glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+			glm::vec3 right = glm::normalize(glm::cross(up, toCamera));
+			up = glm::cross(toCamera, right);
+			
+			// Crear matriz de rotación del billboard (mantiene posición jerárquica)
+			glm::mat4 billboardRotation(1.0f);
+			billboardRotation[0] = glm::vec4(right, 0.0f);
+			billboardRotation[1] = glm::vec4(up, 0.0f);
+			billboardRotation[2] = glm::vec4(toCamera, 0.0f);
+			
+			// Aplicar rotación billboard (sin perder la posición jerárquica)
+			glm::vec3 savedPosition = glm::vec3(model[3]);
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, savedPosition);
+			model = model * billboardRotation;
 			
 			// Escalar según explosionScale (crece progresivamente con la tapa)
-			float currentScale = 25.0f * explosionScale; // Escala de 2.0 (10% de 20) hasta 20.0 (100%)
+			float currentScale = 25.0f * explosionScale;
 			model = glm::scale(model, glm::vec3(currentScale, currentScale, 1.0f));
 			
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1167,7 +1189,7 @@ int main()
 		// Renderizar contador de rounds - DÍGITO DE DECENAS
 		firstDigit = roundCounter / 10;
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(-96.7+195.f+mainWindow.getarticulacion1(), 50.0f, -97.5f+mainWindow.getarticulacion2())); // Ajusta Y para visibilidad
+		model = glm::translate(model, glm::vec3(-96.7+195.f, 50.0f, -97.5f)); // Ajusta Y para visibilidad
 		model = glm::rotate(model,glm::radians(90.0f),glm::vec3(0.0,1.0,0.0));
 		modelaux = model;
 		model = glm::scale(model, glm::vec3(2.0f, 4.0f, 1.0f));
