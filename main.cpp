@@ -324,6 +324,8 @@ std::vector<glm::vec3> gemPositions = {
 	glm::vec3(691.92f, 0.00f, 660.75f),
 	glm::vec3(915.13f, 0.00f, 455.44f)
 };
+
+
 //Sphere cabeza = Sphere(0.5, 20, 20);
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -798,7 +800,8 @@ int main()
 	glm::vec3 p;
 	glm::vec4 rot;
 		projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
-	////Loop mientras no se cierra la ventana
+
+		////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose()){
 		// Procesar solicitudes de agregar/quitar modelos
 		if (g_addModelRequest) {
@@ -1037,6 +1040,9 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		casa_aku_aku.RenderModel();
 
+
+
+
 		// Rotar posiciones de las gemas
 		if (now - lastGemRotationTime > gemRotationInterval) {
 			lastGemRotationTime = now;
@@ -1048,7 +1054,7 @@ int main()
 			gemPositions[1] = gemPositions[0];
 			gemPositions[0] = temp;
 		}
-
+	
 		// Renderizar cada gema en su posición
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, gemPositions[0]);
@@ -1073,9 +1079,8 @@ int main()
 		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaAmarilla.RenderModel();
-
-
-
+		
+		
 
 		glDisable(GL_BLEND);
 
