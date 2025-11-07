@@ -42,6 +42,11 @@ double pauseStartTime = -1.0; // Tiempo de inicio de pausa entre estados
 glm::vec3 lastCurvePos = glm::vec3(0.0f); // Posición final de la curva
 float lastCurveAngle = 0.0f; // Ángulo final de la curva
 
+// Variables para animación de caminata del humanoide
+bool walkingActive = false;
+float walkCycle = 0.0f;
+float walkSpeed = 2.0f;
+
 // Funciones de animación
 
 glm::mat4 AnimationShip(glm::mat4 model)
@@ -397,3 +402,151 @@ void StartOpaAnimation()
     pauseStartTime = -1.0;
     printf("Animacion Opa-Opa reiniciada!\n");
 }
+
+// Función para activar/desactivar la caminata
+void ToggleWalking()
+{
+    walkingActive = !walkingActive;
+    if (!walkingActive) {
+        walkCycle = 0.0f; // Resetear el ciclo cuando se detiene
+    }
+    printf("Caminata %s\n", walkingActive ? "activada" : "desactivada");
+}
+
+// Animación jerárquica del cuerpo (torso)
+glm::mat4 AnimateBody(glm::mat4 model)
+{
+    if (walkingActive) {
+        // Ligero balanceo del torso al caminar
+        float bodySwing = 3.0f * glm::sin(glm::radians(walkCycle));
+        model = glm::rotate(model, glm::radians(bodySwing), glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica del hombro derecho
+glm::mat4 AnimateRightShoulder(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Offset del hombro derecho respecto al cuerpo
+   
+    
+    if (walkingActive) {
+        // Rotación del hombro (movimiento del brazo)
+        float shoulderAngle = 30.0f * glm::sin(glm::radians(walkCycle));
+        model = glm::rotate(model, glm::radians(shoulderAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica del brazo derecho
+glm::mat4 AnimateRightArm(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Offset del brazo respecto al hombro
+    
+    if (walkingActive) {
+        // Ligera flexión adicional del codo al caminar
+        float elbowBend = 10.0f * glm::sin(glm::radians(walkCycle * 2.0f));
+        model = glm::rotate(model, glm::radians(elbowBend), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica del hombro izquierdo
+glm::mat4 AnimateLeftShoulder(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Offset del hombro izquierdo respecto al cuerpo
+
+    
+    if (walkingActive) {
+        // Rotación del hombro (movimiento del brazo opuesto al derecho)
+        float shoulderAngle = -30.0f * glm::sin(glm::radians(walkCycle));
+        model = glm::rotate(model, glm::radians(shoulderAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica del brazo izquierdo
+glm::mat4 AnimateLeftArm(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Offset del brazo respecto al hombro
+    //model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+    
+    if (walkingActive) {
+        // Ligera flexión adicional del codo al caminar
+        float elbowBend = -10.0f * glm::sin(glm::radians(walkCycle * 2.0f));
+        model = glm::rotate(model, glm::radians(elbowBend), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica del muslo derecho
+glm::mat4 AnimateRightThigh(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Offset del muslo derecho respecto al cuerpo
+    
+    if (walkingActive) {
+        // Rotación del muslo (pierna opuesta al brazo derecho)
+        float thighAngle = -50.0f * glm::sin(glm::radians(walkCycle));
+        model = glm::rotate(model, glm::radians(thighAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica de la pierna derecha
+glm::mat4 AnimateRightLeg(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Offset de la pierna respecto al muslo
+
+    
+    if (walkingActive) {
+        // Flexión de la rodilla (solo cuando la pierna va hacia adelante)
+        float kneeAngle =glm::min(45-glm::max(0.0f, 30.0f * glm::sin(glm::radians(walkCycle))),30.0f);
+        model = glm::rotate(model, glm::radians(kneeAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica del muslo izquierdo
+glm::mat4 AnimateLeftThigh(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Offset del muslo izquierdo respecto al cuerpo
+    
+    if (walkingActive) {
+        // Rotación del muslo (pierna opuesta al brazo izquierdo)
+        float thighAngle = 50.0f * glm::sin(glm::radians(walkCycle));
+        model = glm::rotate(model, glm::radians(thighAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Animación jerárquica de la pierna izquierda
+glm::mat4 AnimateLeftLeg(glm::mat4 parentModel)
+{
+    glm::mat4 model = parentModel;
+    // Solo aplicar rotación si está caminando
+    if (walkingActive) {
+        // Flexión de la rodilla (solo cuando la pierna va hacia adelante)
+        float kneeAngle = glm::min(45 - glm::max(0.0f, 30.0f * glm::sin(glm::radians(walkCycle))), 30.0f);
+        model = glm::rotate(model, glm::radians(45.0f-kneeAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    return model;
+}
+
+// Actualizar el ciclo de caminata
+void UpdateWalkCycle()
+{
+    if (walkingActive) {
+        walkCycle += walkSpeed;
+        if (walkCycle >= 360.0f) {
+            walkCycle -= 360.0f;
+        }
+    }
+}
+

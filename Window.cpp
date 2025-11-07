@@ -1,5 +1,6 @@
 
 #include "Window.h"
+#include "animations.h"
 
 #include <algorithm>
 #include <glew.h>
@@ -16,7 +17,6 @@ extern bool g_removeModelRequest;
 extern glm::vec3 g_removeModelPos;
 extern glm::mat4 projection;
 extern int roundCounter;  // Contador de rounds
-extern void StartTNTAnimation();
 extern int maskRotation;  // Rotación de texturas de máscaras
 
 
@@ -139,43 +139,44 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
     	glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 	
-	if (key == GLFW_KEY_F)
+	if (key == GLFW_KEY_1)
 	{
-		theWindow->articulacion1 += 1.0f;
+		theWindow->articulacion1 += 0.1f;
 		printf("art1:%f\n", theWindow->articulacion1);
 	}
 
-	if (key == GLFW_KEY_G)
+	if (key == GLFW_KEY_2)
 	{
-		theWindow->articulacion1 -= 1.0f;
+		theWindow->articulacion1 -= 0.1f;
 		printf("art1:%f\n", theWindow->articulacion1);
 	}
-	if (key == GLFW_KEY_H)
+	if (key == GLFW_KEY_3)
 	{
 
-		theWindow->articulacion2 += 1.0;
+		theWindow->articulacion2 += 0.1;
 		printf("art2:%f\n", theWindow->articulacion2);
 	}
-	if (key == GLFW_KEY_J)
+	if (key == GLFW_KEY_4)
 	{
 
-		theWindow->articulacion2 -= 1.0;
+		theWindow->articulacion2 -= 0.1;
 		printf("art2:%f\n", theWindow->articulacion2);
 	}
-	if (key == GLFW_KEY_K)
+	if (key == GLFW_KEY_5)
 	{
-
-		theWindow->articulacion3 += 9.0;
+		printf("art3:%f\n", theWindow->articulacion3);
+		theWindow->articulacion3 += 0.1;
 	}
-	if (key == GLFW_KEY_L)
+	if (key == GLFW_KEY_6)
 	{
-		theWindow->articulacion3 -= 10.0;
+		printf("art3:%f\n", theWindow->articulacion3);
+		theWindow->articulacion3 -= 0.1;
 	}
 	if (key == GLFW_KEY_Z) {
-		theWindow->articulacion4 += 9.0;
+		theWindow->articulacion4 += 1.0;
 	}
 	if (key == GLFW_KEY_X) {
-		theWindow->articulacion4 -= 9.0;
+		theWindow->articulacion4 -= 1.0;
 	}
 	
 	
@@ -193,6 +194,10 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 
 	if (key == GLFW_KEY_T && action == GLFW_RELEASE) {
 		StartTNTAnimation();
+	}
+
+	if (key == GLFW_KEY_G && action == GLFW_RELEASE) {
+		ToggleWalking();
 	}
 
 	if (key >= 0 && key < 1024)

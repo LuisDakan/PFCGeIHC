@@ -39,6 +39,11 @@ extern double pauseStartTime;
 extern glm::vec3 lastCurvePos;
 extern float lastCurveAngle;
 
+// Variables para animación de caminata
+extern bool walkingActive;
+extern float walkCycle;
+extern float walkSpeed;
+
 // Declaraciones de funciones de animación
 glm::mat4 AnimationShip(glm::mat4 model);
 glm::mat4 AnimationRing(glm::mat4 model, int id);
@@ -47,5 +52,18 @@ void StartTNTAnimation();
 glm::mat4 AnimationTapa(glm::mat4 model);
 glm::mat4 AnimationOpa(glm::mat4 model);
 void StartOpaAnimation();
+
+// Declaraciones de funciones de animación de caminata
+void ToggleWalking();
+void UpdateWalkCycle();
+glm::mat4 AnimateBody(glm::mat4 model);
+glm::mat4 AnimateRightShoulder(glm::mat4 parentModel);
+glm::mat4 AnimateRightArm(glm::mat4 parentModel);
+glm::mat4 AnimateLeftShoulder(glm::mat4 parentModel);
+glm::mat4 AnimateLeftArm(glm::mat4 parentModel);
+glm::mat4 AnimateRightThigh(glm::mat4 parentModel);
+glm::mat4 AnimateRightLeg(glm::mat4 parentModel);
+glm::mat4 AnimateLeftThigh(glm::mat4 parentModel);
+glm::mat4 AnimateLeftLeg(glm::mat4 parentModel);
 
 #endif

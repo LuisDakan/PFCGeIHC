@@ -80,6 +80,7 @@ Model valla_juzgado;
 Model silla_juzgado;
 Model TNT,tapa;
 Model opaopa;
+std::map<std::string,Model> ace;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
 Skybox skybox;
@@ -639,7 +640,7 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
-	torchAce = Model();
+	/*torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
 	torchCrash.LoadModel("Models/antorcha_crash.obj");
@@ -676,8 +677,13 @@ int main()
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
 	opaopa = Model();
-	opaopa.LoadModel("Models/Opa-Opa.obj");
-
+	opaopa.LoadModel("Models/Opa-Opa.obj");*/
+	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
+	"MusloDerechoAce","MusloIzquierdoAce","PiernaDerechaAce","PiernaIzquierdaAce"};
+	for(std::string s:ModelAce){
+		ace[s] = Model();
+		ace[s].LoadModel("Models/Principal/"+s+".obj");
+	}
 
 		//Cycle day
 
@@ -869,7 +875,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tori.RenderModel();
 
-		aux = 0;
+		/*aux = 0;
 		for (const auto& coor : coordTorch) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
@@ -1053,98 +1059,168 @@ int main()
 		model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -50.0f));
 		model = AnimationOpa(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		opaopa.RenderModel();
+		opaopa.RenderModel();*/
 
-
+		// ========== Animación jerárquica de caminata (Ace) ==========
+		// Actualizar el ciclo de caminata
+		UpdateWalkCycle();
 		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		// Posición base del personaje
+		glm::vec3 acePosition(-150.0f, 32.4f, 0.0f);
 		
-
-		
-		
-		
-		
-
+		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 		model = glm::mat4(1.0);
+		model = glm::translate(model, acePosition);
+		model = glm::scale(model,glm::vec3(0.3f,0.3f,0.3f));
+		model = AnimateBody(model);
+		glm::mat4 bodyModel = model; // Guardar la transformación del cuerpo
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["CuerpoAce"].RenderModel();
+		
+		// 2. Renderizar hombro derecho + brazo derecho (jerarquía: Cuerpo -> Hombro -> Brazo)
+		model = bodyModel;
+		model = glm::translate(model, glm::vec3(-7.9714f,20.5293f,-1.55739f));
+		model = AnimateRightShoulder(model);
+		glm::mat4 rightShoulderModel = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["HombroDerechoAce"].RenderModel();
+		
+		model = AnimateRightArm(rightShoulderModel);
+		model = glm::translate(model,glm::vec3(1.15075f,1.2403f,0.13481f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["BrazoDerechoAce"].RenderModel();
+		
+		// 3. Renderizar hombro izquierdo + brazo izquierdo (jerarquía: Cuerpo -> Hombro -> Brazo)
+		model = bodyModel;
+		model = glm::translate(model, glm::vec3(7.624f,20.6028f,-1.58114f));
+		model = AnimateLeftShoulder(model);
+		glm::mat4 leftShoulderModel = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["HombroIzquierdoAce"].RenderModel();
+		
+		model = AnimateLeftArm(leftShoulderModel);
+		model = glm::translate(model,glm::vec3(-0.47100118f,1.2567f,0.28935f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["BrazoIzquierdoAce"].RenderModel();
+		
+		// 4. Renderizar muslo derecho + pierna derecha (jerarquía: Cuerpo -> Muslo -> Pierna)
+		model = bodyModel;
+		model = glm::translate(model,glm::vec3(0.0f, 0.1138f, 0.0f));
+		model = AnimateRightThigh(model);
+		glm::mat4 rightThighModel = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["MusloDerechoAce"].RenderModel();
+		
+		model = rightThighModel;
+		model = glm::translate(model,glm::vec3(-3.35244f,-13.1455f,-0.441f));
+		model = AnimateRightLeg(model);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["PiernaDerechaAce"].RenderModel();
+		
+		// 5. Renderizar muslo izquierdo + pierna izquierda (jerarquía: Cuerpo -> Muslo -> Pierna)
+		model = bodyModel;
+		model = glm::translate(model,glm::vec3(0.0f,0.1138f,0.0f));
+		model = AnimateLeftThigh(model);
+		glm::mat4 leftThighModel = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["MusloIzquierdoAce"].RenderModel();
+		
+		model = leftThighModel;
+		model = glm::translate(model,glm::vec3(3.35244f,-13.1455f,-0.441f));
+		model = AnimateLeftLeg(model);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["PiernaIzquierdaAce"].RenderModel();
+		// ========== Fin animación jerárquica de caminata ==========
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+		
+		
+		
+		
+
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		modelaux=model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1215,7 +1291,7 @@ int main()
 		meshList[4]->RenderMesh();
 
 		offset = glm::vec2(0.0f,0.0f);
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));*/
 		
 		
 		glUseProgram(0);
