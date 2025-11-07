@@ -80,6 +80,9 @@ Model valla_juzgado;
 Model silla_juzgado;
 Model TNT,tapa;
 Model opaopa;
+Model bell;
+Model ring_bell,palanca,soporte_bell;
+
 std::map<std::string,Model> ace;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
@@ -631,6 +634,10 @@ int main()
 	CreateShaders();
 	CreateMeshNumber();
 	CreateRingWalls();
+	
+	// Inicializar sistema de animaciones por keyframes
+	InitKeyframeAnimations();
+	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	
@@ -820,6 +827,9 @@ int main()
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		// Actualizar animaciones por keyframes
+		UpdateKeyframeAnimations();
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

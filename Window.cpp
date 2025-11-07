@@ -200,6 +200,31 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		ToggleWalking();
 	}
 
+	// ========== Control de Animaciones por Keyframes ==========
+	// Tecla 1: Play/Pause animación "Ace"
+	if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
+		KeyframeAnimation* anim = g_AnimationManager.GetAnimation("Ace");
+		if (anim) {
+			if (anim->IsPlaying()) {
+				g_AnimationManager.PauseAnimation("Ace");
+			} else {
+				g_AnimationManager.PlayAnimation("Ace");
+			}
+		}
+	}
+
+	// Tecla 2: Stop/Reset animación "Ace"
+	if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
+		g_AnimationManager.StopAnimation("Ace");
+	}
+
+	// Puedes agregar más controles para otras animaciones:
+	// Tecla 3: Play animación "OtroPersonaje"
+	// if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
+	//     g_AnimationManager.PlayAnimation("OtroPersonaje");
+	// }
+	// ========================================================
+
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)

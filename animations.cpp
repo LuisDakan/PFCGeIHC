@@ -550,3 +550,32 @@ void UpdateWalkCycle()
     }
 }
 
+// ========== Sistema de Animaciones por Keyframes ==========
+
+// Manager global de animaciones
+KeyframeAnimationManager g_AnimationManager;
+
+void InitKeyframeAnimations()
+{
+    printf("\n=== Inicializando animaciones por keyframes ===\n");
+    
+    // Cargar animación de Ace (ejemplo)
+    // Ajusta los nombres de archivo según tus archivos .txt
+    g_AnimationManager.AddAnimation("Ace", "keyframes_Ace.txt", 100);
+    
+    // Aquí puedes agregar más animaciones
+    // g_AnimationManager.AddAnimation("OtroPersonaje", "keyframes_OtroPersonaje.txt", 100);
+    // g_AnimationManager.AddAnimation("Objeto", "keyframes_Objeto.txt", 50);
+    
+    // Listar animaciones cargadas
+    g_AnimationManager.ListAnimations();
+    
+    printf("=== Animaciones inicializadas ===\n\n");
+}
+
+void UpdateKeyframeAnimations()
+{
+    // Actualizar todas las animaciones activas
+    g_AnimationManager.UpdateAll();
+}
+

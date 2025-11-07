@@ -3,6 +3,7 @@
 #define ANIMATIONS_H
 
 #include <glm.hpp>
+#include "KeyframeAnimation.h"
 
 // Constantes de animación
 extern const float A;
@@ -65,5 +66,12 @@ glm::mat4 AnimateRightThigh(glm::mat4 parentModel);
 glm::mat4 AnimateRightLeg(glm::mat4 parentModel);
 glm::mat4 AnimateLeftThigh(glm::mat4 parentModel);
 glm::mat4 AnimateLeftLeg(glm::mat4 parentModel);
+
+// Manager global de animaciones por keyframes
+extern KeyframeAnimationManager g_AnimationManager;
+
+// Funciones para inicializar y controlar animaciones por keyframes
+void InitKeyframeAnimations();
+void UpdateKeyframeAnimations();
 
 #endif
