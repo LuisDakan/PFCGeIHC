@@ -639,7 +639,7 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
-	/*torchAce = Model();
+	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
 	torchCrash.LoadModel("Models/antorcha_crash.obj");
@@ -674,7 +674,7 @@ int main()
 	TNT = Model();
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
-	tapa.LoadModel("Models/tapa_TNT.obj");*/
+	tapa.LoadModel("Models/tapa_TNT.obj");
 	opaopa = Model();
 	opaopa.LoadModel("Models/Opa-Opa.obj");
 
@@ -870,7 +870,7 @@ int main()
 		tori.RenderModel();
 
 		aux = 0;
-		/*for (const auto& coor : coordTorch) {
+		for (const auto& coor : coordTorch) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
 			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
@@ -982,7 +982,7 @@ int main()
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla_juzgado.RenderModel();*/
+		silla_juzgado.RenderModel();
 
 
 		glDisable(GL_BLEND);
