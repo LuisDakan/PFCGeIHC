@@ -1158,14 +1158,6 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		baño.RenderModel();
 
-
-		//Universo Ace Attorney
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-117.98, 0.00, -264.41));
-		model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		mayafey.RenderModel();
-
 		//fuentes
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-194.56, 0.00, 554.75));
