@@ -92,6 +92,8 @@ Model casa_aku_aku;
 Model TNT,tapa;
 Model opaopa;
 Model bell;
+//Personajes
+Model akuaku, ukauka, mayafey,  edgeworth, alexkid, dbjoe, crash;
 Model ring_bell,palanca,soporte_bell;
 Model Reloj_Minuto,Reloj_Hora,Reloj_Crash;
 //Model clock;
@@ -816,6 +818,21 @@ int main()
 	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	casa_aku_aku = Model();
 	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
+	//personajes
+	akuaku = Model();	
+	akuaku.LoadModel("Models/Aku-Aku.obj");
+	crash = Model();
+	crash.LoadModel("Models/CrashBandicoot.obj");
+	ukauka = Model();
+	ukauka.LoadModel("Models/ukauka.obj");
+	mayafey = Model();
+	mayafey.LoadModel("Models/Maya Fey.obj");
+	edgeworth = Model();
+	edgeworth.LoadModel("Models/edgeworth.obj");
+	alexkid = Model();
+	alexkid.LoadModel("Models/alexKid.obj");
+	dbjoe = Model();
+	dbjoe.LoadModel("Models/DBJoe.obj");
 	TNT = Model();
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
@@ -1267,6 +1284,48 @@ int main()
 		model = glm::translate(model, glm::vec3(640.59, 0.00, 456.90));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		casa_aku_aku.RenderModel();
+
+				//Personajes
+		//Universo Crash
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(541.43, 1.50, 392.59));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		akuaku.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(793.55, 5.00, 405.88));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ukauka.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(31.78, 25.00, -11.65));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		crash.RenderModel();
+
+		//Universo Ace Attorney
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(292.36, 0.00, -722.11));
+		model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mayafey.RenderModel();
+		
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-687.69, 0.00, 456.59));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		edgeworth.RenderModel();
+		//Universo Sonic
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-643.37, 0.00, -725.40));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		alexkid.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1043.61, 0.00, -183.27));
+		model = glm::rotate(model, glm::radians(125.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		dbjoe.RenderModel();
 
 
 		glDisable(GL_BLEND);
