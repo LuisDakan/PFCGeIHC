@@ -804,6 +804,8 @@ int main()
 	cajas_nitro.LoadModel("Models/Caja_Nitro.obj");
 	cajas_tnt = Model();
 	cajas_tnt.LoadModel("Models/Caja_TNT.obj");
+	jumping = Model();
+	jumping.LoadModel("Models/jumping.obj");
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
