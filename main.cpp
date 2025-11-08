@@ -1223,8 +1223,6 @@ int main()
 				jumping.RenderModel();
 			}
 
-			
-
 		//juzgado
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-678.49, 0.00, 345.40));
