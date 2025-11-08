@@ -905,7 +905,7 @@ int main()
 		for (const auto& coor : coordTorch) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
-			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			switch (aux) {
 			case 0:
 				break;
