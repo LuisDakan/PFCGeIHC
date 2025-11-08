@@ -75,10 +75,20 @@ Model arbusto_largo;
 Model arbol_tronco;
 Model ring;
 Model piramide;
+Model cabeza_olmeca;
+Model bote_basura;
+Model baño;
+Model fuente;
+Model bancas;
+Model reflector;
+Model cajas_tnt;
+Model cajas_nitro;
+Model jumping;
 Model columna_juzgado;
 Model lugar_juzgado;
 Model valla_juzgado;
 Model silla_juzgado;
+Model casa_aku_aku;
 Model TNT,tapa;
 Model opaopa;
 Model bell;
@@ -315,6 +325,95 @@ std::vector<std::vector<GLfloat>> coordsTreetrunk = {
 { -233.05, 0.00, 626.71 },
 { -101.99, 0.00, 427.04}
 
+};
+std::vector<std::vector<GLfloat>> coordsOlmechead = {
+
+	{666.64,0.00,-48.79},
+	{ 266.90,0.00,-684.57},
+	{ 490.30,0.00,-618.25 },
+	{ 223.25,0.00,-442.40 },
+	{ 443.99,0.00,-46.41 }
+
+};
+std::vector<glm::vec3> gemPositions = {
+	glm::vec3(620.13f, 0.00f, 261.66f),
+	glm::vec3(417.91f, 0.00f, 465.00f),
+	glm::vec3(691.92f, 0.00f, 660.75f),
+	glm::vec3(915.13f, 0.00f, 455.44f)
+};
+
+std::vector<std::vector<GLfloat>> coordsTrash = {
+
+	{-36.14,0.00,250.11},
+{ -31.82,0.00,-247.16 },
+{ -412.42,0.00,-23.92 },
+{  410.04,0.00,-27.38 },
+{ 882.42,0.00,389.26},
+{ 437.37,0.00,466.69 },
+{ 480.02,0.00,-542.16},
+{ -1224.58,0.00,-20.41 },
+{ -1208.12,0.00,31.77},
+{ -939.06,0.00,429.18 },
+{ -471.91,0.00,450.46 }
+
+};
+
+std::vector<std::vector<GLfloat>> coordsBenches = {
+	{ 53.5,0.00,-356.02},
+	{ 53.5,0.00,-575.78},
+	{ 68.5,0.00,367.69},
+	{68.5,0.00,642.01},
+
+
+
+
+};
+
+std::vector<std::vector<GLfloat>> coordsBenches1 = {
+	{ -47.69, -0.00, 514.49},
+	{ -45.70, 0.00, -428.98},
+};
+
+std::vector<std::vector<GLfloat>> coordsBenches2 = {
+{ 530.74,0.00,68.94},
+{ 805.00,0.00,44.34 },
+{ -530.74,0.00,47.57},
+{ -805.00, 0.00, 51.16}
+
+};
+std::vector<std::vector<GLfloat>> coordsBoxnitro{
+	{95.39,-0.00,160.99},
+	{ -83.04,0.00,163.78},
+	{ 11.51,0.00,166.35},
+	{ 94.49,0.00,-170.89},
+	{-91.62,0.00,-158.01 },
+	{ 17.65,0.00,-178.13}
+};
+
+std::vector<std::vector<GLfloat>> coordsBoxtnt{
+	{210.36,-0.00,70.01},
+	{207.70,-0.00,-6.22},
+	{204.72,-0.00,-91.38},
+	{270.61,0.00,-101.24},
+	{269.07,0.00,-12.74},
+	{267.63,0.00,69.72},
+	{ -173.51,0.00,72.05},
+	{ -172.96,0.00,2.44},
+	{ -176.41,0.00,-96.23},
+	{ -255.62,0.00,-102.45},
+	{ -246.78,0.00,-1.39},
+	{ -239.21,0.00,85.09}
+};
+
+std::vector<std::vector<GLfloat>> coordsJumping{
+	{ -482.38,0.00,-325.19},
+{ -837.73,0.00,-330.34},
+{- 869.94,0.00,-575.84},
+{ - 491.94,0.00,-588.32},
+{ - 693.65,0.00,-581.25},
+{ - 661.57,0.00,-325.07},
+{ -437.64, 0.00, -436.67},
+{ -896.14, 0.00, -433.49}
 };
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
@@ -689,6 +788,22 @@ int main()
 	ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
 	piramide.LoadModel("Models/Piramide.obj");
+	cabeza_olmeca = Model();
+	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
+	bote_basura = Model();
+	bote_basura.LoadModel("Models/Basurero.obj");
+	baño = Model();
+	baño.LoadModel("Models/Baño.obj");
+	fuente = Model();
+	fuente.LoadModel("Models/Fuente.obj");
+	bancas= Model();
+	bancas.LoadModel("Models/Banca2.obj");
+	reflector = Model();
+	reflector.LoadModel("Models/Reflector.obj");
+	cajas_nitro = Model();
+	cajas_nitro.LoadModel("Models/Caja_Nitro.obj");
+	cajas_tnt = Model();
+	cajas_tnt.LoadModel("Models/Caja_TNT.obj");
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
@@ -697,6 +812,8 @@ int main()
 	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
 	silla_juzgado = Model();
 	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
+	casa_aku_aku = Model();
+	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
 	TNT = Model();
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
@@ -996,6 +1113,131 @@ int main()
 		model = glm::translate(model, glm::vec3(696.86, 0.00, -413.49));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piramide.RenderModel();
+				//ciclo for para cabezas olmecas
+		for (std::vector <GLfloat> v : coordsOlmechead) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cabeza_olmeca.RenderModel();
+		}
+		//ciclo for para los botes de basura
+		for (std::vector <GLfloat> v : coordsTrash) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			bote_basura.RenderModel();
+		}
+		//baños
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-121.24, 0.00, 271.83));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		baño.RenderModel();
+		
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-117.98, 0.00, -264.41));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		baño.RenderModel();
+		
+		//fuentes
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-194.56, 0.00, 554.75));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		fuente.RenderModel();
+		
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(1080.15, 0.00, -502.91));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		fuente.RenderModel();
+		//bancas
+		for (std::vector <GLfloat> v : coordsBenches) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			bancas.RenderModel();
+		}
+		
+		for (std::vector <GLfloat> v : coordsBenches1) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			bancas.RenderModel();
+		}
+		for (std::vector <GLfloat> v : coordsBenches2) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			bancas.RenderModel();
+		}
+		
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-728.09, 0.00, -36.75));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		bancas.RenderModel();
+		
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(793.39, 0.00, -40.21));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		bancas.RenderModel();
+		
+		//reflectores
+		//lado del juzgado
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-253.01, 0.00, 197.44));
+		model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		reflector.RenderModel();
+		
+		//lado del barco
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-234.55, 0.00, -206.86));
+		model = glm::rotate(model, glm::radians(55.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		reflector.RenderModel();
+		
+		//lado de crash
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(337.30, 0.00, -143.94));
+		model = glm::rotate(model, glm::radians(280.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		reflector.RenderModel();
+		
+		//lado de la piramide
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(253.84, 0.00, 203.23));
+		model = glm::rotate(model, glm::radians(245.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		reflector.RenderModel();
+		
+		//ciclo for para las cajas TNT
+		for (std::vector <GLfloat> v : coordsBoxtnt) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cajas_tnt.RenderModel();
+		}
+		
+		//ciclo for para las cajas nitro
+		for (std::vector <GLfloat> v : coordsBoxnitro) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			cajas_nitro.RenderModel();
+		}
+		
+		//ciclo for para los jumping
+		for (std::vector <GLfloat> v : coordsJumping) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			jumping.RenderModel();
+		}
 
 		//juzgado
 		model = glm::mat4(1.0);
@@ -1018,6 +1260,12 @@ int main()
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla_juzgado.RenderModel();
+
+		//escenario aku aku 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(640.59, 0.00, 456.90));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		casa_aku_aku.RenderModel();
 
 
 		glDisable(GL_BLEND);
