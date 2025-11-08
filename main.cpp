@@ -193,6 +193,16 @@ std::vector<std::vector<float>> coordTorch = {
 	{-451.58, 0.00, -27.17}
 };
 
+//toris
+std::vector<std::vector<GLfloat>> coordsToris = {
+	{ -1143.86,0.00,3.86,180.00},
+	{ 0.85,0.00,790.04,90.00},
+	{ 4.98,0.00,-776.96,90.00}
+
+
+};
+
+
 //matriz con posiciones y escalas de palmeras (x,y,z,s1,s2,s3)
 //cada vector interno representa una palmera
 std::vector<std::vector<GLfloat>> coordsPalm= {
@@ -716,7 +726,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/CrashBandicoot.obj");
+	SetCurrentModel("Models/Tori.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -988,7 +998,7 @@ int main()
 			//Piso 
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(2.0f, 1.0f, 2.0f));
+			//model = glm::scale(model, glm::vec3(2.0f, 1.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			piso.RenderModel();
 
@@ -1020,6 +1030,17 @@ int main()
 			model = glm::translate(model, glm::vec3(1142.11, 0.00, 1.83));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			tori.RenderModel();
+
+			//ciclo for para las toris
+			for (std::vector <GLfloat> v : coordsToris) {
+				model = glm::mat4(1.0);
+				model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+				model = glm::rotate(model, glm::radians(v[3]), glm::vec3(0.0, 1.0, 0.0));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				tori.RenderModel();
+
+			}
+			
 
 			//antorchas
 			aux = 0;
