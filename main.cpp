@@ -763,6 +763,8 @@ int main()
 	cajas_nitro.LoadModel("Models/Caja_Nitro.obj");
 	cajas_tnt = Model();
 	cajas_tnt.LoadModel("Models/Caja_TNT.obj");
+	jumping = Model();
+	jumping.LoadModel("Models/jumping.obj");
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
@@ -1217,7 +1219,6 @@ int main()
 			for (std::vector <GLfloat> v : coordsJumping) {
 				model = glm::mat4(1.0);
 				model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
-				model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 				jumping.RenderModel();
 			}
