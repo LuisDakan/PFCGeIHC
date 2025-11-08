@@ -20,6 +20,7 @@ Pr�ctica 7: Iluminaci�n 1
 //para probar el importer
 //#include<assimp/Importer.hpp>
 #include "animations.h"
+#include "KeyframeAnimation.h"
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader_light.h"
@@ -82,7 +83,8 @@ Model TNT,tapa;
 Model opaopa;
 Model bell;
 Model ring_bell,palanca,soporte_bell;
-
+Model Reloj_Minuto,Reloj_Hora,Reloj_Crash;
+//Model clock;
 std::map<std::string,Model> ace;
 // Variables globales para comunicación de eventos
 // (Eliminadas duplicadas)
@@ -647,6 +649,20 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
+	bell = Model();
+	bell.LoadModel("Models/Bell.obj");
+	soporte_bell = Model();
+	soporte_bell.LoadModel("Models/Boxing_Bell_soporte.obj");
+	palanca = Model();
+	palanca.LoadModel("Models/Boxing_Bell_palanca.obj");
+	ring_bell = Model();
+	ring_bell.LoadModel("Models/Boxing_Bell.obj");
+	Reloj_Crash = Model();
+	Reloj_Crash.LoadModel("Models/reloj_crash.obj");
+	Reloj_Minuto = Model();
+	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
+	Reloj_Hora = Model();
+	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
 	/*torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -1075,6 +1091,81 @@ int main()
 		// Actualizar el ciclo de caminata
 		UpdateWalkCycle();
 		
+		// ========== Renderizado con animación por keyframes (Bell) ==========
+		KeyframeAnimation* bellAnim = g_AnimationManager.GetAnimation("Bell");
+		if(bellAnim && bellAnim->IsPlaying()){
+		   glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
+			float rotateZ = bellAnim->GetValue1();
+			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			bell.RenderModel();
+		}
+		bellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
+		if(bellAnim && bellAnim->IsPlaying()){
+		   glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
+			float posCampana_z = bellAnim->GetValue1();
+			float rotCampana_x = bellAnim->GetValue2();
+			float rotPalanca_x = bellAnim->GetValue3();
+			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
+				
+			modelaux = model;
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			soporte_bell.RenderModel();
+
+			// Campana - Traslación en Z y Rotación en X (balanceo)
+			model = modelaux;
+		
+			model = glm::translate(model, glm::vec3(0.0f,3.5f, posCampana_z));
+			model = glm::rotate(model, rotCampana_x * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			ring_bell.RenderModel();
+			
+			// Palanca - Rotación en X solamente
+			model = modelaux; 
+			model = glm::translate(model, glm::vec3(-0.65f, 2.56f, 0.0f));
+			model = glm::rotate(model, rotPalanca_x * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			palanca.RenderModel();
+
+			
+		}
+
+		bellAnim = g_AnimationManager.GetAnimation("Reloj");
+		if(bellAnim && bellAnim->IsPlaying()){
+		   glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 10.0f));
+			float manecilla_hora = bellAnim->GetValue1();
+			float manecilla_minuto = bellAnim->GetValue2();
+			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(5.0f, 0.0f, -4.0f));
+			model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+			modelaux = model;
+			//model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Reloj_Crash.RenderModel();
+
+			model = modelaux;
+			model = glm::translate(model, glm::vec3(0.366549f, 0.751359f, -0.037627f));
+			model = glm::rotate(model, manecilla_hora * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Reloj_Hora.RenderModel();
+
+			model = modelaux;
+			model = glm::translate(model, glm::vec3(0.362738, 0.775956, -0.021455f));
+			model = glm::rotate(model, manecilla_minuto * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Reloj_Minuto.RenderModel();
+			
+
+			
+		}
+
+		// (El else se eliminó para permitir loop infinito)
+
 		// Posición base del personaje
 		glm::vec3 acePosition(-150.0f, 32.4f, 0.0f);
 		

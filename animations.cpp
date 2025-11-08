@@ -2,7 +2,7 @@
 
 #include <glew.h>
 #include <glfw3.h>
-
+#include "KeyframeAnimation.h"
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
@@ -559,18 +559,37 @@ void InitKeyframeAnimations()
 {
     printf("\n=== Inicializando animaciones por keyframes ===\n");
     
-    // Cargar animación de Ace (ejemplo)
-    // Ajusta los nombres de archivo según tus archivos .txt
-    g_AnimationManager.AddAnimation("Ace", "keyframes_Ace.txt", 100);
+    // Cargar animaciones
+    g_AnimationManager.AddAnimation("Ring_Bell", "keyframes_ring_bell.txt", 100);
+    g_AnimationManager.AddAnimation("Reloj","keyframes_Reloj.txt",100);
+    g_AnimationManager.AddAnimation("Bell","keyframes_bell.txt",100);
     
-    // Aquí puedes agregar más animaciones
-    // g_AnimationManager.AddAnimation("OtroPersonaje", "keyframes_OtroPersonaje.txt", 100);
-    // g_AnimationManager.AddAnimation("Objeto", "keyframes_Objeto.txt", 50);
+    // Configurar animaciones para que se ejecuten en loop automáticamente
+    KeyframeAnimation* ringBellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
+    if (ringBellAnim) {
+        ringBellAnim->SetLooping(true);
+        ringBellAnim->Play();
+        printf("Ring_Bell: Loop activado y reproduciendo\n");
+    }
+    
+    KeyframeAnimation* relojAnim = g_AnimationManager.GetAnimation("Reloj");
+    if (relojAnim) {
+        relojAnim->SetLooping(true);
+        relojAnim->Play();
+        printf("Reloj: Loop activado y reproduciendo\n");
+    }
+    
+    KeyframeAnimation* bellAnim = g_AnimationManager.GetAnimation("Bell");
+    if (bellAnim) {
+        bellAnim->SetLooping(true);
+        bellAnim->Play();
+        printf("Bell: Loop activado y reproduciendo\n");
+    }
     
     // Listar animaciones cargadas
     g_AnimationManager.ListAnimations();
     
-    printf("=== Animaciones inicializadas ===\n\n");
+    printf("=== Animaciones inicializadas y en loop ===\n\n");
 }
 
 void UpdateKeyframeAnimations()
