@@ -223,6 +223,16 @@ std::vector<std::vector<GLfloat>> coordsPalm= {
 
 };
 
+//toris
+std::vector<std::vector<GLfloat>> coordsToris = {
+	{1142.11, 0.00, 1.83, 0.00}
+	{ -1143.86,0.00,3.86,180.00},
+	{ 0.85,0.00,790.04,90.00},
+	{ 4.98,0.00,-776.96,90.00}
+
+
+};
+
 //matriz con posiciones de palmeras de tres troncos (x,y,z)
 std::vector<std::vector<GLfloat>> coordsPalmtres = {
 	{ -559.54,0.00,-653.03},
@@ -1034,11 +1044,15 @@ int main()
 		model = AnimationShip(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		barco.RenderModel();
-
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(1142.11, 0.00, 1.83));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		tori.RenderModel();
+		//ciclo for para las toris
+		for (std::vector <GLfloat> v : coordsToris) {
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+			model = glm::rotate(model, glm::radians(v[3]), glm::vec3(0.0, 1.0, 0.0));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			tori.RenderModel();
+		
+		}
 
 		aux = 0;
 		for (const auto& coor : coordTorch) {
