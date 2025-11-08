@@ -1,5 +1,24 @@
+
 #include "Window.h"
+#include "animations.h"
+
 #include <algorithm>
+#include <glew.h>
+#include <glfw3.h>
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
+
+
+// Variables globales para comunicación de eventos
+extern bool g_addModelRequest;
+extern glm::vec3 g_pendingModelPos;
+extern bool g_removeModelRequest;
+extern glm::vec3 g_removeModelPos;
+extern glm::mat4 projection;
+extern int roundCounter;  // Contador de rounds
+extern int maskRotation;  // Rotación de texturas de máscaras
+
 
 Window::Window()
 {
@@ -43,6 +62,7 @@ int Window::Initialise()
 	articulacion8 = 0.0f;
 	articulacion9 = 0.0f;
 	articulacion10 = 0.0f;
+
 	//Asignando variables de GLFW y propiedades de ventana
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -115,77 +135,95 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 {
 	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-	if (key == GLFW_KEY_Y)
-	{
-		theWindow-> muevex -= 1.0;
-		theWindow->front = true;
-	}
-	if (key == GLFW_KEY_U)
-	{
-		theWindow-> muevex += 1.0;
-		theWindow->front = false;
-	}
-	if (key == GLFW_KEY_F)
-	{
-		theWindow->articulacion1 += 9.0f;
-		//printf("Valor:%f\n", theWindow->articulacion1);
-	}
-
-	if (key == GLFW_KEY_G)
-	{
-		theWindow->articulacion1 -= 9.0f;
-		//printf("Valor:%f\n", theWindow->articulacion1);
-	}
-	if (key == GLFW_KEY_H)
-	{
-
-		theWindow->articulacion2 += 9.0;
-	}
-	if (key == GLFW_KEY_J)
-	{
-
-		theWindow->articulacion2 -= 9.0;
-	}
-	if (key == GLFW_KEY_K)
-	{
-
-		theWindow->articulacion3 += 9.0;
-	}
-	if (key == GLFW_KEY_L)
-	{
-		theWindow->articulacion3 -= 10.0;
-	}
-	if (key == GLFW_KEY_Z) {
-		theWindow->articulacion4 += 9.0;
-	}
-	if (key == GLFW_KEY_X) {
-		theWindow->articulacion4 -= 9.0;
-	}
-	if (key == GLFW_KEY_C) {
-		theWindow->articulacion5 += 9.0;
-		theWindow->articulacion5 = std::min(theWindow->articulacion5, 45.0f);
-	}
-	if (key == GLFW_KEY_V) {
-		theWindow->articulacion5 -= 9.0;
-		theWindow->articulacion5 = std::max(theWindow->articulacion5, 0.0f);
-	}
-
-	if (key == GLFW_KEY_B && action == GLFW_RELEASE) {
-		theWindow->antorch = !theWindow->antorch;
-	}
-
-	if (key == GLFW_KEY_N && action == GLFW_RELEASE) {
-		theWindow->raygun = !theWindow->raygun;
-	}
-
-	if (key == GLFW_KEY_M && action == GLFW_RELEASE) {
-		theWindow->isOn=!theWindow->isOn;
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    	glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 	
+	if (key == GLFW_KEY_1)
+	{
+		theWindow->articulacion1 += 0.1f;
+		printf("art1:%f\n", theWindow->articulacion1);
+	}
+
+	if (key == GLFW_KEY_2)
+	{
+		theWindow->articulacion1 -= 0.1f;
+		printf("art1:%f\n", theWindow->articulacion1);
+	}
+	if (key == GLFW_KEY_3)
+	{
+
+		theWindow->articulacion2 += 0.1;
+		printf("art2:%f\n", theWindow->articulacion2);
+	}
+	if (key == GLFW_KEY_4)
+	{
+
+		theWindow->articulacion2 -= 0.1;
+		printf("art2:%f\n", theWindow->articulacion2);
+	}
+	if (key == GLFW_KEY_5)
+	{
+		printf("art3:%f\n", theWindow->articulacion3);
+		theWindow->articulacion3 += 0.1;
+	}
+	if (key == GLFW_KEY_6)
+	{
+		printf("art3:%f\n", theWindow->articulacion3);
+		theWindow->articulacion3 -= 0.1;
+	}
+	if (key == GLFW_KEY_Z) {
+		theWindow->articulacion4 += 1.0;
+	}
+	if (key == GLFW_KEY_X) {
+		theWindow->articulacion4 -= 1.0;
+	}
+	
+	
+	// Control del contador de rounds (tecla Q para incrementar)
+	if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
+		printf("Presionado\n");
+		roundCounter=(roundCounter+1)%15;
+	}
+	
+	// Tecla W para rotar texturas de máscaras en las paredes del ring
+	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		maskRotation = (maskRotation + 1) % 4;  // Ciclar entre 0-3
+		printf("Rotacion de mascaras: %d\n", maskRotation);
+	}
+
+	if (key == GLFW_KEY_T && action == GLFW_RELEASE) {
+		StartTNTAnimation();
+	}
+
+	if (key == GLFW_KEY_G && action == GLFW_RELEASE) {
+		ToggleWalking();
+	}
+
+	// ========== Control de Animaciones por Keyframes ==========
+	// Tecla 1: Play/Pause animación "Ace"
+	if (key == GLFW_KEY_1 && action == GLFW_RELEASE) {
+		KeyframeAnimation* anim = g_AnimationManager.GetAnimation("Ace");
+		if (anim) {
+			if (anim->IsPlaying()) {
+				g_AnimationManager.PauseAnimation("Ace");
+			} else {
+				g_AnimationManager.PlayAnimation("Ace");
+			}
+		}
+	}
+
+	// Tecla 2: Stop/Reset animación "Ace"
+	if (key == GLFW_KEY_2 && action == GLFW_RELEASE) {
+		g_AnimationManager.StopAnimation("Ace");
+	}
+
+	// Puedes agregar más controles para otras animaciones:
+	// Tecla 3: Play animación "OtroPersonaje"
+	// if (key == GLFW_KEY_3 && action == GLFW_RELEASE) {
+	//     g_AnimationManager.PlayAnimation("OtroPersonaje");
+	// }
+	// ========================================================
 
 	if (key >= 0 && key < 1024)
 	{
@@ -218,7 +256,11 @@ void Window::ManejaMouse(GLFWwindow* window, double xPos, double yPos)
 
 	theWindow->lastX = xPos;
 	theWindow->lastY = yPos;
+	// Guardar posición global del mouse
+	theWindow->lastMouseX = xPos;
+	theWindow->lastMouseY = yPos;
 }
+
 
 
 Window::~Window()
