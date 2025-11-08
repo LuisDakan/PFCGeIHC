@@ -649,7 +649,7 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
-	bell = Model();
+	/*bell = Model();
 	bell.LoadModel("Models/Bell.obj");
 	soporte_bell = Model();
 	soporte_bell.LoadModel("Models/Boxing_Bell_soporte.obj");
@@ -662,14 +662,14 @@ int main()
 	Reloj_Minuto = Model();
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
-	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
+	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");*/
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
 	torchCrash.LoadModel("Models/antorcha_crash.obj");
 	torchSonic = Model();
 	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
-	palmera_doble = Model();
+	/*palmera_doble = Model();
 	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 	torchModel = Model();
 	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
@@ -706,7 +706,7 @@ int main()
 	for(std::string s:ModelAce){
 		ace[s] = Model();
 		ace[s].LoadModel("Models/Principal/"+s+".obj");
-	}
+	}*/
 
 		//Cycle day
 
@@ -910,7 +910,7 @@ int main()
 			case 0:
 				break;
 			case 1:
-				model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
+				model = glm::translate(model, glm::vec3(0.0f, 2.5f, 0.0f));
 				break;
 			case 2:
 				break;
@@ -932,7 +932,7 @@ int main()
 		}
 
 		//ciclo for para palmeras dobles
-		for (std::vector <GLfloat> v : coordsPalm) {
+		/*for (std::vector <GLfloat> v : coordsPalm) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1]+7.0, v[2]));
 			model = glm::scale(model, glm::vec3(v[3], v[4], v[5]));
@@ -980,10 +980,10 @@ int main()
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
-		}
+		}*/
 
 		//ring
-		model = glm::mat4(1.0);
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ring.RenderModel();
@@ -1014,12 +1014,12 @@ int main()
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla_juzgado.RenderModel();
+		silla_juzgado.RenderModel();*/
 
 
 		glDisable(GL_BLEND);
 
-		model = glm::mat4(1.0);
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(248.0f, 0.0f, 31.0f));
 		model = AnimationTNT(model);  // Aplicar tambaleo
 		modelaux = model;
@@ -1393,7 +1393,7 @@ int main()
 
 		offset = glm::vec2(0.0f,0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-		
+		*/
 		
 		glUseProgram(0);
 
