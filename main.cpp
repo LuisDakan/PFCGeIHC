@@ -93,6 +93,8 @@ Texture explosion;
 //materiales
 Material Material_brillante;
 Material Material_opaco;
+//material del personaje
+Material Material_personaje;
 
 //posiciones de antorchas
 std::vector<std::vector<float>> coordTorch = {
@@ -669,7 +671,7 @@ int main()
 	torchCrash.LoadModel("Models/antorcha_crash.obj");
 	torchSonic = Model();
 	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
-	/*palmera_doble = Model();
+	palmera_doble = Model();
 	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
 	torchModel = Model();
 	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
@@ -706,7 +708,7 @@ int main()
 	for(std::string s:ModelAce){
 		ace[s] = Model();
 		ace[s].LoadModel("Models/Principal/"+s+".obj");
-	}*/
+	}
 
 		//Cycle day
 
@@ -734,6 +736,7 @@ int main()
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
+	Material_personaje = Material(0.2f, 14);
 	mascaras = Texture("Textures/Masks.png"); mascaras.LoadTextureA();
 	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
 	explosion = Texture("Textures/Explosion.png"); explosion.LoadTextureA();
@@ -932,7 +935,7 @@ int main()
 		}
 
 		//ciclo for para palmeras dobles
-		/*for (std::vector <GLfloat> v : coordsPalm) {
+		for (std::vector <GLfloat> v : coordsPalm) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1]+7.0, v[2]));
 			model = glm::scale(model, glm::vec3(v[3], v[4], v[5]));
@@ -980,10 +983,10 @@ int main()
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
-		}*/
+		}
 
 		//ring
-		/*model = glm::mat4(1.0);
+		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ring.RenderModel();
@@ -1014,12 +1017,12 @@ int main()
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla_juzgado.RenderModel();*/
+		silla_juzgado.RenderModel();
 
 
 		glDisable(GL_BLEND);
 
-		/*model = glm::mat4(1.0);
+		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(248.0f, 0.0f, 31.0f));
 		model = AnimationTNT(model);  // Aplicar tambaleo
 		modelaux = model;
@@ -1175,6 +1178,7 @@ int main()
 		model = glm::scale(model,glm::vec3(0.3f,0.3f,0.3f));
 		model = AnimateBody(model);
 		glm::mat4 bodyModel = model; // Guardar la transformación del cuerpo
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["CuerpoAce"].RenderModel();
 		
@@ -1183,11 +1187,13 @@ int main()
 		model = glm::translate(model, glm::vec3(-7.9714f,20.5293f,-1.55739f));
 		model = AnimateRightShoulder(model);
 		glm::mat4 rightShoulderModel = model;
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["HombroDerechoAce"].RenderModel();
 		
 		model = AnimateRightArm(rightShoulderModel);
 		model = glm::translate(model,glm::vec3(1.15075f,1.2403f,0.13481f));
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["BrazoDerechoAce"].RenderModel();
 		
@@ -1196,11 +1202,13 @@ int main()
 		model = glm::translate(model, glm::vec3(7.624f,20.6028f,-1.58114f));
 		model = AnimateLeftShoulder(model);
 		glm::mat4 leftShoulderModel = model;
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["HombroIzquierdoAce"].RenderModel();
 		
 		model = AnimateLeftArm(leftShoulderModel);
 		model = glm::translate(model,glm::vec3(-0.47100118f,1.2567f,0.28935f));
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["BrazoIzquierdoAce"].RenderModel();
 		
@@ -1209,12 +1217,14 @@ int main()
 		model = glm::translate(model,glm::vec3(0.0f, 0.1138f, 0.0f));
 		model = AnimateRightThigh(model);
 		glm::mat4 rightThighModel = model;
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["MusloDerechoAce"].RenderModel();
 		
 		model = rightThighModel;
 		model = glm::translate(model,glm::vec3(-3.35244f,-13.1455f,-0.441f));
 		model = AnimateRightLeg(model);
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["PiernaDerechaAce"].RenderModel();
 		
@@ -1223,12 +1233,14 @@ int main()
 		model = glm::translate(model,glm::vec3(0.0f,0.1138f,0.0f));
 		model = AnimateLeftThigh(model);
 		glm::mat4 leftThighModel = model;
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["MusloIzquierdoAce"].RenderModel();
 		
 		model = leftThighModel;
 		model = glm::translate(model,glm::vec3(3.35244f,-13.1455f,-0.441f));
 		model = AnimateLeftLeg(model);
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["PiernaIzquierdaAce"].RenderModel();
 		// ========== Fin animación jerárquica de caminata ==========
@@ -1393,7 +1405,7 @@ int main()
 
 		offset = glm::vec2(0.0f,0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
-		*/
+		
 		
 		glUseProgram(0);
 
