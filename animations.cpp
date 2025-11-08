@@ -8,6 +8,7 @@
 #include <gtc\type_ptr.hpp>
 
 #include "Model.h"
+#include "KeyframeAnimation.h"
 
 const float A = 300.0f;
 const float B = 200.0f;
