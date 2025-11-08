@@ -663,7 +663,7 @@ int main()
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
 	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
-	/*torchAce = Model();
+	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
 	torchCrash.LoadModel("Models/antorcha_crash.obj");
@@ -700,7 +700,7 @@ int main()
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
 	opaopa = Model();
-	opaopa.LoadModel("Models/Opa-Opa.obj");*/
+	opaopa.LoadModel("Models/Opa-Opa.obj");
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
 	"MusloDerechoAce","MusloIzquierdoAce","PiernaDerechaAce","PiernaIzquierdaAce"};
 	for(std::string s:ModelAce){
@@ -901,7 +901,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tori.RenderModel();
 
-		/*aux = 0;
+		aux = 0;
 		for (const auto& coor : coordTorch) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(coor[0], coor[1], coor[2]*2.0f/1.5f));
@@ -1085,7 +1085,7 @@ int main()
 		model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -50.0f));
 		model = AnimationOpa(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		opaopa.RenderModel();*/
+		opaopa.RenderModel();
 
 		// ========== Animación jerárquica de caminata (Ace) ==========
 		// Actualizar el ciclo de caminata
@@ -1321,7 +1321,7 @@ int main()
 		
 		
 
-		/*model = glm::mat4(1.0);
+		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		modelaux=model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1392,7 +1392,7 @@ int main()
 		meshList[4]->RenderMesh();
 
 		offset = glm::vec2(0.0f,0.0f);
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));*/
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 		
 		
 		glUseProgram(0);
