@@ -49,6 +49,8 @@ glm::mat4 projection = glm::mat4(1.0f);
 
 //ciclo 
 bool day = true;
+float lastGemRotationTime = 0.0f;
+float gemRotationInterval = 3.0f;
 // Variable para contador de rounds (0 a 14)
 int roundCounter = 0,firstDigit,secondDigit;
 
@@ -95,6 +97,7 @@ Model opaopa;
 Model bell;
 //Personajes
 Model akuaku, ukauka, mayafey,  edgeworth, alexkid, dbjoe, crash;
+Model gemaAzul, gemaRoja, gemaPurpura, gemaAmarilla;
 Model ring_bell,palanca,soporte_bell;
 Model Reloj_Minuto,Reloj_Hora,Reloj_Crash;
 //Model clock;
@@ -762,6 +765,14 @@ int main()
 	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	casa_aku_aku = Model();
 	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
+	gemaAzul = Model();
+	gemaAzul.LoadModel("Models/GemaAzul.obj");
+	gemaRoja = Model();
+	gemaRoja.LoadModel("Models/GemaRojo.obj");
+	gemaPurpura = Model();
+	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
+	gemaAmarilla = Model();
+	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
 	//personajes
 	akuaku = Model();	
 	akuaku.LoadModel("Models/Aku-Aku.obj");
@@ -1284,6 +1295,42 @@ spotLights[3] = SpotLight(
 		model = glm::translate(model, glm::vec3(640.59, 0.00, 456.90));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		casa_aku_aku.RenderModel();
+		// Rotar posiciones de las gemas
+		if (now - lastGemRotationTime > gemRotationInterval) {
+			lastGemRotationTime = now;
+
+			// Rotar las posiciones
+			glm::vec3 temp = gemPositions[3];
+			gemPositions[3] = gemPositions[2];
+			gemPositions[2] = gemPositions[1];
+			gemPositions[1] = gemPositions[0];
+			gemPositions[0] = temp;
+		}
+
+		// Renderizar cada gema en su posición
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[0]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaAzul.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[1]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaRoja.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[2]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaPurpura.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, gemPositions[3]);
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		gemaAmarilla.RenderModel();
 
 				//Personajes
 		//Universo Crash
