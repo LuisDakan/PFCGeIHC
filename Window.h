@@ -32,6 +32,8 @@ public:
 	GLfloat getarticulacion10() { return articulacion10; }
 	bool AntorchOn() { return antorch; }
 	bool RayGunOn() { return raygun; }
+	bool prendido() { return prenderspot; }
+	bool apagado() { return apagadospot; }
 
 	GLfloat forward() { return front; }
 	~Window();
@@ -56,6 +58,8 @@ private:
 	GLfloat yChange;
 	GLfloat muevex;
 	bool mouseFirstMoved;
+	bool prenderspot;
+	bool apagadospot;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);
 
