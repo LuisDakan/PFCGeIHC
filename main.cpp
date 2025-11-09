@@ -225,7 +225,7 @@ std::vector<std::vector<GLfloat>> coordsPalm= {
 
 //toris
 std::vector<std::vector<GLfloat>> coordsToris = {
-	{1142.11, 0.00, 1.83, 0.00}
+	{1142.11, 0.00, 1.83, 0.00},
 	{ -1143.86,0.00,3.86,180.00},
 	{ 0.85,0.00,790.04,90.00},
 	{ 4.98,0.00,-776.96,90.00}
@@ -1035,7 +1035,7 @@ int main()
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 1.0f, 2.0f));
+		//model = glm::scale(model, glm::vec3(2.0f, 1.0f, 2.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piso.RenderModel();
 
@@ -1044,6 +1044,7 @@ int main()
 		model = AnimationShip(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		barco.RenderModel();
+
 		//ciclo for para las toris
 		for (std::vector <GLfloat> v : coordsToris) {
 			model = glm::mat4(1.0);
@@ -1163,12 +1164,12 @@ int main()
 		//baños
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-121.24, 0.00, 271.83));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		baño.RenderModel();
 		
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-117.98, 0.00, -264.41));
-		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		baño.RenderModel();
 
@@ -1492,12 +1493,12 @@ int main()
 		// (El else se eliminó para permitir loop infinito)
 
 		// Posición base del personaje
-		glm::vec3 acePosition(-150.0f, 32.4f, 0.0f);
+		glm::vec3 acePosition(-150.0f, 18.0f/*32.4f*/, 0.0f);
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 		model = glm::mat4(1.0);
 		model = glm::translate(model, acePosition);
-		model = glm::scale(model,glm::vec3(0.3f,0.3f,0.3f));
+		model = glm::scale(model,glm::vec3(0.6f,0.6f,0.6f));
 		model = AnimateBody(model);
 		glm::mat4 bodyModel = model; // Guardar la transformación del cuerpo
 		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
