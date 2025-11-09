@@ -1,6 +1,6 @@
 
 /*
-Pr�ctica 7: Iluminaci�n 1 
+Proyecto Final
 */
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
