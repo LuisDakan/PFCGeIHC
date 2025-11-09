@@ -50,6 +50,8 @@ Material Material_brillante;
 Material Material_opaco;
 
 bool day=true;
+float sunAngle = 0.0f;
+float sunSpeed = 0.5f;
 
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
@@ -342,6 +344,49 @@ void setDay(std::vector<std::string> skyboxDay){
 	);
 }
 
+float dirX;
+float dirY;
+float dirZ;
+
+/*void updateSunlight(float deltaTime, std::vector<std::string> skyboxDay, std::vector<std::string> skyboxNight) {
+	// Incrementar el ángulo del sol
+	sunAngle += sunSpeed * deltaTime;
+
+	// Convertir a radianes
+	float angleRad = sunAngle * 3.14159f / 180.0f;
+
+	// Calcular dirección del sol (rotación en el eje X)
+	// De (0, 0, -1) a (0, 0, 1)
+	dirX = 0.0f;
+	dirY = sin(angleRad);
+	dirZ = -cos(angleRad);
+
+	glm::vec3 dir = glm::vec3(dirX, dirY, dirZ);
+
+	// Actualizar dirección de la luz
+	mainLight.SetDir(dir);
+	/*
+	// Detectar cuando completa medio ciclo (180 grados)
+	if (sunAngle >= 180.0f && !cycleComplete) {
+		cycleComplete = true;
+		sunAngle = 0.0f; // Reiniciar ángulo
+
+		// Alternar entre día y noche
+		day = !day;
+
+		if (day) {
+			printf("Llego el dia\n");
+			setDay(skyboxDay);
+		}
+		else {
+			printf("Llego la noche\n");
+			setNight(skyboxNight);
+		}
+
+		cycleComplete = false;
+	}
+}*/
+
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
@@ -349,11 +394,11 @@ int main()
 
 	CreateObjects();
 	CreateShaders();
-	
+
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
-	piso=Model();
-	piso.LoadModel("Models/pisot.obj");
+	piso = Model();
+	piso.LoadModel("Models/piso.obj");
 
 
 	//Cycle day
@@ -407,7 +452,7 @@ int main()
 	);
 	points[pointLightCount] = "laser";
 	//pointLightCount++;
-	
+
 	unsigned int spotLightCount = 0;
 	//linterna
 	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
@@ -416,9 +461,9 @@ int main()
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		5.0f);
-	spots[spotLightCount]="linterna";
+	spots[spotLightCount] = "linterna";
 	spotLightCount++;
-	
+
 	//luz cofre
 	spotLights[1] = SpotLight(0.0f, 1.0f, 0.0f,
 		1.0f, 2.0f,
@@ -438,7 +483,7 @@ int main()
 		15.0f);
 	spots[spotLightCount] = "faroDelantero";
 	spotLightCount++;
-	
+
 
 	//faro trasero
 	spotLights[3] = SpotLight(0.0f, 0.0f, 1.0f,
@@ -451,10 +496,15 @@ int main()
 	spotLightCount++;
 
 
+
+
+
+
+
 	int idx;
 	//se crean mas luces puntuales y spotlight 
 	float lastSwitchTime = 0.0f;
-	float switchInterval = 5.0f;
+	float switchInterval = 30.0f;
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
@@ -469,18 +519,24 @@ int main()
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
 
-		if (now - lastSwitchTime > switchInterval) {
-			day = !day;
-			lastSwitchTime = now;
-			if (day) {
-				printf("Llego el dia\n");
-				setDay(skyboxDay);
-			}
-			else {
-				printf("Llego la noche\n");
-				setNight(skyboxNight);
+		// Actualizar ciclo día/noche
+		//updateSunlight(deltaTime, skyboxDay, skyboxNight);	
+		// Cambiar skybox según posición del sol
+		/*if (sunAngle >= 0.0f && sunAngle < 180.0f) {
+			// Día (sol arriba)
+			if (!day) {
+				day = true;
+				skybox = Skybox(skyboxDay);
 			}
 		}
+		else {
+			// Noche (sol abajo)  
+			if (day) {
+				day = false;
+				skybox = Skybox(skyboxNight);
+			}
+		}*/
+
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
