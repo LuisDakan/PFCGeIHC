@@ -20,16 +20,7 @@ public:
 	}
 	bool* getsKeys() { return keys; }
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
-	GLfloat getarticulacion1() { return articulacion1; }
-	GLfloat getarticulacion2() { return articulacion2; }
-	GLfloat getarticulacion3() { return articulacion3; }
-	GLfloat getarticulacion4() { return articulacion4; }
-	GLfloat getarticulacion5() { return articulacion5; }
-	GLfloat getarticulacion6() { return articulacion6; }
-	GLfloat getarticulacion7() { return articulacion7; }
-	GLfloat getarticulacion8() { return articulacion8; }
-	GLfloat getarticulacion9() { return articulacion9; }
-	GLfloat getarticulacion10() { return articulacion10; }
+	bool prendido() { return prenderspot; }
 	bool AntorchOn() { return antorch; }
 	bool RayGunOn() { return raygun; }
 
@@ -55,6 +46,7 @@ private:
 	GLfloat xChange;
 	GLfloat yChange;
 	GLfloat muevex;
+	bool prenderspot;
 	bool mouseFirstMoved;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);
