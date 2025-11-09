@@ -17,7 +17,8 @@ public:
 
 	~PointLight();
 
-	void SetPos(glm::vec3 pos);
+		void SetPos(glm::vec3 pos);
+		glm::vec3 GetPosition() const;
 
 protected:
 	glm::vec3 position;

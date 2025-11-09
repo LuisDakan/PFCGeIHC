@@ -17,6 +17,7 @@ Pr�ctica 7: Iluminaci�n 1
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
+#include <geometric.hpp>
 //para probar el importer
 //#include<assimp/Importer.hpp>
 #include "animations.h"
@@ -93,7 +94,7 @@ Texture explosion;
 //materiales
 Material Material_brillante;
 Material Material_opaco;
-
+std::vector<PointLight> lights;
 //posiciones de antorchas
 std::vector<std::vector<float>> coordTorch = {
 	{110.53, 0.00, 189.66},
@@ -496,89 +497,6 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
-int searchPoint(std::string id) {
-	for (int i = 0;i < MAX_POINT_LIGHTS;i++) {
-		if (points[i] == id) return i;
-	}
-	printf("NO SE ENCONTRO LA LUZ PointLight\n");
-	return -1;
-}
-
-void turnOffPoint(std::string id, unsigned int& pointLightCount)
-{
-	if (pointLightCount <= 0) {
-		return;
-	}
-	int idx=-1;
-	for(int i=0;i<pointLightCount;i++){
-		if(points[i]==id){
-			idx=i;
-			break;
-		}
-	}
-	if (idx == -1) return;
-	std::swap(pointLights[idx], pointLights[--pointLightCount]);
-	std::swap(points[idx], points[pointLightCount]);
-
-}
-
-void turnOnPoint(std::string id, unsigned int& pointLightCount) {
-	if (pointLightCount >= MAX_POINT_LIGHTS) {
-		return;
-	}
-	int idx =-1;
-	for(int i=pointLightCount;i<MAX_POINT_LIGHTS;i++){
-		if(points[i]==id){
-			idx=i;
-			break;
-		}
-	}
-	if (idx == -1) return;
-	std::swap(pointLights[idx], pointLights[pointLightCount]);
-	std::swap(points[idx], points[pointLightCount]);
-	pointLightCount++;
-}
-
-int searchSpot(std::string id) {
-	for (int i = 0;i < MAX_SPOT_LIGHTS;i++) {
-		if (spots[i] == id) return i;
-	}
-	printf("NO SE ENCONTRO LA LUZ SpotLight\n");
-	return -1;
-}
-
-void turnOffSpot(std::string id, unsigned int& spotLightCount) {
-    if (spotLightCount <= 0) {
-		return;
-	}
-	int idx=-1;
-	for(int i=0;i<spotLightCount;i++){
-		if(spots[i]==id){
-			idx=i;
-			break;
-		}
-	}
-	if (idx == -1) return;
-	std::swap(spotLights[idx], spotLights[--spotLightCount]);
-	std::swap(spots[idx], spots[spotLightCount]);
-}
-
-void turnOnSpot(std::string id, unsigned int& spotLightCount) {
-    if (spotLightCount >= MAX_SPOT_LIGHTS) {
-		return;
-	}
-	int idx =-1;
-	for(int i=spotLightCount;i<MAX_SPOT_LIGHTS;i++){
-		if(spots[i]==id){
-			idx=i;
-			break;
-		}
-	}
-	if (idx == -1) return;
-	std::swap(spotLights[idx], spotLights[spotLightCount]);
-	std::swap(spots[idx], spots[spotLightCount]);
-	spotLightCount++;
-}
 
 //funciones para el ciclo de día
 void setNight(std::vector<std::string> skyboxNight)
@@ -637,6 +555,17 @@ int main()
 	CreateMeshNumber();
 	CreateRingWalls();
 	
+
+	for(std::vector<float> v:coordTorch)
+	{
+		lights.push_back(
+			PointLight(1.0f, 1.0f, 0.0f,
+			0.0f, 1.0f,
+			v[0], v[1]+4.0, v[2],
+			0.01f, 0.01f, 0.001f)
+		);
+	}
+
 	// Inicializar sistema de animaciones por keyframes
 	InitKeyframeAnimations();
 	
@@ -742,65 +671,8 @@ int main()
 		0.3f, 0.3f,
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
-	unsigned int pointLightCount = 0;
-	//Lampara
-	pointLights[0] = PointLight(1.0f, 1.0f, 0.0f,
-		0.0f, 1.0f,
-		-6.0f, 1.5f, 1.5f,
-		0.1f, 0.01f, 0.01f);
-	points[pointLightCount] = "antorcha";
-	pointLightCount++;
-	//Laser
-	pointLights[1] = PointLight(1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f,
-		0.0f, 0.0f, 0.0f,
-		0.3f, 0.02f, 0.02f
-	);
-	points[pointLightCount] = "laser";
-	//pointLightCount++;
 	
-	unsigned int spotLightCount = 0;
-	//linterna
-	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		5.0f);
-	spots[spotLightCount]="linterna";
-	spotLightCount++;
 	
-	//luz cofre
-	spotLights[1] = SpotLight(0.0f, 1.0f, 0.0f,
-		1.0f, 2.0f,
-		5.0f, 10.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.05f, 0.05f,
-		15.0f);
-	spots[spotLightCount] = "linternaCofre";
-	spotLightCount++;
-
-	//faro delantero
-	spotLights[2] = SpotLight(0.0f, 0.0f, 1.0f,
-		1.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		0.4f, 0.01f, 0.01f,
-		15.0f);
-	spots[spotLightCount] = "faroDelantero";
-	spotLightCount++;
-	
-
-	//faro trasero
-	spotLights[3] = SpotLight(0.0f, 0.0f, 1.0f,
-		1.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		0.4f, 0.01f, 0.01f,
-		15.0f);
-	spots[spotLightCount] = "faroTrasero";
-	spotLightCount++;
-
 	glm::vec2 offset;
 	int idx,aux;
 	//variables para el ciclo de dia y noche
@@ -816,16 +688,34 @@ int main()
 	GLuint uniformColor = 0;
 	glm::vec3 p;
 	glm::vec4 rot;
-		projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
+	
+	// Variables del loop principal declaradas fuera para optimización
+	GLfloat now;
+	glm::mat4 view;
+	glm::vec3 camPos, lowerLight;
+	float da, db;
+	int l;
+	glm::vec3 explosionOffset, explosionWorldPos, toCamera, up_billboard, right_billboard;
+	glm::mat4 billboardRotation;
+	glm::vec3 savedPosition;
+	float currentScale;
+	float rotateZ, posCampana_z, rotCampana_x, rotPalanca_x;
+	float manecilla_hora, manecilla_minuto;
+	glm::vec3 acePosition;
+	glm::mat4 bodyModel, rightShoulderModel, leftShoulderModel;
+	glm::mat4 rightThighModel, leftThighModel;
+	KeyframeAnimation* bellAnim;
+	int pointLightCount,spotLightCount=0;
+	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose()){
 
 	
-		GLfloat now = glfwGetTime();
+		now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
-
+		
 		if (now - lastSwitchTime > switchInterval) {
 				day = !day;
 				lastSwitchTime = now;
@@ -864,23 +754,48 @@ int main()
 		uniformShininess = shaderList[0].GetShininessLocation();
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-		glm::mat4 view = camera.calculateViewMatrix();
+		view = camera.calculateViewMatrix();
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(view));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la c�mara de tipo flash
-		//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
-			glm::vec3 lowerLight = camera.getCameraPosition();
+		// Ordenar luces por distancia a la cámara (más cercanas primero)
+		std::sort(lights.begin(), lights.end(),
+		[&](const PointLight& a, const PointLight& b) {
+			camPos = camera.getCameraPosition();
+			da = glm::distance(a.GetPosition(), camPos);
+			db = glm::distance(b.GetPosition(), camPos);
+			return da < db;
+		});
+		
+		// Copiar las 11 luces más cercanas al arreglo pointLights
+		// Solo si están a menos de 300 metros
+		pointLightCount = 0;
+		for(int i = 0; i < lights.size() && pointLightCount < MAX_POINT_LIGHTS; i++){
+			float distanceToCamera = glm::distance(lights[i].GetPosition(), camera.getCameraPosition());
+			if(distanceToCamera < 300.0f){
+				pointLights[pointLightCount] = lights[i];
+				pointLightCount++;
+			} else {
+				// Como están ordenadas, si esta está muy lejos, las siguientes también
+				break;
+			}
+		}
+		
+		// luz ligada a la cámara de tipo flash
+		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
+		lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
-
-		//informaci�n al shader de fuentes de iluminaci�n
+		
+		//información al shader de fuentes de iluminación
 		shaderList[0].SetDirectionalLight(&mainLight);
-
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
+		if(!day)
+			shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 		
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+
+
 
 		//Piso 
 
@@ -1042,32 +957,32 @@ int main()
 			model = modelaux; // modelaux tiene la posición y animación de la TNT
 			
 			// Offset relativo respecto a la TNT (subir 15 unidades en Y)
-			glm::vec3 explosionOffset = glm::vec3(0.0f, 15.0f, 0.0f);
+			explosionOffset = glm::vec3(0.0f, 15.0f, 0.0f);
 			model = glm::translate(model, explosionOffset);
 			
 			// Extraer la posición mundial del billboard para calcular dirección a cámara
-			glm::vec3 explosionWorldPos = glm::vec3(model[3]);
+			explosionWorldPos = glm::vec3(model[3]);
 			
 			// Calcular vectores para orientar el billboard hacia la cámara
-			glm::vec3 toCamera = glm::normalize(camera.getCameraPosition() - explosionWorldPos);
-			glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-			glm::vec3 right = glm::normalize(glm::cross(up, toCamera));
-			up = glm::cross(toCamera, right);
+			toCamera = glm::normalize(camera.getCameraPosition() - explosionWorldPos);
+			up_billboard = glm::vec3(0.0f, 1.0f, 0.0f);
+			right_billboard = glm::normalize(glm::cross(up_billboard, toCamera));
+			up_billboard = glm::cross(toCamera, right_billboard);
 			
 			// Crear matriz de rotación del billboard (mantiene posición jerárquica)
-			glm::mat4 billboardRotation(1.0f);
-			billboardRotation[0] = glm::vec4(right, 0.0f);
-			billboardRotation[1] = glm::vec4(up, 0.0f);
+			billboardRotation = glm::mat4(1.0f);
+			billboardRotation[0] = glm::vec4(right_billboard, 0.0f);
+			billboardRotation[1] = glm::vec4(up_billboard, 0.0f);
 			billboardRotation[2] = glm::vec4(toCamera, 0.0f);
 			
 			// Aplicar rotación billboard (sin perder la posición jerárquica)
-			glm::vec3 savedPosition = glm::vec3(model[3]);
+			savedPosition = glm::vec3(model[3]);
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, savedPosition);
 			model = model * billboardRotation;
 			
 			// Escalar según explosionScale (crece progresivamente con la tapa)
-			float currentScale = 25.0f * explosionScale;
+			currentScale = 25.0f * explosionScale;
 			model = glm::scale(model, glm::vec3(currentScale, currentScale, 1.0f));
 			
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1092,22 +1007,22 @@ int main()
 		UpdateWalkCycle();
 		
 		// ========== Renderizado con animación por keyframes (Bell) ==========
-		KeyframeAnimation* bellAnim = g_AnimationManager.GetAnimation("Bell");
+		bellAnim = g_AnimationManager.GetAnimation("Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
-		   glm::mat4 model = glm::mat4(1.0f);
+		   model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
-			float rotateZ = bellAnim->GetValue1();
+			rotateZ = bellAnim->GetValue1();
 			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bell.RenderModel();
 		}
 		bellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
-		   glm::mat4 model = glm::mat4(1.0f);
+		   model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
-			float posCampana_z = bellAnim->GetValue1();
-			float rotCampana_x = bellAnim->GetValue2();
-			float rotPalanca_x = bellAnim->GetValue3();
+			posCampana_z = bellAnim->GetValue1();
+			rotCampana_x = bellAnim->GetValue2();
+			rotPalanca_x = bellAnim->GetValue3();
 			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 				
 			modelaux = model;
@@ -1134,10 +1049,10 @@ int main()
 
 		bellAnim = g_AnimationManager.GetAnimation("Reloj");
 		if(bellAnim && bellAnim->IsPlaying()){
-		   glm::mat4 model = glm::mat4(1.0f);
+		   model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 10.0f));
-			float manecilla_hora = bellAnim->GetValue1();
-			float manecilla_minuto = bellAnim->GetValue2();
+			manecilla_hora = bellAnim->GetValue1();
+			manecilla_minuto = bellAnim->GetValue2();
 			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			
 			model = glm::mat4(1.0);
@@ -1167,14 +1082,14 @@ int main()
 		// (El else se eliminó para permitir loop infinito)
 
 		// Posición base del personaje
-		glm::vec3 acePosition(-150.0f, 32.4f, 0.0f);
+		acePosition = glm::vec3(-150.0f, 32.4f, 0.0f);
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 		model = glm::mat4(1.0);
 		model = glm::translate(model, acePosition);
 		model = glm::scale(model,glm::vec3(0.3f,0.3f,0.3f));
 		model = AnimateBody(model);
-		glm::mat4 bodyModel = model; // Guardar la transformación del cuerpo
+		bodyModel = model; // Guardar la transformación del cuerpo
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["CuerpoAce"].RenderModel();
 		
@@ -1182,7 +1097,7 @@ int main()
 		model = bodyModel;
 		model = glm::translate(model, glm::vec3(-7.9714f,20.5293f,-1.55739f));
 		model = AnimateRightShoulder(model);
-		glm::mat4 rightShoulderModel = model;
+		rightShoulderModel = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["HombroDerechoAce"].RenderModel();
 		
@@ -1195,7 +1110,7 @@ int main()
 		model = bodyModel;
 		model = glm::translate(model, glm::vec3(7.624f,20.6028f,-1.58114f));
 		model = AnimateLeftShoulder(model);
-		glm::mat4 leftShoulderModel = model;
+		leftShoulderModel = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["HombroIzquierdoAce"].RenderModel();
 		
@@ -1208,7 +1123,7 @@ int main()
 		model = bodyModel;
 		model = glm::translate(model,glm::vec3(0.0f, 0.1138f, 0.0f));
 		model = AnimateRightThigh(model);
-		glm::mat4 rightThighModel = model;
+		rightThighModel = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["MusloDerechoAce"].RenderModel();
 		
@@ -1222,7 +1137,7 @@ int main()
 		model = bodyModel;
 		model = glm::translate(model,glm::vec3(0.0f,0.1138f,0.0f));
 		model = AnimateLeftThigh(model);
-		glm::mat4 leftThighModel = model;
+		leftThighModel = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["MusloIzquierdoAce"].RenderModel();
 		
