@@ -1493,7 +1493,7 @@ int main()
 		// (El else se eliminó para permitir loop infinito)
 
 		// Posición base del personaje
-		glm::vec3 acePosition(-150.0f, 18.0f/*32.4f*/, 0.0f);
+		glm::vec3 acePosition(-150.0f, 19.0f/*32.4f*/, 0.0f);
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 		model = glm::mat4(1.0);
