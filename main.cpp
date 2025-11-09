@@ -440,6 +440,10 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+//para reflectores
+SpotLight spotlighttemp[MAX_SPOT_LIGHTS];
+int s = 0;
+
 
 std::vector<std::string> spots(MAX_SPOT_LIGHTS),points(MAX_POINT_LIGHTS);
 
@@ -821,7 +825,55 @@ int main()
 		0.3f, 0.3f,
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
-	
+	//para los reflectores 
+	glm::vec3 ringPos = glm::vec3(8.55f, 0.0f, -12.67f);
+glm::vec3 reflectorPos1 = glm::vec3(-253.01f, 125.0f, 197.44f); // encima del reflector
+glm::vec3 dir = glm::normalize(ringPos-reflectorPos1);
+
+spotLights[0] = SpotLight(
+	1.0f, 1.0f, 1.0f,          
+	5.0f, 5.0f,                // ambient, diffuse
+	reflectorPos1.x, reflectorPos1.y,  reflectorPos1.z,  // posición
+	dir.x, dir.y, dir.z,       // dirección hacia el ring
+	1.0f, 0.01f, 0.001f,      
+	100.0f                     
+);
+
+glm::vec3 reflectorPos2 = glm::vec3(-234.55, 125.00, -206.86); // encima del reflector
+glm::vec3 dir2 = glm::normalize(ringPos - reflectorPos2);
+
+spotLights[1] = SpotLight(
+	1.0f, 1.0f, 1.0f,          
+	5.0f, 5.0f,                // ambient, diffuse
+	reflectorPos2.x, reflectorPos2.y, reflectorPos2.z,  // posición
+	dir2.x, dir2.y, dir2.z,       // dirección hacia el ring
+	1.0f, 0.01f, 0.001f,       
+	100.0f                      
+);
+glm::vec3 reflectorPos3 = glm::vec3(337.30, 125.00, -143.94); // encima del reflector
+glm::vec3 dir3 = glm::normalize(ringPos - reflectorPos3);
+
+spotLights[2] = SpotLight(
+	1.0f, 1.0f, 1.0f,          
+	5.0f, 5.0f,                // ambient, diffuse
+	reflectorPos3.x, reflectorPos3.y, reflectorPos3.z,  // posición
+	dir3.x, dir3.y, dir3.z,       // dirección hacia el ring
+	1.0f, 0.01f, 0.001f,       
+	100.0f                      
+);
+
+glm::vec3 reflectorPos4= glm::vec3(253.84, 125.00, 203.23); // encima del reflector
+glm::vec3 dir4 = glm::normalize(ringPos - reflectorPos4);
+
+spotLights[3] = SpotLight(
+	1.0f, 1.0f, 1.0f,       
+	5.0f, 5.0f,                // ambient, diffuse
+	reflectorPos4.x, reflectorPos4.y, reflectorPos4.z,  // posición
+	dir4.x, dir4.y, dir4.z,       // dirección hacia el ring
+	1.0f, 0.01f, 0.001f,      
+	100.0f                     
+);
+
 	
 	glm::vec2 offset;
 	int idx,aux;
@@ -878,6 +930,15 @@ int main()
 				setNight(skyboxNight);
 				}
 			}
+
+		s = 0;
+		if (mainWindow.prendido()) {
+	spotlighttemp[s++] = spotLights[0];
+	spotlighttemp[s++] = spotLights[1];
+	spotlighttemp[s++] = spotLights[2];
+	spotlighttemp[s++] = spotLights[3];
+
+}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
@@ -941,7 +1002,7 @@ int main()
 		shaderList[0].SetDirectionalLight(&mainLight);
 		if(!day)
 			shaderList[0].SetPointLights(pointLights, pointLightCount);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+			shaderList[0].SetSpotLights(spotlighttemp, s);
 		
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
@@ -1137,6 +1198,8 @@ int main()
 		//lado del juzgado
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-253.01, 0.00, 197.44));
+		modelaux = model;
+		spotLights[3].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 125.0f, modelaux[3].z));
 		model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		reflector.RenderModel();
@@ -1144,6 +1207,8 @@ int main()
 		//lado del barco
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-234.55, 0.00, -206.86));
+		modelaux = model;
+		spotLights[3].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 125.0f, modelaux[3].z));
 		model = glm::rotate(model, glm::radians(55.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		reflector.RenderModel();
@@ -1151,6 +1216,8 @@ int main()
 		//lado de crash
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(337.30, 0.00, -143.94));
+		modelaux = model;
+		spotLights[3].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 125.0f, modelaux[3].z));
 		model = glm::rotate(model, glm::radians(280.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		reflector.RenderModel();
@@ -1158,6 +1225,8 @@ int main()
 		//lado de la piramide
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(253.84, 0.00, 203.23));
+		modelaux = model;
+		spotLights[3].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 125.0f, modelaux[3].z));
 		model = glm::rotate(model, glm::radians(245.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		reflector.RenderModel();
