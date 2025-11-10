@@ -699,7 +699,7 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
-	/*bell = Model();
+	bell = Model();
 	bell.LoadModel("Models/Bell.obj");
 	soporte_bell = Model();
 	soporte_bell.LoadModel("Models/Boxing_Bell_soporte.obj");
@@ -712,7 +712,7 @@ int main()
 	Reloj_Minuto = Model();
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
-	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");*/
+	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -890,7 +890,7 @@ spotLights[3] = SpotLight(
 	int idx,aux;
 	//variables para el ciclo de dia y noche
 	float lastSwitchTime = 0.0f;
-	float switchInterval = 300.0f;//5 minutos
+	float switchInterval = 500.0f;//5 minutos
 	//se crean mas luces puntuales y spotlight 
 	glm::mat4 model(1.0);
 	glm::mat4 modelaux(1.0);
@@ -1453,21 +1453,22 @@ spotLights[3] = SpotLight(
 		bellAnim = g_AnimationManager.GetAnimation("Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
+			model = glm::translate(model, glm::vec3(-543.37, 20.00, -725.40));
 			rotateZ = bellAnim->GetValue1();
 			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bell.RenderModel();
 		}
 		bellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
+			model = glm::translate(model, glm::vec3(-96.7 + 195.f, 50.0f, -77.5f));
 			posCampana_z = bellAnim->GetValue1();
 			rotCampana_x = bellAnim->GetValue2();
 			rotPalanca_x = bellAnim->GetValue3();
 			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
-				
+			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 			modelaux = model;
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			soporte_bell.RenderModel();
@@ -1493,14 +1494,11 @@ spotLights[3] = SpotLight(
 		bellAnim = g_AnimationManager.GetAnimation("Reloj");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(0.0f, 10.0f, 10.0f));
+		   model = glm::translate(model, glm::vec3(640.59, 10.00, 370.90));
 			manecilla_hora = bellAnim->GetValue1();
 			manecilla_minuto = bellAnim->GetValue2();
-			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
-			
-			model = glm::mat4(1.0);
-			model = glm::translate(model, glm::vec3(5.0f, 0.0f, -4.0f));
-			model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			modelaux = model;
 			//model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
