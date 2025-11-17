@@ -343,50 +343,59 @@ void setDay(std::vector<std::string> skyboxDay){
 		0.0f, 0.0f, -1.0f   // Dirección
 	);
 }
-
-float dirX;
-float dirY;
-float dirZ;
-
-/*void updateSunlight(float deltaTime, std::vector<std::string> skyboxDay, std::vector<std::string> skyboxNight) {
+void updateSimpleDayNight(float deltaTime) {
 	// Incrementar el ángulo del sol
 	sunAngle += sunSpeed * deltaTime;
 
-	// Convertir a radianes
-	float angleRad = sunAngle * 3.14159f / 180.0f;
+	// Mantener el ángulo entre 0 y 360
+	if (sunAngle >= 360.0f) {
+		sunAngle -= 360.0f;
+	}
 
-	// Calcular dirección del sol (rotación en el eje X)
-	// De (0, 0, -1) a (0, 0, 1)
-	dirX = 0.0f;
-	dirY = sin(angleRad);
-	dirZ = -cos(angleRad);
+	// Convertir a radianes para los cálculos
+	float angleRad = sunAngle * 3.14159265f / 180.0f;
 
-	glm::vec3 dir = glm::vec3(dirX, dirY, dirZ);
+	// Calcular dirección de la luz en el plano YZ
+	float dirY = sin(angleRad);  // Componente Y (altura)
+	float dirZ = cos(angleRad);  // Componente Z (profundidad)
 
-	// Actualizar dirección de la luz
-	mainLight.SetDir(dir);
-	/*
-	// Detectar cuando completa medio ciclo (180 grados)
-	if (sunAngle >= 180.0f && !cycleComplete) {
-		cycleComplete = true;
-		sunAngle = 0.0f; // Reiniciar ángulo
+	// Calcular intensidad basada en la altura del sol
+	// Cuando dirY > 0 = día (sol arriba)
+	// Cuando dirY < 0 = noche (sol abajo)
+	float intensity = glm::max(0.0f, dirY);  // Solo positivo cuando está arriba
 
-		// Alternar entre día y noche
-		day = !day;
+	// Intensidades para día y noche
+	float ambientIntensity = 0.15f + (intensity * 0.35f);  // De 0.15 a 0.5
+	float diffuseIntensity = 0.2f + (intensity * 0.6f);    // De 0.2 a 0.8
 
-		if (day) {
-			printf("Llego el dia\n");
-			setDay(skyboxDay);
+	// Color de la luz (blanco en el día, azulado en la noche)
+	float colorR = 0.2f + (intensity * 0.8f);  // De 0.2 a 1.0
+	float colorG = 0.3f + (intensity * 0.7f);  // De 0.3 a 1.0
+	float colorB = 0.6f + (intensity * 0.4f);  // De 0.6 a 1.0
+
+	// Actualizar la luz direccional
+	mainLight = DirectionalLight(
+		colorR, colorG, colorB,
+		ambientIntensity,
+		diffuseIntensity,
+		0.0f, dirY, dirZ  // Dirección en plano YZ
+	);
+
+	// Cambiar skybox según la posición del sol
+	static bool wasDay = true;
+	bool isDay = (dirY > 0.0f);
+
+	// Solo cambiar skybox cuando cruza el horizonte
+	if (isDay != wasDay) {
+		wasDay = isDay;
+		if (isDay) {
+			printf("Amanecer - Ángulo: %.1f grados\n", sunAngle);
 		}
 		else {
-			printf("Llego la noche\n");
-			setNight(skyboxNight);
+			printf("Atardecer - Ángulo: %.1f grados\n", sunAngle);
 		}
-
-		cycleComplete = false;
 	}
-}*/
-
+}
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
@@ -503,8 +512,8 @@ int main()
 
 	int idx;
 	//se crean mas luces puntuales y spotlight 
-	float lastSwitchTime = 0.0f;
-	float switchInterval = 30.0f;
+	//float lastSwitchTime = 0.0f;
+	//float switchInterval = 30.0f;
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
@@ -520,9 +529,11 @@ int main()
 		lastTime = now;
 
 		// Actualizar ciclo día/noche
-		//updateSunlight(deltaTime, skyboxDay, skyboxNight);	
+		// Actualizar ciclo día/noche
+		updateSimpleDayNight(deltaTime);
+
 		// Cambiar skybox según posición del sol
-		/*if (sunAngle >= 0.0f && sunAngle < 180.0f) {
+		if (sunAngle >= 0.0f && sunAngle < 180.0f) {
 			// Día (sol arriba)
 			if (!day) {
 				day = true;
@@ -535,7 +546,7 @@ int main()
 				day = false;
 				skybox = Skybox(skyboxNight);
 			}
-		}*/
+		}
 
 
 		//Recibir eventos del usuario
