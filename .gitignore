@@ -9,6 +9,8 @@
 *.dae
 *.fbx
 *.blend
+*.3ds
+*.mtl
 
 # Precompiled Headers
 *.gch
@@ -49,3 +51,21 @@
 #Images files
 *.png
 *.tga
+*.jpg
+*.jpeg
+
+# Eliminar los archivos del proyecto de visual studio
+
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+#Eliminando carpetas de bibliotecas
+
+Debug/*
+glm/*
+include/*
+x64/*
+
+#Ignorar zip
+*.zip
