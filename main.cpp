@@ -31,6 +31,7 @@ Proyecto Final
 #include"Model.h"
 #include "Skybox.h"
 #include <algorithm>
+#include "miniaudio.h"
 
 //para iluminaci�n
 #include "CommonValues.h"
@@ -39,7 +40,7 @@ Proyecto Final
 #include "SpotLight.h"
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
-
+#define VERIFY(x) if((x)!=MA_SUCCESS) return (x)
 // Declaraciones globales para comunicación de eventos
 bool g_addModelRequest = false;
 glm::vec3 g_pendingModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -80,7 +81,7 @@ Model ring;
 Model piramide;
 Model cabeza_olmeca;
 Model bote_basura;
-Model baño;
+Model bano;
 Model fuente;
 Model bancas;
 Model reflector;
@@ -112,6 +113,12 @@ Material Material_opaco;
 std::vector<PointLight> lights;
 //material del personaje
 Material Material_personaje;
+
+ma_sound s_explosion,s_soundtrack;
+ma_result result;
+ma_engine eng;
+ma_sound_group ambiental, effects;
+
 
 //posiciones de antorchas
 std::vector<std::vector<float>> coordTorch = {
@@ -618,6 +625,46 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+int loadSoundGroups() {
+
+	result = ma_sound_group_init(&eng, 0, NULL, &ambiental);
+	VERIFY(result);
+	ma_sound_group_set_volume(&ambiental, 0.8);
+
+	result = ma_sound_group_init(&eng, 0, NULL, &effects);
+	VERIFY(result);
+	ma_sound_group_set_volume(&effects, 0.5);
+	return MA_SUCCESS;
+}
+
+int loadSounds() {
+
+	result = ma_sound_init_from_file(&eng, "Audio/explosion.wav", MA_SOUND_FLAG_DECODE, &effects, NULL, &s_explosion);
+	VERIFY(result);
+	result = ma_sound_init_from_file(&eng, "Audio/SergioMagicDustbin.mp3", MA_SOUND_FLAG_DECODE, NULL, NULL, &s_soundtrack);
+	VERIFY(result);
+	return MA_SUCCESS;
+
+}
+
+void unloadSoundsGroups()
+{
+	ma_sound_group_uninit(&ambiental);
+	ma_sound_group_uninit(&effects);
+}
+
+void unloadSounds() {
+	if(ma_sound_is_playing(&s_explosion)==MA_TRUE){
+		ma_sound_stop(&s_explosion);
+	}
+	ma_sound_uninit(&s_explosion);
+
+	if(ma_sound_is_looping(&s_soundtrack)==MA_TRUE){
+		ma_sound_set_looping(&s_soundtrack,MA_FALSE);
+		ma_sound_stop(&s_soundtrack);
+	}
+	ma_sound_uninit(&s_soundtrack);
+}
 
 //funciones para el ciclo de día
 void setNight(std::vector<std::string> skyboxNight)
@@ -677,7 +724,7 @@ int main()
 	CreateRingWalls();
 	
 
-	for(std::vector<float> v:coordTorch)
+	/*for(std::vector<float> v:coordTorch)
 	{
 		lights.push_back(
 			PointLight(1.0f, 1.0f, 0.0f,
@@ -689,15 +736,15 @@ int main()
 
 	// Inicializar sistema de animaciones por keyframes
 	InitKeyframeAnimations();
-	
+	*/
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
-
+	
 	
 	barco = Model();
 	barco.LoadModel("Models/Barco.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
-	tori = Model();
+	/*tori = Model();
 	tori.LoadModel("Models/Tori.obj");
 	bell = Model();
 	bell.LoadModel("Models/Bell.obj");
@@ -741,8 +788,8 @@ int main()
 	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
 	bote_basura = Model();
 	bote_basura.LoadModel("Models/Basurero.obj");
-	baño = Model();
-	baño.LoadModel("Models/Baño.obj");
+	bano = Model();
+	bano.LoadModel("Models/bano.obj");
 	fuente = Model();
 	fuente.LoadModel("Models/Fuente.obj");
 	bancas= Model();
@@ -799,7 +846,7 @@ int main()
 	for(std::string s:ModelAce){
 		ace[s] = Model();
 		ace[s].LoadModel("Models/Principal/"+s+".obj");
-	}
+	}*/
 
 		//Cycle day
 
@@ -885,7 +932,21 @@ spotLights[3] = SpotLight(
 	100.0f                     
 );
 
+	//Creación del motor de sonidos
+	result=ma_engine_init(NULL,&eng);
+	VERIFY(result);
+
+	//Carga grupos de sonidos
+
+	VERIFY(loadSoundGroups());
+
+	//Carga de los sonidos
+	VERIFY(loadSounds());
 	
+	//Area de sonidos
+	ma_sound_set_looping(&s_soundtrack,MA_TRUE);
+    ma_sound_start(&s_soundtrack);
+
 	glm::vec2 offset;
 	int idx,aux;
 	//variables para el ciclo de dia y noche
@@ -920,6 +981,7 @@ spotLights[3] = SpotLight(
 	KeyframeAnimation* bellAnim;
 	int pointLightCount,spotLightCount=0;
 	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
+	
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose()){
 
@@ -929,6 +991,7 @@ spotLights[3] = SpotLight(
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
 		
+
 		if (now - lastSwitchTime > switchInterval) {
 				day = !day;
 				lastSwitchTime = now;
@@ -1034,7 +1097,7 @@ spotLights[3] = SpotLight(
 		barco.RenderModel();
 
 		//ciclo for para las toris
-		for (std::vector <GLfloat> v : coordsToris) {
+		/*for (std::vector <GLfloat> v : coordsToris) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			model = glm::rotate(model, glm::radians(v[3]), glm::vec3(0.0, 1.0, 0.0));
@@ -1149,17 +1212,17 @@ spotLights[3] = SpotLight(
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bote_basura.RenderModel();
 		}
-		//baños
+		//banos
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-121.24, 0.00, 271.83));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		baño.RenderModel();
+		bano.RenderModel();
 		
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-117.98, 0.00, -264.41));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		baño.RenderModel();
+		bano.RenderModel();
 
 		//fuentes
 		model = glm::mat4(1.0);
@@ -1744,7 +1807,7 @@ spotLights[3] = SpotLight(
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 		numeros.UseTexture();
-		meshList[4]->RenderMesh();
+		meshList[4]->RenderMesh();*/
 
 		offset = glm::vec2(0.0f,0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
@@ -1754,9 +1817,13 @@ spotLights[3] = SpotLight(
 
 		mainWindow.swapBuffers();
 	}
-
-	return 0;
+	//Limpia de variables
+    unloadSounds();
+    unloadSoundsGroups();
+    ma_engine_uninit(&eng);
+    return 0;
 }
+	
 
 void CreateMeshNumber()
 {
