@@ -4,7 +4,7 @@
 
 #include <glm.hpp>
 #include "KeyframeAnimation.h"
-
+#include "miniaudio.h"
 // Constantes de animación
 extern const float A;
 extern const float B;
@@ -50,7 +50,7 @@ glm::mat4 AnimationShip(glm::mat4 model);
 glm::mat4 AnimationRing(glm::mat4 model, int id);
 glm::mat4 AnimationTNT(glm::mat4 model);
 void StartTNTAnimation();
-glm::mat4 AnimationTapa(glm::mat4 model);
+glm::mat4 AnimationTapa(glm::mat4 model,ma_sound &s);
 glm::mat4 AnimationOpa(glm::mat4 model);
 void StartOpaAnimation();
 

@@ -6,7 +6,7 @@
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
-
+#include "miniaudio.h"
 #include "Model.h"
 #include "KeyframeAnimation.h"
 
@@ -149,18 +149,20 @@ void StartTNTAnimation()
         printf("Animacion TNT en progreso, espera a que termine.\n");
     }
 }
- 
- 
+
+
 // Animación de la tapa: elevación desde el segundo 4 y regreso
-glm::mat4 AnimationTapa(glm::mat4 model)
+glm::mat4 AnimationTapa(glm::mat4 model,ma_sound &s)
 {
     // Solo calcular si la animación está activa y ya se inició
     if (TNTAnimationActive && TNTStartTime >= 0.0) {
+
         double currentTime = glfwGetTime();
         double elapsedTime = currentTime - TNTStartTime;
         
         // La tapa comienza a subir en el segundo 4
         if (elapsedTime >= 4.0) {
+            ma_sound_start(&s);
             // Calcular tiempo de elevación desde el segundo 4
             float tiempoElevacion = (float)(elapsedTime - 4.0);
             
@@ -187,6 +189,8 @@ glm::mat4 AnimationTapa(glm::mat4 model)
                 // Marcar animación como completa para poder reiniciarla
                 if (!TNTAnimationComplete) {
                     TNTAnimationComplete = true;
+                    ma_sound_stop(&s);
+                    ma_sound_seek_to_pcm_frame(&s,0);
                 }
             }
             

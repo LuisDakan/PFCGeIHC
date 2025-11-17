@@ -633,7 +633,8 @@ int loadSoundGroups() {
 
 	result = ma_sound_group_init(&eng, 0, NULL, &effects);
 	VERIFY(result);
-	ma_sound_group_set_volume(&effects, 0.5);
+	
+	//ma_sound_group_set_volume(&effects, 0.5);
 	return MA_SUCCESS;
 }
 
@@ -641,8 +642,10 @@ int loadSounds() {
 
 	result = ma_sound_init_from_file(&eng, "Audio/explosion.wav", MA_SOUND_FLAG_DECODE, &effects, NULL, &s_explosion);
 	VERIFY(result);
-	result = ma_sound_init_from_file(&eng, "Audio/SergioMagicDustbin.mp3", MA_SOUND_FLAG_DECODE, NULL, NULL, &s_soundtrack);
+	ma_sound_set_volume(&s_explosion,0.5);
+	result = ma_sound_init_from_file(&eng, "Audio/SergioMagicDustbin.mp3", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &s_soundtrack);
 	VERIFY(result);
+	ma_sound_set_volume(&s_soundtrack,0.2);
 	return MA_SUCCESS;
 
 }
@@ -744,6 +747,10 @@ int main()
 	barco.LoadModel("Models/Barco.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
+	TNT = Model();
+	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
+	tapa = Model();
+	tapa.LoadModel("Models/tapa_TNT.obj");
 	/*tori = Model();
 	tori.LoadModel("Models/Tori.obj");
 	bell = Model();
@@ -835,10 +842,6 @@ int main()
 	alexkid.LoadModel("Models/alexKid.obj");
 	dbjoe = Model();
 	dbjoe.LoadModel("Models/DBJoe.obj");
-	TNT = Model();
-	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
-	tapa = Model();
-	tapa.LoadModel("Models/tapa_TNT.obj");
 	opaopa = Model();
 	opaopa.LoadModel("Models/Opa-Opa.obj");
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
@@ -1080,8 +1083,9 @@ spotLights[3] = SpotLight(
 		
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
-
-
+		//Sincronizacion del listener y camara
+		glm::vec3 camPos = camera.getCameraPosition()*0.01f;
+		ma_engine_listener_set_position(&eng, 0, camPos.x, camPos.y, camPos.z);
 		//Piso 
 
 		model = glm::mat4(1.0);
@@ -1438,18 +1442,21 @@ spotLights[3] = SpotLight(
 		dbjoe.RenderModel();
 
 
-		glDisable(GL_BLEND);
+		glDisable(GL_BLEND);*/
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(248.0f, 0.0f, 31.0f));
 		model = AnimationTNT(model);  // Aplicar tambaleo
 		modelaux = model;
+		// Posicionar el sonido de explosión en la TNT
+		glm::vec3 tntWorldPos = glm::vec3(model[3])*0.01f;
+		ma_sound_set_position(&s_explosion, tntWorldPos.x,tntWorldPos.y,tntWorldPos.z);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		TNT.RenderModel();
 
 		// Animación tapa: elevación
 		model = modelaux;
-		model = AnimationTapa(model);  // Aplicar elevación
+		model = AnimationTapa(model,s_explosion);  // Aplicar elevación
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tapa.RenderModel();
 		
@@ -1502,7 +1509,7 @@ spotLights[3] = SpotLight(
 			glDisable(GL_BLEND);
 		}
 
-		model = glm::mat4(1.0);
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -50.0f));
 		model = AnimationOpa(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
