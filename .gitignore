@@ -69,3 +69,7 @@ x64/*
 
 #Ignorar zip
 *.zip
+
+#Ignorar .vscode
+
+.vscode/*
