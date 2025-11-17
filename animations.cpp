@@ -48,6 +48,9 @@ bool walkingActive = false;
 float walkCycle = 0.0f;
 float walkSpeed = 2.0f;
 
+// Banderas de sonidos
+bool TNT_explosion = false;
+
 // Funciones de animación
 
 glm::mat4 AnimationShip(glm::mat4 model)
@@ -162,7 +165,11 @@ glm::mat4 AnimationTapa(glm::mat4 model,ma_sound &s)
         
         // La tapa comienza a subir en el segundo 4
         if (elapsedTime >= 4.0) {
-            ma_sound_start(&s);
+            if(!TNT_explosion){
+                ma_sound_start(&s);
+                TNT_explosion = true;
+            }
+                
             // Calcular tiempo de elevación desde el segundo 4
             float tiempoElevacion = (float)(elapsedTime - 4.0);
             
@@ -177,7 +184,6 @@ glm::mat4 AnimationTapa(glm::mat4 model,ma_sound &s)
                 // sin(0 a PI) va de 0 -> 1 -> 0
                 float progreso = tiempoElevacion / duracionCiclo; // 0 a 1
                 elevacion = alturaMaxima * glm::sin(progreso * 3.14159265f); // 0 -> max -> 0
-                
                 // Calcular escala de explosión sincronizada con la elevación
                 // Explosión crece desde 0.1 (muy pequeña) hasta 1.0 (tamaño completo)
                 explosionScale = 0.1f + 0.9f * glm::sin(progreso * 3.14159265f);
@@ -185,12 +191,12 @@ glm::mat4 AnimationTapa(glm::mat4 model,ma_sound &s)
             else {
                 // Después del ciclo, la explosión permanece a tamaño completo
                 explosionScale = 0.1f;
-                
+                TNT_explosion = false;
+                ma_sound_stop(&s);
+                ma_sound_seek_to_pcm_frame(&s,0);
                 // Marcar animación como completa para poder reiniciarla
                 if (!TNTAnimationComplete) {
                     TNTAnimationComplete = true;
-                    ma_sound_stop(&s);
-                    ma_sound_seek_to_pcm_frame(&s,0);
                 }
             }
             
@@ -198,6 +204,7 @@ glm::mat4 AnimationTapa(glm::mat4 model,ma_sound &s)
         }
         else {
             // Antes de que comience a subir, explosión no visible
+            TNT_explosion = false;
             explosionScale = 0.0f;
         }
     }
