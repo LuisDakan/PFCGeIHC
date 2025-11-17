@@ -73,3 +73,8 @@ x64/*
 #Ignorar .vscode
 
 .vscode/*
+
+#Ignorar sounds
+*.mp3
+*.wav
+*.flac
