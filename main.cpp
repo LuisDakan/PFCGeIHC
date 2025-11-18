@@ -845,9 +845,9 @@ int main()
 	alexkid = Model();
 	alexkid.LoadModel("Models/alexKid.obj");
 	dbjoe = Model();
-	dbjoe.LoadModel("Models/DBJoe.obj");
+	dbjoe.LoadModel("Models/DBJoe.obj");*/
 	opaopa = Model();
-	opaopa.LoadModel("Models/Opa-Opa.obj");
+	opaopa.LoadModel("Models/Opa-Opa.obj");/*
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
 	"MusloDerechoAce","MusloIzquierdoAce","PiernaDerechaAce","PiernaIzquierdaAce"};
 	for(std::string s:ModelAce){
@@ -1603,12 +1603,12 @@ int main()
 			glDisable(GL_BLEND);
 		}
 
-		/*model = glm::mat4(1.0);
+		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -50.0f));
 		model = AnimationOpa(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		opaopa.RenderModel();
-
+		/*
 		// ========== Animación jerárquica de caminata (Ace) ==========
 		// Actualizar el ciclo de caminata
 		UpdateWalkCycle();
