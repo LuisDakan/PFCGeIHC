@@ -69,6 +69,7 @@ Model ak;
 Model currentModel;
 Model barco;
 Model tori;
+Model miniReflector;
 Model torchModel;
 Model torchAce, torchCrash, torchSonic;
 Model palmera_doble;
@@ -756,6 +757,12 @@ int main()
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
+	/*tori = Model();
+	tori.LoadModel("Models/Tori.obj");
+	miniReflector = Model();
+	miniReflector.LoadModel("Models/Mini_Reflector.obj");
+	bell = Model();
+	bell.LoadModel("Models/Bell.obj");
 	soporte_bell = Model();
 	soporte_bell.LoadModel("Models/Boxing_Bell_soporte.obj");
 	palanca = Model();
@@ -802,7 +809,7 @@ int main()
 	bote_basura = Model();
 	bote_basura.LoadModel("Models/Basurero.obj");
 	bano = Model();
-	bano.LoadModel("Models/bano.obj");
+	bano.LoadModel("Models/baño.obj");
 	fuente = Model();
 	fuente.LoadModel("Models/Fuente.obj");
 	bancas= Model();
@@ -894,52 +901,101 @@ int main()
 	//contador de luces puntuales
 	//para los reflectores 
 	glm::vec3 ringPos = glm::vec3(8.55f, 0.0f, -12.67f);
-glm::vec3 reflectorPos1 = glm::vec3(-253.01f, 125.0f, 197.44f); // encima del reflector
-glm::vec3 dir = glm::normalize(ringPos-reflectorPos1);
+	glm::vec3 piraPos = glm::vec3(696.86f, 195.00f, -413.49f);
+	glm::vec3 reflectorPos1 = glm::vec3(-253.01f, 125.0f, 197.44f); // encima del reflector
+	glm::vec3 dir = glm::normalize(ringPos-reflectorPos1);
+	
+	spotLights[0] = SpotLight(
+		1.0f, 1.0f, 1.0f,          
+		5.0f, 5.0f,                // ambient, diffuse
+		reflectorPos1.x, reflectorPos1.y,  reflectorPos1.z,  // posición
+		dir.x, dir.y, dir.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,      
+		100.0f                     
+	);
+	
+	glm::vec3 reflectorPos2 = glm::vec3(-234.55, 125.00, -206.86); // encima del reflector
+	glm::vec3 dir2 = glm::normalize(ringPos - reflectorPos2);
+	
+	spotLights[1] = SpotLight(
+		1.0f, 1.0f, 1.0f,          
+		5.0f, 5.0f,                // ambient, diffuse
+		reflectorPos2.x, reflectorPos2.y, reflectorPos2.z,  // posición
+		dir2.x, dir2.y, dir2.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,       
+		100.0f                      
+	);
+	glm::vec3 reflectorPos3 = glm::vec3(337.30, 125.00, -143.94); // encima del reflector
+	glm::vec3 dir3 = glm::normalize(ringPos - reflectorPos3);
+	
+	spotLights[2] = SpotLight(
+		1.0f, 1.0f, 1.0f,          
+		5.0f, 5.0f,                // ambient, diffuse
+		reflectorPos3.x, reflectorPos3.y, reflectorPos3.z,  // posición
+		dir3.x, dir3.y, dir3.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,       
+		100.0f                      
+	);
+	
+	glm::vec3 reflectorPos4= glm::vec3(253.84, 125.00, 203.23); // encima del reflector
+	glm::vec3 dir4 = glm::normalize(ringPos - reflectorPos4);
+	
+	spotLights[3] = SpotLight(
+		1.0f, 1.0f, 1.0f,       
+		5.0f, 5.0f,                // ambient, diffuse
+		reflectorPos4.x, reflectorPos4.y, reflectorPos4.z,  // posición
+		dir4.x, dir4.y, dir4.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,      
+		100.0f                     
+	);
 
-spotLights[0] = SpotLight(
-	1.0f, 1.0f, 1.0f,          
-	5.0f, 5.0f,                // ambient, diffuse
-	reflectorPos1.x, reflectorPos1.y,  reflectorPos1.z,  // posición
-	dir.x, dir.y, dir.z,       // dirección hacia el ring
-	1.0f, 0.01f, 0.001f,      
-	100.0f                     
-);
-
-glm::vec3 reflectorPos2 = glm::vec3(-234.55, 125.00, -206.86); // encima del reflector
-glm::vec3 dir2 = glm::normalize(ringPos - reflectorPos2);
-
-spotLights[1] = SpotLight(
-	1.0f, 1.0f, 1.0f,          
-	5.0f, 5.0f,                // ambient, diffuse
-	reflectorPos2.x, reflectorPos2.y, reflectorPos2.z,  // posición
-	dir2.x, dir2.y, dir2.z,       // dirección hacia el ring
-	1.0f, 0.01f, 0.001f,       
-	100.0f                      
-);
-glm::vec3 reflectorPos3 = glm::vec3(337.30, 125.00, -143.94); // encima del reflector
-glm::vec3 dir3 = glm::normalize(ringPos - reflectorPos3);
-
-spotLights[2] = SpotLight(
-	1.0f, 1.0f, 1.0f,          
-	5.0f, 5.0f,                // ambient, diffuse
-	reflectorPos3.x, reflectorPos3.y, reflectorPos3.z,  // posición
-	dir3.x, dir3.y, dir3.z,       // dirección hacia el ring
-	1.0f, 0.01f, 0.001f,       
-	100.0f                      
-);
-
-glm::vec3 reflectorPos4= glm::vec3(253.84, 125.00, 203.23); // encima del reflector
-glm::vec3 dir4 = glm::normalize(ringPos - reflectorPos4);
-
-spotLights[3] = SpotLight(
-	1.0f, 1.0f, 1.0f,       
-	5.0f, 5.0f,                // ambient, diffuse
-	reflectorPos4.x, reflectorPos4.y, reflectorPos4.z,  // posición
-	dir4.x, dir4.y, dir4.z,       // dirección hacia el ring
-	1.0f, 0.01f, 0.001f,      
-	100.0f                     
-);
+	glm::vec3 minireflectorPos1 = glm::vec3(995.15f, 8.611f, -407.96f); // encima del reflector
+	glm::vec3 dir5 = glm::normalize(piraPos - minireflectorPos1);
+	
+	spotLights[4] = SpotLight(
+		1.0f, 0.0f, 0.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos1.x, minireflectorPos1.y, minireflectorPos1.z,  // posición
+		dir5.x, dir5.y, dir5.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
+	
+	glm::vec3 minireflectorPos2 = glm::vec3(698.30f, 8.611f, -746.17f); // encima del reflector
+	glm::vec3 dir6 = glm::normalize(piraPos - minireflectorPos2);
+	
+	spotLights[5] = SpotLight(
+		0.0f, 1.0f, 01.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos2.x, minireflectorPos2.y, minireflectorPos2.z,  // posición
+		dir6.x, dir6.y, dir6.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
+	
+	glm::vec3 minireflectorPos3 = glm::vec3(353.17f, 8.611f, -404.60f); // encima del reflector
+	glm::vec3 dir7 = glm::normalize(piraPos - minireflectorPos3);
+	
+	spotLights[6] = SpotLight(
+		0.0f, 0.0f, 1.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos3.x, minireflectorPos3.y, minireflectorPos3.z,  // posición
+		dir7.x, dir7.y, dir7.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
+	
+	glm::vec3 minireflectorPos4 = glm::vec3(694.67f, 8.611f, -141.98f); // encima del reflector
+	glm::vec3 dir8 = glm::normalize(piraPos - minireflectorPos4);
+	
+	spotLights[7] = SpotLight(
+		1.0f, 1.0f, 0.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos4.x, minireflectorPos4.y, minireflectorPos4.z,  // posición
+		dir8.x, dir8.y, dir8.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
 
 	//Creación del motor de sonidos
 	result=ma_engine_init(NULL,&eng);
@@ -1016,12 +1072,18 @@ spotLights[3] = SpotLight(
 
 		s = 0;
 		if (mainWindow.prendido()) {
-	spotlighttemp[s++] = spotLights[0];
-	spotlighttemp[s++] = spotLights[1];
-	spotlighttemp[s++] = spotLights[2];
-	spotlighttemp[s++] = spotLights[3];
-
-}
+			spotlighttemp[s++] = spotLights[0];
+			spotlighttemp[s++] = spotLights[1];
+			spotlighttemp[s++] = spotLights[2];
+			spotlighttemp[s++] = spotLights[3];
+		
+		}
+		if (mainWindow.prendido2()) {
+			spotlighttemp[s++] = spotLights[4];
+			spotlighttemp[s++] = spotLights[5];
+			spotlighttemp[s++] = spotLights[6];
+			spotlighttemp[s++] = spotLights[7];
+		}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
@@ -1079,7 +1141,6 @@ spotLights[3] = SpotLight(
 		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
 		lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 		
 		//información al shader de fuentes de iluminación
 		shaderList[0].SetDirectionalLight(&mainLight);
@@ -1278,7 +1339,7 @@ spotLights[3] = SpotLight(
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		bancas.RenderModel();
 		
-		//reflectores
+		//reflectores*/
 		//lado del juzgado
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-253.01, 0.00, 197.44));
@@ -1314,7 +1375,43 @@ spotLights[3] = SpotLight(
 		model = glm::rotate(model, glm::radians(245.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		reflector.RenderModel();
+
+		//Minireflector
+		//lado izquierdo
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(994.05f, 0.00f, -407.96f));
+		modelaux = model;
+		spotLights[4].SetPos(glm::vec3(modelaux[3].x + 1.1f, modelaux[3].y + 8.611f, modelaux[3].z));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		miniReflector.RenderModel();
 		
+		//atras
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(698.30f, 0.00f, -745.47f));
+		modelaux = model;
+		spotLights[5].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 8.611f, modelaux[3].z - 1.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		miniReflector.RenderModel();
+		
+		//lado derecho
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(354.27f, 0.00f, -404.60f));
+		modelaux = model;
+		spotLights[6].SetPos(glm::vec3(modelaux[3].x - 1.1f, modelaux[3].y + 8.611f, modelaux[3].z));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		miniReflector.RenderModel();
+		
+		//enfrente
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(694.67f, 0.00f, -143.08f));
+		modelaux = model;
+		spotLights[7].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 8.611f, modelaux[3].z + 1.1f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		miniReflector.RenderModel();
+		/*
 		//ciclo for para las cajas TNT
 		for (std::vector <GLfloat> v : coordsBoxtnt) {
 			model = glm::mat4(1.0);
@@ -1418,7 +1515,7 @@ spotLights[3] = SpotLight(
 		ukauka.RenderModel();
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(31.78, 25.00, -11.65));
+		model = glm::translate(model, glm::vec3(31.78, 23.00, -11.65));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		crash.RenderModel();
 
@@ -1599,7 +1696,7 @@ spotLights[3] = SpotLight(
 		// (El else se eliminó para permitir loop infinito)
 
 		// Posición base del personaje
-		acePosition = glm::vec3(-150.0f, 32.4f, 0.0f);
+		acePosition = glm::vec3(-150.0f, 19.5f, 0.0f);
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 		model = glm::mat4(1.0);
@@ -1658,6 +1755,11 @@ spotLights[3] = SpotLight(
 		model = glm::translate(model,glm::vec3(0.0f,0.1138f,0.0f));
 		model = AnimateLeftThigh(model);
 		leftThighModel = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ace["MusloIzquierdoAce"].RenderModel();
+		
+		model = leftThighModel;
+		model = glm::translate(model, glm::vec3(+3.35244f, -13.1455f, -0.441f));
 		model = AnimateLeftLeg(model);
 		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));

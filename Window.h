@@ -21,6 +21,7 @@ public:
 	bool* getsKeys() { return keys; }
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
 	bool prendido() { return prenderspot; }
+	bool prendido2() { return prenderspot2; }
 	bool AntorchOn() { return antorch; }
 	bool RayGunOn() { return raygun; }
 
@@ -46,7 +47,7 @@ private:
 	GLfloat xChange;
 	GLfloat yChange;
 	GLfloat muevex;
-	bool prenderspot;
+	bool prenderspot, prenderspot2;
 	bool mouseFirstMoved;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);
