@@ -1329,7 +1329,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		bancas.RenderModel();
 		
-		//reflectores
+		//reflectores*/
 		//lado del juzgado
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-253.01, 0.00, 197.44));
@@ -1401,7 +1401,7 @@ int main()
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		miniReflector.RenderModel();
-		
+		/*
 		//ciclo for para las cajas TNT
 		for (std::vector <GLfloat> v : coordsBoxtnt) {
 			model = glm::mat4(1.0);
