@@ -829,7 +829,7 @@ int main()
 	valla_juzgado = Model();
 	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
 	silla_juzgado = Model();
-	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
+	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");*/
 	casa_aku_aku = Model();
 	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
 	gemaAzul = Model();
@@ -840,6 +840,7 @@ int main()
 	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
 	gemaAmarilla = Model();
 	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
+	/*
 	//personajes
 	akuaku = Model();	
 	akuaku.LoadModel("Models/Aku-Aku.obj");
@@ -1045,6 +1046,12 @@ int main()
 	glm::mat4 rightThighModel, leftThighModel;
 	KeyframeAnimation* bellAnim;
 	int pointLightCount,spotLightCount=0;
+	//para animacion de las gemas
+	float radius = 200.0f;
+	float gemRotationAngle = 0.0f;
+	float angle = 0.0f;
+	// Tomando como Centro la posicion de la casa de aku aku 
+	glm::vec3 centerPosition = glm::vec3(640.59, 20.0f, 456.90);
 	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	
 	////Loop mientras no se cierra la ventana
@@ -1458,50 +1465,44 @@ int main()
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla_juzgado.RenderModel();
+		silla_juzgado.RenderModel();*/
 
 		//escenario aku aku 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(640.59, 0.00, 456.90));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		casa_aku_aku.RenderModel();
-		// Rotar posiciones de las gemas
-		if (now - lastGemRotationTime > gemRotationInterval) {
-			lastGemRotationTime = now;
-
-			// Rotar las posiciones
-			glm::vec3 temp = gemPositions[3];
-			gemPositions[3] = gemPositions[2];
-			gemPositions[2] = gemPositions[1];
-			gemPositions[1] = gemPositions[0];
-			gemPositions[0] = temp;
+		//Animacion gemas orbitando
+		gemRotationAngle += 0.001f;
+		for (int i = 0; i < 4; i++) {
+			angle = gemRotationAngle + (i * glm::radians(90.0f));
+			gemPositions[i] = centerPosition + glm::vec3(cos(angle) * radius, 0.0f, sin(angle) * radius);
 		}
 
-		// Renderizar cada gema en su posición
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, gemPositions[0]);
-		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaAzul.RenderModel();
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, gemPositions[1]);
-		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaRoja.RenderModel();
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, gemPositions[2]);
-		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaPurpura.RenderModel();
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, gemPositions[3]);
-		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotación
+		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaAmarilla.RenderModel();
-
+		/*
 				//Personajes
 		//Universo Crash
 		model = glm::mat4(1.0);
