@@ -51,7 +51,7 @@ Material Material_opaco;
 
 bool day=true;
 float sunAngle = 0.0f;
-float sunSpeed = 0.5f;
+float sunSpeed = 0.3f;
 
 
 //Sphere cabeza = Sphere(0.5, 20, 20);
@@ -343,6 +343,8 @@ void setDay(std::vector<std::string> skyboxDay){
 		0.0f, 0.0f, -1.0f   // Dirección
 	);
 }
+// Variable para trackear el skybox actual
+// ============= FUNCIÓN SIMPLE PARA ACTUALIZAR EL CICLO =============
 void updateSimpleDayNight(float deltaTime) {
 	// Incrementar el ángulo del sol
 	sunAngle += sunSpeed * deltaTime;
@@ -396,6 +398,10 @@ void updateSimpleDayNight(float deltaTime) {
 		}
 	}
 }
+
+
+
+
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
@@ -411,29 +417,43 @@ int main()
 
 
 	//Cycle day
-
-	//Skybox Night
-
+	// casi noche
+		//atardecer
+	std::vector<std::string> skyboxAlmostNight;
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_rt_casi_noche.png");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_lf_casi_noche.png");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_dn_casi_noche.png");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_up_casi_noche.png");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_bk_casi_noche.png");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_ft_casi_noche.png");
+	//noche
 	std::vector<std::string> skyboxNight;
-	skyboxNight.push_back("Textures/Skybox/Zona_Nebulosa.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Planeta.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Luna.png");
+	skyboxNight.push_back("Textures/Skybox/sh_rt_noche.png");
+	skyboxNight.push_back("Textures/Skybox/sh_lf_noche.png");
+	skyboxNight.push_back("Textures/Skybox/sh_dn_noche.png");
+	skyboxNight.push_back("Textures/Skybox/sh_up_noche.png");
+	skyboxNight.push_back("Textures/Skybox/sh_bk_noche.png");
+	skyboxNight.push_back("Textures/Skybox/sh_ft_noche.png");
+
+	//atardecer
+	std::vector<std::string> skyboxSunset;
+	skyboxSunset.push_back("Textures/Skybox/sh_rt_atardecer.png");
+	skyboxSunset.push_back("Textures/Skybox/sh_lf_atardecer.png");
+	skyboxSunset.push_back("Textures/Skybox/sh_dn_atardecer.png");
+	skyboxSunset.push_back("Textures/Skybox/sh_up_atardecer.png");
+	skyboxSunset.push_back("Textures/Skybox/sh_bk_atardecer.png");
+	skyboxSunset.push_back("Textures/Skybox/sh_ft_atardecer.png");
 
 	//Skybox Day
 	std::vector<std::string> skyboxDay;
-	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
-	skyboxDay.push_back("Textures/Skybox/dia_despejado.jpg");
-
+	skyboxDay.push_back("Textures/Skybox/sh_rt.png");
+	skyboxDay.push_back("Textures/Skybox/sh_lf.png");
+	skyboxDay.push_back("Textures/Skybox/sh_dn.png");
+	skyboxDay.push_back("Textures/Skybox/sh_up.png");
+	skyboxDay.push_back("Textures/Skybox/sh_bk.png");
+	skyboxDay.push_back("Textures/Skybox/sh_ft.png");
 
 	std::vector<std::string> skyboxFaces = skyboxDay;
-
 	skybox = Skybox(skyboxFaces);
 
 	Material_brillante = Material(4.0f, 256);
@@ -507,8 +527,9 @@ int main()
 
 
 
+	int currentSkyboxIndex = -1;  // Inicializar en -1 para forzar primer cambio
 
-
+	int newSkyboxIndex;
 
 	int idx;
 	//se crean mas luces puntuales y spotlight 
@@ -528,26 +549,53 @@ int main()
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
 
-		// Actualizar ciclo día/noche
+	
 		// Actualizar ciclo día/noche
 		updateSimpleDayNight(deltaTime);
 
-		// Cambiar skybox según posición del sol
-		if (sunAngle >= 0.0f && sunAngle < 180.0f) {
-			// Día (sol arriba)
-			if (!day) {
-				day = true;
-				skybox = Skybox(skyboxDay);
-			}
+
+		newSkyboxIndex=0;
+
+		if (sunAngle >= 0.0f && sunAngle < 45.0f) {
+			newSkyboxIndex = 2; // Amanecer - casi noche
+		}
+		else if (sunAngle >= 45.0f && sunAngle < 120.0f) {
+			newSkyboxIndex = 0; // Día
+		}
+		else if (sunAngle >= 120.0f && sunAngle < 180.0f) {
+			newSkyboxIndex = 1; // Atardecer
+		}
+		else if (sunAngle >= 180.0f && sunAngle < 240.0f) {
+			newSkyboxIndex = 2; // Crepúsculo - casi noche
+		}
+		else if (sunAngle >= 240.0f && sunAngle < 320.0f) {
+			newSkyboxIndex = 3; // Noche
 		}
 		else {
-			// Noche (sol abajo)  
-			if (day) {
-				day = false;
-				skybox = Skybox(skyboxNight);
-			}
+			newSkyboxIndex = 2; // Pre-amanecer - casi noche
 		}
 
+		// Cambiar skybox solo si es diferente
+		if (newSkyboxIndex != currentSkyboxIndex) {
+			currentSkyboxIndex = newSkyboxIndex;
+
+			if (currentSkyboxIndex == 0) {
+				skybox = Skybox(skyboxDay);
+				printf("DÍA - Ángulo: %.1f°\n", sunAngle);
+			}
+			else if (currentSkyboxIndex == 1) {
+				skybox = Skybox(skyboxSunset);
+				printf("ATARDECER - Ángulo: % .1f°\n", sunAngle);
+			}
+			else if (currentSkyboxIndex == 2) {
+				skybox = Skybox(skyboxAlmostNight);
+				printf("CASI NOCHE - Ángulo: %.1f°\n", sunAngle);
+			}
+			else {
+				skybox = Skybox(skyboxNight);
+				printf("NOCHE - Ángulo: % .1f°\n", sunAngle);
+			}
+		}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
