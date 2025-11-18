@@ -53,6 +53,7 @@ int Window::Initialise()
 	antorch = false;
 	raygun = false;
 	prenderspot=false;
+	prenderspot2=false;
 
 	//Asignando variables de GLFW y propiedades de ventana
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -216,9 +217,11 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	// }
 	// ========================================================
 	//Tecla para los reflectores 
-		if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
+	if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
 		theWindow->prenderspot = !theWindow->prenderspot;
-
+	}
+	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		theWindow->prenderspot2 = !theWindow->prenderspot2;
 	}
 	if (key >= 0 && key < 1024)
 	{
