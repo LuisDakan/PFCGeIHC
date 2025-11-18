@@ -52,6 +52,7 @@ Model ak;
 Model currentModel;
 Model barco;
 Model tori;
+Model miniReflector;
 Model torchAce, torchCrash, torchSonic;
 Model palmera_doble;
 Model palmera_tres;
@@ -63,7 +64,7 @@ Model ring;
 Model piramide;
 Model cabeza_olmeca;
 Model bote_basura;
-Model baño;
+Model bano;
 Model fuente;
 Model bancas;
 Model reflector;
@@ -201,7 +202,6 @@ std::vector<std::vector<GLfloat>> coordsToris = {
 
 
 };
-
 
 //matriz con posiciones y escalas de palmeras (x,y,z,s1,s2,s3)
 //cada vector interno representa una palmera
@@ -647,7 +647,7 @@ void turnOnPoint(std::string id, unsigned int& pointLightCount) {
 	std::swap(points[idx], points[pointLightCount]);
 	pointLightCount++;
 }
-
+/*
 int searchSpot(std::string id) {
 	for (int i = 0;i < MAX_SPOT_LIGHTS;i++) {
 		if (spots[i] == id) return i;
@@ -687,7 +687,7 @@ void turnOnSpot(std::string id, unsigned int& spotLightCount) {
 	std::swap(spotLights[idx], spotLights[spotLightCount]);
 	std::swap(spots[idx], spots[spotLightCount]);
 	spotLightCount++;
-}
+}*/
 
 void setNight(std::vector<std::string> skyboxNight)
 {
@@ -728,7 +728,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Tori.obj");
+	SetCurrentModel("Models/Mini_Reflector.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -738,9 +738,11 @@ int main()
 	barco.LoadModel("Models/Barco.obj");
 	piso=Model();
 	piso.LoadModel("Models/piso.obj");
-	/*
+	
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
+	miniReflector = Model();
+	miniReflector.LoadModel("Models/Mini_Reflector.obj");
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -758,14 +760,14 @@ int main()
 	arbusto_largo = Model();
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
-	arbol_tronco.LoadModel("Models/Arbol12.obj");*/
+	arbol_tronco.LoadModel("Models/Arbol12.obj");
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
-	/*piramide = Model();
+	piramide = Model();
 	piramide.LoadModel("Models/Piramide.obj");
 	cabeza_olmeca = Model();
 	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
-	bote_basura = Model();
+	/*bote_basura = Model();
 	bote_basura.LoadModel("Models/Basurero.obj");
 	baño = Model();
 	baño.LoadModel("Models/Baño.obj");
@@ -871,6 +873,7 @@ int main()
 	unsigned int spotLightCount = 0;
 
 	glm::vec3 ringPos = glm::vec3(8.55f, 0.0f, -12.67f);
+	glm::vec3 piraPos = glm::vec3(696.86f, 195.00f, -413.49f);
 	glm::vec3 reflectorPos1 = glm::vec3(-253.01f, 125.0f, 197.44f); // encima del reflector
 	glm::vec3 dir = glm::normalize(ringPos-reflectorPos1);
 
@@ -882,7 +885,8 @@ int main()
 		1.0f, 0.01f, 0.001f,      
 		100.0f                     
 	);
-	
+	spotLightCount++;
+
 	glm::vec3 reflectorPos2 = glm::vec3(-234.55, 125.00, -206.86); // encima del reflector
 	glm::vec3 dir2 = glm::normalize(ringPos - reflectorPos2);
 
@@ -918,7 +922,53 @@ int main()
 		100.0f                     
 	);
 
+	glm::vec3 minireflectorPos1 = glm::vec3(995.15f, 8.611f, -407.96f); // encima del reflector
+	glm::vec3 dir5 = glm::normalize(piraPos - minireflectorPos1);
 
+	spotLights[4] = SpotLight(
+		1.0f, 0.0f, 0.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos1.x, minireflectorPos1.y, minireflectorPos1.z,  // posición
+		dir5.x, dir5.y, dir5.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
+
+	glm::vec3 minireflectorPos2 = glm::vec3(698.30f, 8.611f, -746.17f); // encima del reflector
+	glm::vec3 dir6 = glm::normalize(piraPos - minireflectorPos2);
+
+	spotLights[5] = SpotLight(
+		0.0f, 1.0f, 01.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos2.x, minireflectorPos2.y, minireflectorPos2.z,  // posición
+		dir6.x, dir6.y, dir6.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
+
+	glm::vec3 minireflectorPos3 = glm::vec3(353.17f, 8.611f, -404.60f); // encima del reflector
+	glm::vec3 dir7 = glm::normalize(piraPos - minireflectorPos3);
+
+	spotLights[6] = SpotLight(
+		0.0f, 0.0f, 1.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos3.x, minireflectorPos3.y, minireflectorPos3.z,  // posición
+		dir7.x, dir7.y, dir7.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
+
+	glm::vec3 minireflectorPos4 = glm::vec3(694.67f, 8.611f, -141.98f); // encima del reflector
+	glm::vec3 dir8 = glm::normalize(piraPos - minireflectorPos4);
+
+	spotLights[7] = SpotLight(
+		1.0f, 1.0f, 0.0f,			// ambient
+		5.0f, 5.0f,                // ambient, diffuse
+		minireflectorPos4.x, minireflectorPos4.y, minireflectorPos4.z,  // posición
+		dir8.x, dir8.y, dir8.z,       // dirección hacia el ring
+		1.0f, 0.01f, 0.001f,
+		60.0f
+	);
 
 	int idx, aux=0;
 
@@ -978,8 +1028,16 @@ int main()
 				spotlighttemp[s++] = spotLights[1];
 				spotlighttemp[s++] = spotLights[2];
 				spotlighttemp[s++] = spotLights[3];
-
-			}//luz puntual de la gema
+			}
+			if (mainWindow.prendido2()) {
+				spotlighttemp[s++] = spotLights[4];
+				spotlighttemp[s++] = spotLights[5];
+				spotlighttemp[s++] = spotLights[6];
+				spotlighttemp[s++] = spotLights[7];
+			}
+			printf("Spotlight count: %d\n", s);
+			
+			//luz puntual de la gema
 			// Clear the window
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1004,7 +1062,6 @@ int main()
 			//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
 			glm::vec3 lowerLight = camera.getCameraPosition();
 			lowerLight.y -= 0.3f;
-			spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 			//informaci�n al shader de fuentes de iluminaci�n
 			shaderList[0].SetDirectionalLight(&mainLight);
@@ -1012,6 +1069,8 @@ int main()
 			shaderList[0].SetPointLights(pointLights, pointLightCount);
 			shaderList[0].SetSpotLights(spotlighttemp, s);
 
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 
@@ -1042,7 +1101,7 @@ int main()
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 				currentModel.RenderModel();
 			}*/
-		/*
+		
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(-694.59f, 0.00, -418.33f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1063,7 +1122,6 @@ int main()
 
 			}
 			
-
 			//antorchas
 			aux = 0;
 			for (const auto& coor : coordTorch) {
@@ -1144,7 +1202,7 @@ int main()
 				model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 				arbol_tronco.RenderModel();
-			}*/
+			}
 			//ring
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
@@ -1152,12 +1210,12 @@ int main()
 			ring.RenderModel();
 			
 			//piramide
-			/*
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(696.86, 0.00, -413.49));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			piramide.RenderModel();
 
+			
 			//ciclo for para cabezas olmecas
 			for (std::vector <GLfloat> v : coordsOlmechead) {
 				model = glm::mat4(1.0);
@@ -1165,6 +1223,7 @@ int main()
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 				cabeza_olmeca.RenderModel();
 			}
+			/*
 			//ciclo for para los botes de basura
 			for (std::vector <GLfloat> v : coordsTrash) {
 				model = glm::mat4(1.0);
@@ -1228,12 +1287,48 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bancas.RenderModel();*/
 
-			//reflectores
+			//Minireflectores
+			//lado izquierdo
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(994.05f, 0.00f, -407.96f));
+			modelaux = model;
+			spotLights[4].SetPos(glm::vec3(modelaux[3].x + 1.1f, modelaux[3].y+ 8.611f, modelaux[3].z));
+			model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			miniReflector.RenderModel();
+
+			//atras
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(698.30f, 0.00f, -745.47f));
+			modelaux = model;
+			spotLights[5].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 8.611f, modelaux[3].z - 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			miniReflector.RenderModel();
+
+			//lado derecho
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(354.27f, 0.00f, -404.60f));
+			modelaux = model;
+			spotLights[6].SetPos(glm::vec3(modelaux[3].x - 1.1f, modelaux[3].y + 8.611f, modelaux[3].z));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			miniReflector.RenderModel();
+			
+			//enfrente
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(694.67f, 0.00f, -143.08f));
+			modelaux = model;
+			spotLights[7].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 8.611f, modelaux[3].z + 1.1f));
+			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			miniReflector.RenderModel();
+
+			//Reflector
 			//lado del juzgado
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(-253.01, 0.00, 197.44));
 			modelaux = model;
-			spotLights[0].SetPos(glm::vec3(modelaux[3].x , modelaux[3].y+125.0f, modelaux[3].z));
+			spotLights[0].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 125.0f, modelaux[3].z));
 			model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			reflector.RenderModel();
@@ -1255,7 +1350,7 @@ int main()
 			model = glm::rotate(model, glm::radians(280.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			reflector.RenderModel();
-			
+
 			//lado de la piramide
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(253.84, 0.00, 203.23));

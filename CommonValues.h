@@ -3,5 +3,5 @@
 #include "stb_image.h"
 
 const int MAX_POINT_LIGHTS = 2;
-const int MAX_SPOT_LIGHTS = 5;
+const int MAX_SPOT_LIGHTS = 8;
 #endif
