@@ -1035,7 +1035,6 @@ int main()
 				spotlighttemp[s++] = spotLights[6];
 				spotlighttemp[s++] = spotLights[7];
 			}
-			printf("Spotlight count: %d\n", s);
 			
 			//luz puntual de la gema
 			// Clear the window
