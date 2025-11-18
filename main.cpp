@@ -114,7 +114,7 @@ std::vector<PointLight> lights;
 //material del personaje
 Material Material_personaje;
 
-ma_sound s_explosion,s_soundtrack;
+ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock;
 ma_result result;
 ma_engine eng;
 ma_sound_group ambiental, effects;
@@ -646,6 +646,11 @@ int loadSounds() {
 	result = ma_sound_init_from_file(&eng, "Audio/SergioMagicDustbin.mp3", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &s_soundtrack);
 	VERIFY(result);
 	ma_sound_set_volume(&s_soundtrack,0.2);
+	result = ma_sound_init_from_file(&eng,"Audio/Box_Bell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_box_bell);
+	VERIFY(result);
+	
+	result = ma_sound_init_from_file(&eng,"Audio/clock.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_clock);
+	VERIFY(result);
 	return MA_SUCCESS;
 
 }
@@ -751,10 +756,6 @@ int main()
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
-	/*tori = Model();
-	tori.LoadModel("Models/Tori.obj");
-	bell = Model();
-	bell.LoadModel("Models/Bell.obj");
 	soporte_bell = Model();
 	soporte_bell.LoadModel("Models/Boxing_Bell_soporte.obj");
 	palanca = Model();
@@ -767,6 +768,11 @@ int main()
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
 	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
+
+	/*tori = Model();
+	tori.LoadModel("Models/Tori.obj");
+	bell = Model();
+	bell.LoadModel("Models/Bell.obj");
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -1529,7 +1535,7 @@ spotLights[3] = SpotLight(
 			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bell.RenderModel();
-		}
+		}*/
 		bellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
@@ -1589,7 +1595,7 @@ spotLights[3] = SpotLight(
 
 			
 		}
-
+		/*
 		// (El else se eliminó para permitir loop infinito)
 
 		// Posición base del personaje
