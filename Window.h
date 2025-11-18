@@ -33,7 +33,7 @@ public:
 	bool AntorchOn() { return antorch; }
 	bool RayGunOn() { return raygun; }
 	bool prendido() { return prenderspot; }
-	bool apagado() { return apagadospot; }
+	bool prendido2() { return prenderspot2; }
 
 	GLfloat forward() { return front; }
 	~Window();
@@ -59,7 +59,7 @@ private:
 	GLfloat muevex;
 	bool mouseFirstMoved;
 	bool prenderspot;
-	bool apagadospot;
+	bool prenderspot2;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);
 

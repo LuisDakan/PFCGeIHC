@@ -62,7 +62,7 @@ int Window::Initialise()
 	articulacion9 = 0.0f;
 	articulacion10 = 0.0f;
 	prenderspot=false;
-	apagadospot=false;
+	prenderspot2=false;
 	//Asignando variables de GLFW y propiedades de ventana
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -216,6 +216,10 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
 		theWindow->prenderspot = !theWindow->prenderspot;
+
+	}
+	if (key == GLFW_KEY_T && action == GLFW_RELEASE) {
+		theWindow->prenderspot2 = !theWindow->prenderspot2;
 
 	}
 
