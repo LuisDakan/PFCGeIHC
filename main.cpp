@@ -1053,7 +1053,7 @@ int main()
 	glm::mat4 billboardRotation;
 	glm::vec3 savedPosition;
 	float currentScale;
-	float rotateZ, posCampana_z, rotCampana_x, rotPalanca_x;
+	float rotateZ=0.0f, posCampana_z, rotCampana_x, rotPalanca_x;
 	float manecilla_hora, manecilla_minuto;
 	glm::vec3 acePosition;
 	glm::mat4 bodyModel, rightShoulderModel, leftShoulderModel;
