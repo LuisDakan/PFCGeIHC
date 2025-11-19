@@ -118,7 +118,7 @@ std::vector<PointLight> lights;
 //material del personaje
 Material Material_personaje;
 
-ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell,s_crash_bandicoot,s_boat,s_judge,s_box_ring;
+ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell,s_crash_bandicoot,s_boat,s_judge,s_box_ring,s_pyramid;
 ma_result result;
 ma_engine eng;
 ma_sound_group ambiental, effects;
@@ -669,7 +669,7 @@ int loadSounds() {
 	VERIFY(result);
 	
 	result = ma_sound_init_from_file(&eng,"Audio/clock.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_clock);
-	ma_sound_set_volume(&s_clock,0.3);
+	ma_sound_set_volume(&s_clock,0.5);
 	VERIFY(result);
 
 	result = ma_sound_init_from_file(&eng,"Audio/Sonido_Campana.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_bell);
@@ -705,6 +705,13 @@ int loadSounds() {
 	ma_sound_set_min_distance(&s_box_ring, 3.0f);
 	ma_sound_set_rolloff(&s_box_ring, 4.0f);
 	ma_sound_start(&s_box_ring);
+
+	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Piramide.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_pyramid);
+	ma_sound_set_looping(&s_pyramid, MA_TRUE);
+	ma_sound_set_volume(&s_pyramid, 5.0f);
+	ma_sound_set_min_distance(&s_pyramid, 3.0f);
+	ma_sound_set_rolloff(&s_pyramid, 4.0f);
+	ma_sound_start(&s_pyramid);
 
 
 	return MA_SUCCESS;
@@ -867,8 +874,8 @@ int main()
 	arbol_tronco.LoadModel("Models/Arbol12.obj");*/
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
-	/*piramide = Model();
-	piramide.LoadModel("Models/Piramide.obj");
+	piramide = Model();
+	piramide.LoadModel("Models/Piramide.obj");/*
 	cabeza_olmeca = Model();
 	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
 	bote_basura = Model();
@@ -1338,7 +1345,7 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
 		}
-
+	    */
 		//ring
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
@@ -1357,8 +1364,15 @@ int main()
 		model = glm::translate(model, glm::vec3(696.86, 0.00, -413.49));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		piramide.RenderModel();
+		
+		// Posicionar sonido ambiental de la pirámide
+		glm::vec3 piramideWorldPos = glm::vec3(model[3]);
+		ma_sound_set_position(&s_pyramid, 
+			piramideWorldPos.x * AUDIO_SCALE, 
+			piramideWorldPos.y * AUDIO_SCALE, 
+			piramideWorldPos.z * AUDIO_SCALE);
 				//ciclo for para cabezas olmecas
-		for (std::vector <GLfloat> v : coordsOlmechead) {
+		/*for (std::vector <GLfloat> v : coordsOlmechead) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
