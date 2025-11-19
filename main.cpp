@@ -118,7 +118,7 @@ std::vector<PointLight> lights;
 //material del personaje
 Material Material_personaje;
 
-ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell,s_crash_bandicoot;
+ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell,s_crash_bandicoot,s_boat,s_judge,s_box_ring;
 ma_result result;
 ma_engine eng;
 ma_sound_group ambiental, effects;
@@ -642,7 +642,7 @@ int loadSoundGroups() {
 
 	result = ma_sound_group_init(&eng, 0, NULL, &ambiental);
 	VERIFY(result);
-	ma_sound_group_set_volume(&ambiental, 0.5);
+	ma_sound_group_set_volume(&ambiental, 0.3);
 
 	result = ma_sound_group_init(&eng, 0, NULL, &effects);
 	VERIFY(result);
@@ -650,15 +650,19 @@ int loadSoundGroups() {
 	//ma_sound_group_set_volume(&effects, 0.5);
 	return MA_SUCCESS;
 }
-
+//s_boat,s_judge,s_box_ring
 int loadSounds() {
+	//soundtrack
+	result = ma_sound_init_from_file(&eng, "Audio/Soundtrack.mp3", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &s_soundtrack);
+	VERIFY(result);
+	ma_sound_set_volume(&s_soundtrack,0.2);
+
+	//efectos de sonido
 
 	result = ma_sound_init_from_file(&eng, "Audio/explosion.wav", MA_SOUND_FLAG_DECODE, &effects, NULL, &s_explosion);
 	VERIFY(result);
 	ma_sound_set_volume(&s_explosion,0.5);
-	result = ma_sound_init_from_file(&eng, "Audio/Soundtrack.mp3", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &s_soundtrack);
-	VERIFY(result);
-	ma_sound_set_volume(&s_soundtrack,0.2);
+	
 	result = ma_sound_init_from_file(&eng,"Audio/Box_Bell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_box_bell);
 	ma_sound_set_volume(&s_box_bell,0.3);
 
@@ -672,6 +676,7 @@ int loadSounds() {
 	ma_sound_set_volume(&s_bell,0.3);
 	VERIFY(result);
 
+	//Ambientales
 	result = ma_sound_init_from_file(&eng,"Audio/Crash_Bandicoot.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_crash_bandicoot);
 	ma_sound_set_looping(&s_crash_bandicoot, MA_TRUE);
 	ma_sound_set_volume(&s_crash_bandicoot, 0.5f);
@@ -679,6 +684,28 @@ int loadSounds() {
 	ma_sound_set_min_distance(&s_crash_bandicoot, 3.0f);
 	ma_sound_set_rolloff(&s_crash_bandicoot, 4.0f);
 	ma_sound_start(&s_crash_bandicoot);
+
+	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Barco.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_boat);
+	ma_sound_set_looping(&s_boat, MA_TRUE);
+	ma_sound_set_volume(&s_boat, 5.0f);
+	ma_sound_set_min_distance(&s_boat, 5.0f);
+	ma_sound_set_rolloff(&s_boat, 1.0f);
+	ma_sound_start(&s_boat);
+	
+	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Juzgado.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_judge);
+	ma_sound_set_looping(&s_judge, MA_TRUE);
+	ma_sound_set_volume(&s_judge, 0.7f);
+	ma_sound_set_min_distance(&s_judge, 3.0f);
+	ma_sound_set_rolloff(&s_judge, 4.0f);
+	ma_sound_start(&s_judge);
+	
+	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Luchas.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_box_ring);
+	ma_sound_set_looping(&s_box_ring, MA_TRUE);
+	ma_sound_set_volume(&s_box_ring, 0.7f);
+	ma_sound_set_min_distance(&s_box_ring, 3.0f);
+	ma_sound_set_rolloff(&s_box_ring, 4.0f);
+	ma_sound_start(&s_box_ring);
+
 
 	return MA_SUCCESS;
 
@@ -859,7 +886,7 @@ int main()
 	cajas_tnt = Model();
 	cajas_tnt.LoadModel("Models/Caja_TNT.obj");
 	jumping = Model();
-	jumping.LoadModel("Models/jumping.obj");
+	jumping.LoadModel("Models/jumping.obj");*/
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
@@ -867,9 +894,9 @@ int main()
 	valla_juzgado = Model();
 	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
 	silla_juzgado = Model();
-	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");*/
+	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	casa_aku_aku = Model();
-	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
+	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");/*
 	gemaAzul = Model();
 	gemaAzul.LoadModel("Models/GemaAzul.obj");
 	gemaRoja = Model();
@@ -877,7 +904,7 @@ int main()
 	gemaPurpura = Model();
 	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
 	gemaAmarilla = Model();
-	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
+	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");*/
 	
 	//personajes
 	/*akuaku = Model();	
@@ -1213,6 +1240,13 @@ int main()
 		modelboat = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		barco.RenderModel();
+		
+		// Posicionar sonido ambiental del barco
+		glm::vec3 barcoWorldPos = glm::vec3(model[3]);
+		ma_sound_set_position(&s_boat, 
+			barcoWorldPos.x * AUDIO_SCALE, 
+			barcoWorldPos.y * AUDIO_SCALE, 
+			barcoWorldPos.z * AUDIO_SCALE);
 
 		//ciclo for para las toris
 		/*for (std::vector <GLfloat> v : coordsToris) {
@@ -1310,6 +1344,13 @@ int main()
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ring.RenderModel();
+		
+		// Posicionar sonido ambiental del ring de boxeo
+		glm::vec3 ringWorldPos = glm::vec3(model[3]);
+		ma_sound_set_position(&s_box_ring, 
+			ringWorldPos.x * AUDIO_SCALE, 
+			ringWorldPos.y * AUDIO_SCALE, 
+			ringWorldPos.z * AUDIO_SCALE);
 		
 		//piramide
 		model = glm::mat4(1.0);
@@ -1483,7 +1524,7 @@ int main()
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			jumping.RenderModel();
-		}
+		}*/
 
 		//juzgado
 		model = glm::mat4(1.0);
@@ -1496,6 +1537,13 @@ int main()
 		model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 61.1f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		lugar_juzgado.RenderModel();
+		
+		// Posicionar sonido ambiental del juzgado
+		glm::vec3 juzgadoWorldPos = glm::vec3(model[3]);
+		ma_sound_set_position(&s_judge, 
+			juzgadoWorldPos.x * AUDIO_SCALE, 
+			juzgadoWorldPos.y * AUDIO_SCALE, 
+			juzgadoWorldPos.z * AUDIO_SCALE);
 	
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(-5.99f, 0.0f, 118.85f));
@@ -1505,7 +1553,7 @@ int main()
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla_juzgado.RenderModel();*/
+		silla_juzgado.RenderModel();
 
 		//escenario aku aku 
 		model = glm::mat4(1.0);
