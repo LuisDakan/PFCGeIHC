@@ -5,6 +5,7 @@
 #include <glm.hpp>
 #include <string>
 #include <vector>
+#include "miniaudio.h"
 
 #define MAX_FRAMES 100
 
@@ -54,6 +55,9 @@ public:
     // Configuración
     void SetInterpolationSteps(int steps) { maxSteps = steps; }
     void SetLooping(bool loop) { looping = loop; }
+    void SetSound(ma_sound* sound) { soundPtr = sound; }
+    bool IsLooping() const { return looping; }
+    int GetPlayIndex() const { return playIndex; }
 
 private:
     void Interpolate();    // Calcular incrementos entre frames
@@ -74,6 +78,7 @@ private:
     bool looping;          // Si la animación se repite
     
     std::string animationName;
+    ma_sound* soundPtr;    // Puntero al sonido asociado (opcional)
 };
 
 // Manager para múltiples animaciones
@@ -91,7 +96,6 @@ public:
     void PauseAnimation(const std::string& name);
     void StopAnimation(const std::string& name);
     void ResetAnimation(const std::string& name);
-    
     // Actualizar todas las animaciones activas
     void UpdateAll();
     

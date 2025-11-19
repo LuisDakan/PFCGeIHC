@@ -7,7 +7,8 @@
 KeyframeAnimation::KeyframeAnimation()
     : frameCount(0), playIndex(0), currentStep(0), maxSteps(100),
       isPlaying(false), looping(false),
-      currentValue1(0.0f), currentValue2(0.0f), currentValue3(0.0f)
+      currentValue1(0.0f), currentValue2(0.0f), currentValue3(0.0f),
+      soundPtr(nullptr)
 {
 }
 
@@ -15,7 +16,7 @@ KeyframeAnimation::KeyframeAnimation(const std::string& filename, int maxSteps)
     : frameCount(0), playIndex(0), currentStep(0), maxSteps(maxSteps),
       isPlaying(false), looping(false),
       currentValue1(0.0f), currentValue2(0.0f), currentValue3(0.0f),
-      animationName(filename)
+      animationName(filename), soundPtr(nullptr)
 {
     LoadFromFile(filename);
 }
@@ -124,6 +125,9 @@ void KeyframeAnimation::Update()
     
     if (currentStep >= maxSteps) // ¿Terminó interpolación entre frames?
     {
+        // Reiniciar sonido al llegar al límite de steps
+        
+        
         playIndex++;
         
         if (playIndex >= frameCount - 1) // ¿Llegó al último frame?
@@ -160,6 +164,7 @@ void KeyframeAnimation::Update()
         currentValue3 += frames[playIndex].value3Inc;
         currentStep++;
     }
+    
 }
 
 // ==================== KeyframeAnimationManager ====================

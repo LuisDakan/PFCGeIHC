@@ -660,12 +660,14 @@ int loadSounds() {
 	VERIFY(result);
 	ma_sound_set_volume(&s_soundtrack,0.2);
 	result = ma_sound_init_from_file(&eng,"Audio/Box_Bell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_box_bell);
+	ma_sound_set_volume(&s_box_bell,0.3);
 	VERIFY(result);
 	
 	result = ma_sound_init_from_file(&eng,"Audio/clock.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_clock);
 	VERIFY(result);
 
-	result = ma_sound_init_from_file(&eng,"Audio/handbell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_bell);
+	result = ma_sound_init_from_file(&eng,"Audio/Sonido_Campana.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_bell);
+	ma_sound_set_volume(&s_bell,0.3);
 	VERIFY(result);
 	return MA_SUCCESS;
 
@@ -760,6 +762,22 @@ int main()
 
 	// Inicializar sistema de animaciones por keyframes*/
 	InitKeyframeAnimations();
+	
+	// Asociar sonidos a las animaciones de efectos especiales
+	KeyframeAnimation* bellAnim = g_AnimationManager.GetAnimation("Bell");
+	if(bellAnim) {
+		bellAnim->SetSound(&s_bell);
+	}
+	
+	KeyframeAnimation* ringBellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
+	if(ringBellAnim) {
+		ringBellAnim->SetSound(&s_box_bell);
+	}
+	
+	KeyframeAnimation* relojAnim = g_AnimationManager.GetAnimation("Reloj");
+	if(relojAnim) {
+		relojAnim->SetSound(&s_clock);
+	}
 	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 	
@@ -1058,7 +1076,7 @@ int main()
 	glm::vec3 acePosition;
 	glm::mat4 bodyModel, rightShoulderModel, leftShoulderModel;
 	glm::mat4 rightThighModel, leftThighModel;
-	KeyframeAnimation* bellAnim;
+	
 	int pointLightCount,spotLightCount=0;
 	//para animacion de las gemas
 	float radius = 200.0f;
@@ -1648,9 +1666,6 @@ int main()
 			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 			
-			// Posicionar el sonido de bell ligado por jerarquía
-			glm::vec3 bellWorldPos = glm::vec3(model[3]);
-			ma_sound_set_position(&s_bell, bellWorldPos.x * AUDIO_SCALE, bellWorldPos.y * AUDIO_SCALE, bellWorldPos.z * AUDIO_SCALE);
 			
 			// Reproducir sonido cuando la campana comienza a rotar
 			if (!bellSoundPlayed && fabs(rotateZ) > 1.0f) {
@@ -1661,6 +1676,10 @@ int main()
 			
 			model = modelboat;
 			model = glm::translate(model, glm::vec3(31.174f, 84.0f, 10.257f));
+			// Posicionar el sonido de bell ligado por jerarquía
+			glm::vec3 bellWorldPos = glm::vec3(model[3]);
+			ma_sound_set_position(&s_bell, bellWorldPos.x * AUDIO_SCALE, bellWorldPos.y * AUDIO_SCALE, bellWorldPos.z * AUDIO_SCALE);
+			
 			rotateZ = bellAnim->GetValue1();
 			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
