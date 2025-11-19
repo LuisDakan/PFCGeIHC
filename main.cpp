@@ -1641,12 +1641,7 @@ int main()
 		// ========== Renderizado con animación por keyframes (Bell) ==========
 		bellAnim = g_AnimationManager.GetAnimation("Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
-		   model = glm::mat4(1.0f);
-		   model = glm::translate(model,glm::vec3(0.0f,2.0f,0.0f));
-			//model = glm::translate(model, glm::vec3(-543.37, 20.00, -725.40));
-			rotateZ = bellAnim->GetValue1();
-			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
-			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		  
 			
 			// Posicionar el sonido de bell ligado por jerarquía
 			glm::vec3 bellWorldPos = glm::vec3(model[3]);
