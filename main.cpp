@@ -895,13 +895,13 @@ int main()
 	dbjoe = Model();
 	dbjoe.LoadModel("Models/DBJoe.obj");*/
 	opaopa = Model();
-	opaopa.LoadModel("Models/Opa-Opa.obj");/*
+	opaopa.LoadModel("Models/Opa-Opa.obj");
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
 	"MusloDerechoAce","MusloIzquierdoAce","PiernaDerechaAce","PiernaIzquierdaAce"};
 	for(std::string s:ModelAce){
 		ace[s] = Model();
 		ace[s].LoadModel("Models/Principal/"+s+".obj");
-	}*/
+	}
 
 		//Cycle day
 
@@ -1805,15 +1805,16 @@ int main()
 			clockSoundPlayed = false;
 			lastClockRotation = 0.0f;
 		}
-		/*
+		
 		// (El else se eliminó para permitir loop infinito)
 
 		// Posición base del personaje
-		acePosition = glm::vec3(-150.0f, 19.5f, 0.0f);
+		acePosition = glm::vec3(1300.0f, 19.5f, 0.0f);
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 		model = glm::mat4(1.0);
 		model = glm::translate(model, acePosition);
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model,glm::vec3(0.6f,0.6f,0.6f));
 		model = AnimateBody(model);
 		bodyModel = model; // Guardar la transformación del cuerpo
@@ -1966,7 +1967,7 @@ int main()
 		
 		
 		
-		*/
+	
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		modelaux=model;
