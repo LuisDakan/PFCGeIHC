@@ -54,6 +54,8 @@ float lastGemRotationTime = 0.0f;
 float gemRotationInterval = 3.0f;
 // Variable para contador de rounds (0 a 14)
 int roundCounter = 0,firstDigit,secondDigit;
+//Rotación badajo
+float badajo_rot = 0.0f;
 
 // Variable para rotación de texturas de máscaras (0-3)
 int maskRotation = 0;
@@ -97,6 +99,7 @@ Model casa_aku_aku;
 Model TNT,tapa;
 Model opaopa;
 Model bell;
+Model badajo;
 //Personajes
 Model akuaku, ukauka, mayafey,  edgeworth, alexkid, dbjoe, crash;
 Model gemaAzul, gemaRoja, gemaPurpura, gemaAmarilla;
@@ -745,7 +748,7 @@ int main()
 	CreateRingWalls();
 	
 
-	/*for(std::vector<float> v:coordTorch)
+	for(std::vector<float> v:coordTorch)
 	{
 		lights.push_back(
 			PointLight(1.0f, 1.0f, 0.0f,
@@ -769,8 +772,14 @@ int main()
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
+	tori = Model();
+	tori.LoadModel("Models/Tori.obj");
+	miniReflector = Model();
+	miniReflector.LoadModel("Models/Mini_Reflector.obj");
 	bell = Model();
 	bell.LoadModel("Models/Bell.obj");
+	badajo = Model();
+	badajo.LoadModel("Models/Badajo.obj");
 	soporte_bell = Model();
 	soporte_bell.LoadModel("Models/Boxing_Bell_soporte.obj");
 	palanca = Model();
@@ -783,15 +792,7 @@ int main()
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
 	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
-
 	/*
-	miniReflector = Model();
-	miniReflector.LoadModel("Models/Mini_Reflector.obj");
-
-	/*tori = Model();
-	tori.LoadModel("Models/Tori.obj");
-	bell = Model();
-	bell.LoadModel("Models/Bell.obj");
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -811,10 +812,10 @@ int main()
 	arbusto_largo = Model();
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
-	arbol_tronco.LoadModel("Models/Arbol12.obj");
+	arbol_tronco.LoadModel("Models/Arbol12.obj");*/
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
-	piramide = Model();
+	/*piramide = Model();
 	piramide.LoadModel("Models/Piramide.obj");
 	cabeza_olmeca = Model();
 	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
@@ -867,9 +868,9 @@ int main()
 	alexkid = Model();
 	alexkid.LoadModel("Models/alexKid.obj");
 	dbjoe = Model();
-	dbjoe.LoadModel("Models/DBJoe.obj");
+	dbjoe.LoadModel("Models/DBJoe.obj");*/
 	opaopa = Model();
-	opaopa.LoadModel("Models/Opa-Opa.obj");
+	opaopa.LoadModel("Models/Opa-Opa.obj");/*
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
 	"MusloDerechoAce","MusloIzquierdoAce","PiernaDerechaAce","PiernaIzquierdaAce"};
 	for(std::string s:ModelAce){
@@ -1033,6 +1034,7 @@ int main()
 	//se crean mas luces puntuales y spotlight 
 	glm::mat4 model(1.0);
 	glm::mat4 modelaux(1.0);
+	glm::mat4 modelboat(1.0);
 	glm::mat4 modeljuz(1.0);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -1183,6 +1185,7 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-694.59f,0.00,-418.33f));
 		model = AnimationShip(model);
+		modelboat = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		barco.RenderModel();
 
@@ -1625,12 +1628,12 @@ int main()
 			glDisable(GL_BLEND);
 		}
 
-		/*model = glm::mat4(1.0);
+		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -50.0f));
 		model = AnimationOpa(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		opaopa.RenderModel();*/
-
+		opaopa.RenderModel();
+		
 		// ========== Animación jerárquica de caminata (Ace) ==========
 		// Actualizar el ciclo de caminata
 		UpdateWalkCycle();
@@ -1656,8 +1659,20 @@ int main()
 				bellSoundPlayed = true;
 			}
 			
+			model = modelboat;
+			model = glm::translate(model, glm::vec3(31.174f, 84.0f, 10.257f));
+			rotateZ = bellAnim->GetValue1();
+			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+			modelaux = model;
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bell.RenderModel();
+
+			model = modelaux;
+			badajo_rot = bellAnim->GetValue2();
+			model = glm::rotate(model, glm::radians(badajo_rot), glm::vec3(0.0f, 0.0f, 1.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			badajo.RenderModel();
 		}
 		else {
 			// Resetear bandera cuando la animación no está activa
@@ -1666,11 +1681,11 @@ int main()
 		bellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(-96.7 + 195.f, 50.0f, -77.5f));
+			model = glm::translate(model, glm::vec3(116.f, 4.0f, -80.0f));
 			posCampana_z = bellAnim->GetValue1();
 			rotCampana_x = bellAnim->GetValue2();
 			rotPalanca_x = bellAnim->GetValue3();
-			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 			modelaux = model;
 			
@@ -1713,11 +1728,11 @@ int main()
 		bellAnim = g_AnimationManager.GetAnimation("Reloj");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
-		   model = glm::translate(model, glm::vec3(640.59, 10.00, 370.90));
+		   model = glm::translate(model, glm::vec3(640.59f, 15.00f, 466.5f));
 			manecilla_hora = bellAnim->GetValue1();
 			manecilla_minuto = bellAnim->GetValue2();
-			
-			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			modelaux = model;
 			
@@ -1922,12 +1937,12 @@ int main()
 		
 		
 		
-
+		*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		modelaux=model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		ring.RenderModel();
+		ring.RenderModel(); /*
 
 		// Renderizar paredes del ring con texturas de máscaras
 		mascaras.UseTexture();
