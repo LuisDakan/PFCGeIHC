@@ -708,7 +708,7 @@ int loadSounds() {
 
 	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Piramide.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_pyramid);
 	ma_sound_set_looping(&s_pyramid, MA_TRUE);
-	ma_sound_set_volume(&s_pyramid, 5.0f);
+	ma_sound_set_volume(&s_pyramid, 10.0f);
 	ma_sound_set_min_distance(&s_pyramid, 3.0f);
 	ma_sound_set_rolloff(&s_pyramid, 4.0f);
 	ma_sound_start(&s_pyramid);
