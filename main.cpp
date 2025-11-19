@@ -1042,7 +1042,7 @@ int main()
 	float angle = 0.0f;
 	// Tomando como Centro la posicion de la casa de aku aku 
 	glm::vec3 centerPosition = glm::vec3(640.59, 20.0f, 456.90);
-	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
+	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 5000.0f);
 	
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose()){
