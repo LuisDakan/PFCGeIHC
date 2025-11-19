@@ -76,6 +76,7 @@ private:
     
     bool isPlaying;
     bool looping;          // Si la animación se repite
+    bool soundPlayed;      // Control para reproducir sonido una vez por ciclo
     
     std::string animationName;
     ma_sound* soundPtr;    // Puntero al sonido asociado (opcional)

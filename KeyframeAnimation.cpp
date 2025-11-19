@@ -8,7 +8,7 @@ KeyframeAnimation::KeyframeAnimation()
     : frameCount(0), playIndex(0), currentStep(0), maxSteps(100),
       isPlaying(false), looping(false),
       currentValue1(0.0f), currentValue2(0.0f), currentValue3(0.0f),
-      soundPtr(nullptr)
+      soundPtr(nullptr), soundPlayed(false)
 {
 }
 
@@ -16,7 +16,7 @@ KeyframeAnimation::KeyframeAnimation(const std::string& filename, int maxSteps)
     : frameCount(0), playIndex(0), currentStep(0), maxSteps(maxSteps),
       isPlaying(false), looping(false),
       currentValue1(0.0f), currentValue2(0.0f), currentValue3(0.0f),
-      animationName(filename), soundPtr(nullptr)
+      animationName(filename), soundPtr(nullptr), soundPlayed(false)
 {
     LoadFromFile(filename);
 }
@@ -105,6 +105,7 @@ void KeyframeAnimation::Reset()
     currentValue1 = frames[0].value1;
     currentValue2 = frames[0].value2;
     currentValue3 = frames[0].value3;
+    soundPlayed = false;
 }
 
 void KeyframeAnimation::Interpolate()
@@ -125,8 +126,14 @@ void KeyframeAnimation::Update()
     
     if (currentStep >= maxSteps) // ¿Terminó interpolación entre frames?
     {
-        // Reiniciar sonido al llegar al límite de steps
-        
+        // Reproducir sonido una vez cuando termina el ciclo de interpolación
+        if (soundPtr && !soundPlayed && playIndex==2)
+        {
+            ma_sound_seek_to_pcm_frame(soundPtr, 0);
+            //ma_sound_set_start_time_in_milliseconds(soundPtr,1000);
+            ma_sound_start(soundPtr);
+            soundPlayed = true;
+        }
         
         playIndex++;
         
@@ -140,6 +147,8 @@ void KeyframeAnimation::Update()
                 currentValue1 = frames[0].value1;
                 currentValue2 = frames[0].value2;
                 currentValue3 = frames[0].value3;
+                soundPlayed = false; // Resetear para el siguiente ciclo
+                
                 Interpolate();
             }
             else
@@ -153,6 +162,7 @@ void KeyframeAnimation::Update()
         {
             // Continuar con siguiente frame
             currentStep = 0;
+            soundPlayed = false; // Permitir reproducción en el siguiente ciclo
             Interpolate();
         }
     }

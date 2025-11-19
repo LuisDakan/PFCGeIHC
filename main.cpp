@@ -661,6 +661,7 @@ int loadSounds() {
 	ma_sound_set_volume(&s_soundtrack,0.2);
 	result = ma_sound_init_from_file(&eng,"Audio/Box_Bell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_box_bell);
 	ma_sound_set_volume(&s_box_bell,0.3);
+	//ma_sound_set_looping(&s_box_bell,MA_TRUE);
 	VERIFY(result);
 	
 	result = ma_sound_init_from_file(&eng,"Audio/clock.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_clock);
@@ -1071,7 +1072,7 @@ int main()
 	glm::mat4 billboardRotation;
 	glm::vec3 savedPosition;
 	float currentScale;
-	float rotateZ, posCampana_z, rotCampana_x, rotPalanca_x;
+	float rotateZ=0.0f, posCampana_z, rotCampana_x, rotPalanca_x;
 	float manecilla_hora, manecilla_minuto;
 	glm::vec3 acePosition;
 	glm::mat4 bodyModel, rightShoulderModel, leftShoulderModel;
@@ -1659,12 +1660,7 @@ int main()
 		// ========== Renderizado con animación por keyframes (Bell) ==========
 		bellAnim = g_AnimationManager.GetAnimation("Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
-		   model = glm::mat4(1.0f);
-		   model = glm::translate(model,glm::vec3(0.0f,2.0f,0.0f));
-			//model = glm::translate(model, glm::vec3(-543.37, 20.00, -725.40));
-			rotateZ = bellAnim->GetValue1();
-			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
-			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		   
 			
 			
 			// Reproducir sonido cuando la campana comienza a rotar
@@ -1719,11 +1715,11 @@ int main()
 			model = modelaux;
 			
 			// Reproducir sonido cuando la campana comienza a moverse
-			if (!ringBellSoundPlayed && (fabs(posCampana_z) > 0.1f || fabs(rotCampana_x) > 0.5f)) {
+			/*if (!ringBellSoundPlayed && (fabs(posCampana_z) > 0.1f || fabs(rotCampana_x) > 0.5f)) {
 				ma_sound_set_looping(&s_box_bell,MA_TRUE);
 				ma_sound_start(&s_box_bell);
 				ringBellSoundPlayed = true;
-			}
+			}*/
 		
 			model = glm::translate(model, glm::vec3(0.0f,3.5f, posCampana_z));
 			model = glm::rotate(model, rotCampana_x * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
