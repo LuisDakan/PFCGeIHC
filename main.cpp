@@ -115,10 +115,19 @@ std::vector<PointLight> lights;
 //material del personaje
 Material Material_personaje;
 
-ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock;
+ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell;
 ma_result result;
 ma_engine eng;
 ma_sound_group ambiental, effects;
+
+// Banderas para control de sonidos
+bool ringBellSoundPlayed = false;
+bool clockSoundPlayed = false;
+float lastClockRotation = 0.0f;
+bool bellSoundPlayed = false;
+
+// Escala para audio 3D
+const float AUDIO_SCALE = 0.01f;
 
 
 //posiciones de antorchas
@@ -652,6 +661,9 @@ int loadSounds() {
 	
 	result = ma_sound_init_from_file(&eng,"Audio/clock.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_clock);
 	VERIFY(result);
+
+	result = ma_sound_init_from_file(&eng,"Audio/handbell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_bell);
+	VERIFY(result);
 	return MA_SUCCESS;
 
 }
@@ -757,10 +769,6 @@ int main()
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
 	tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
-	/*tori = Model();
-	tori.LoadModel("Models/Tori.obj");
-	miniReflector = Model();
-	miniReflector.LoadModel("Models/Mini_Reflector.obj");
 	bell = Model();
 	bell.LoadModel("Models/Bell.obj");
 	soporte_bell = Model();
@@ -775,6 +783,10 @@ int main()
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
 	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
+
+	/*
+	miniReflector = Model();
+	miniReflector.LoadModel("Models/Mini_Reflector.obj");
 
 	/*tori = Model();
 	tori.LoadModel("Models/Tori.obj");
@@ -1052,7 +1064,7 @@ int main()
 	float angle = 0.0f;
 	// Tomando como Centro la posicion de la casa de aku aku 
 	glm::vec3 centerPosition = glm::vec3(640.59, 20.0f, 456.90);
-	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
+	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 5000.0f);
 	
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose()){
@@ -1553,7 +1565,7 @@ int main()
 		model = AnimationTNT(model);  // Aplicar tambaleo
 		modelaux = model;
 		// Posicionar el sonido de explosión en la TNT
-		glm::vec3 tntWorldPos = glm::vec3(model[3])*0.01f;
+		glm::vec3 tntWorldPos = glm::vec3(model[3])*AUDIO_SCALE;
 		ma_sound_set_position(&s_explosion, tntWorldPos.x,tntWorldPos.y,tntWorldPos.z);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		TNT.RenderModel();
@@ -1622,7 +1634,7 @@ int main()
 		// ========== Animación jerárquica de caminata (Ace) ==========
 		// Actualizar el ciclo de caminata
 		UpdateWalkCycle();
-		
+		*/
 		// ========== Renderizado con animación por keyframes (Bell) ==========
 		bellAnim = g_AnimationManager.GetAnimation("Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
@@ -1631,9 +1643,24 @@ int main()
 			rotateZ = bellAnim->GetValue1();
 			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+			
+			// Posicionar el sonido de bell ligado por jerarquía
+			glm::vec3 bellWorldPos = glm::vec3(model[3]);
+			ma_sound_set_position(&s_bell, bellWorldPos.x * AUDIO_SCALE, bellWorldPos.y * AUDIO_SCALE, bellWorldPos.z * AUDIO_SCALE);
+			
+			// Reproducir sonido cuando la campana comienza a rotar
+			if (!bellSoundPlayed && fabs(rotateZ) > 1.0f) {
+				ma_sound_start(&s_bell);
+				bellSoundPlayed = true;
+			}
+			
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bell.RenderModel();
-		}*/
+		}
+		else {
+			// Resetear bandera cuando la animación no está activa
+			bellSoundPlayed = false;
+		}
 		bellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
@@ -1644,11 +1671,22 @@ int main()
 			//model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 			modelaux = model;
+			
+			// Posicionar el sonido de box_bell ligado por jerarquía
+			glm::vec3 boxBellWorldPos = glm::vec3(model[3]);
+			ma_sound_set_position(&s_box_bell, boxBellWorldPos.x * AUDIO_SCALE, boxBellWorldPos.y * AUDIO_SCALE, boxBellWorldPos.z * AUDIO_SCALE);
+			
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			soporte_bell.RenderModel();
 
 			// Campana - Traslación en Z y Rotación en X (balanceo)
 			model = modelaux;
+			
+			// Reproducir sonido cuando la campana comienza a moverse
+			if (!ringBellSoundPlayed && (fabs(posCampana_z) > 0.1f || fabs(rotCampana_x) > 0.5f)) {
+				ma_sound_start(&s_box_bell);
+				ringBellSoundPlayed = true;
+			}
 		
 			model = glm::translate(model, glm::vec3(0.0f,3.5f, posCampana_z));
 			model = glm::rotate(model, rotCampana_x * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -1664,6 +1702,10 @@ int main()
 
 			
 		}
+		else {
+			// Resetear bandera cuando la animación no está activa
+			ringBellSoundPlayed = false;
+		}
 
 		bellAnim = g_AnimationManager.GetAnimation("Reloj");
 		if(bellAnim && bellAnim->IsPlaying()){
@@ -1671,9 +1713,26 @@ int main()
 		   model = glm::translate(model, glm::vec3(640.59, 10.00, 370.90));
 			manecilla_hora = bellAnim->GetValue1();
 			manecilla_minuto = bellAnim->GetValue2();
+			
 			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			modelaux = model;
+			
+			// Posicionar el sonido del reloj ligado por jerarquía
+			glm::vec3 clockWorldPos = glm::vec3(modelaux[3]);
+			ma_sound_set_position(&s_clock, clockWorldPos.x * AUDIO_SCALE, clockWorldPos.y * AUDIO_SCALE, clockWorldPos.z * AUDIO_SCALE);
+			
+			// Reproducir sonido cada vez que la manecilla del minuto cambia significativamente
+			if (!clockSoundPlayed && fabs(manecilla_minuto - lastClockRotation) > 5.0f) {
+				ma_sound_start(&s_clock);
+				clockSoundPlayed = true;
+				lastClockRotation = manecilla_minuto;
+			}
+			// Resetear bandera después de un cambio grande
+			if (fabs(manecilla_minuto - lastClockRotation) > 15.0f) {
+				clockSoundPlayed = false;
+			}
+			
 			//model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Reloj_Crash.RenderModel();
@@ -1692,6 +1751,11 @@ int main()
 			
 
 			
+		}
+		else {
+			// Resetear bandera cuando la animación no está activa
+			clockSoundPlayed = false;
+			lastClockRotation = 0.0f;
 		}
 		/*
 		// (El else se eliminó para permitir loop infinito)
