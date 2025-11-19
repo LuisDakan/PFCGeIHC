@@ -600,7 +600,7 @@ void InitKeyframeAnimations()
     // Cargar animaciones
     g_AnimationManager.AddAnimation("Ring_Bell", "keyframes_ring_bell.txt", 100);
     g_AnimationManager.AddAnimation("Reloj","keyframes_Reloj.txt",100);
-    g_AnimationManager.AddAnimation("Bell","keyframes_bell.txt",100);
+    g_AnimationManager.AddAnimation("Bell","keyframes_bell.txt",25);
     
     // Configurar animaciones para que se ejecuten en loop automáticamente
     KeyframeAnimation* ringBellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
