@@ -755,9 +755,9 @@ int main()
 		);
 	}
 
-	// Inicializar sistema de animaciones por keyframes
+	// Inicializar sistema de animaciones por keyframes*/
 	InitKeyframeAnimations();
-	*/
+	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 	
 	
@@ -1629,17 +1629,18 @@ int main()
 		model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -50.0f));
 		model = AnimationOpa(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		opaopa.RenderModel();
+		opaopa.RenderModel();*/
 
 		// ========== Animación jerárquica de caminata (Ace) ==========
 		// Actualizar el ciclo de caminata
 		UpdateWalkCycle();
-		*/
+		
 		// ========== Renderizado con animación por keyframes (Bell) ==========
 		bellAnim = g_AnimationManager.GetAnimation("Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
 		   model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(-543.37, 20.00, -725.40));
+		   model = glm::translate(model,glm::vec3(0.0f,2.0f,0.0f));
+			//model = glm::translate(model, glm::vec3(-543.37, 20.00, -725.40));
 			rotateZ = bellAnim->GetValue1();
 			model = glm::rotate(model, glm::radians(rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
@@ -1650,6 +1651,7 @@ int main()
 			
 			// Reproducir sonido cuando la campana comienza a rotar
 			if (!bellSoundPlayed && fabs(rotateZ) > 1.0f) {
+				ma_sound_set_looping(&s_bell,MA_TRUE);
 				ma_sound_start(&s_bell);
 				bellSoundPlayed = true;
 			}
@@ -1684,6 +1686,7 @@ int main()
 			
 			// Reproducir sonido cuando la campana comienza a moverse
 			if (!ringBellSoundPlayed && (fabs(posCampana_z) > 0.1f || fabs(rotCampana_x) > 0.5f)) {
+				ma_sound_set_looping(&s_box_bell,MA_TRUE);
 				ma_sound_start(&s_box_bell);
 				ringBellSoundPlayed = true;
 			}
@@ -1724,6 +1727,7 @@ int main()
 			
 			// Reproducir sonido cada vez que la manecilla del minuto cambia significativamente
 			if (!clockSoundPlayed && fabs(manecilla_minuto - lastClockRotation) > 5.0f) {
+				ma_sound_set_looping(&s_bell,MA_TRUE);
 				ma_sound_start(&s_clock);
 				clockSoundPlayed = true;
 				lastClockRotation = manecilla_minuto;
