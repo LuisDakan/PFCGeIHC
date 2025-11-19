@@ -118,7 +118,7 @@ std::vector<PointLight> lights;
 //material del personaje
 Material Material_personaje;
 
-ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell;
+ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell,s_crash_bandicoot;
 ma_result result;
 ma_engine eng;
 ma_sound_group ambiental, effects;
@@ -642,11 +642,11 @@ int loadSoundGroups() {
 
 	result = ma_sound_group_init(&eng, 0, NULL, &ambiental);
 	VERIFY(result);
-	ma_sound_group_set_volume(&ambiental, 0.8);
+	ma_sound_group_set_volume(&ambiental, 0.5);
 
 	result = ma_sound_group_init(&eng, 0, NULL, &effects);
 	VERIFY(result);
-	
+	ma_sound_group_set_volume(&effects,0.4);
 	//ma_sound_group_set_volume(&effects, 0.5);
 	return MA_SUCCESS;
 }
@@ -656,20 +656,30 @@ int loadSounds() {
 	result = ma_sound_init_from_file(&eng, "Audio/explosion.wav", MA_SOUND_FLAG_DECODE, &effects, NULL, &s_explosion);
 	VERIFY(result);
 	ma_sound_set_volume(&s_explosion,0.5);
-	result = ma_sound_init_from_file(&eng, "Audio/SergioMagicDustbin.mp3", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &s_soundtrack);
+	result = ma_sound_init_from_file(&eng, "Audio/Soundtrack.mp3", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &s_soundtrack);
 	VERIFY(result);
 	ma_sound_set_volume(&s_soundtrack,0.2);
 	result = ma_sound_init_from_file(&eng,"Audio/Box_Bell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_box_bell);
 	ma_sound_set_volume(&s_box_bell,0.3);
-	//ma_sound_set_looping(&s_box_bell,MA_TRUE);
+
 	VERIFY(result);
 	
 	result = ma_sound_init_from_file(&eng,"Audio/clock.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_clock);
+	ma_sound_set_volume(&s_clock,0.3);
 	VERIFY(result);
 
 	result = ma_sound_init_from_file(&eng,"Audio/Sonido_Campana.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_bell);
 	ma_sound_set_volume(&s_bell,0.3);
 	VERIFY(result);
+
+	result = ma_sound_init_from_file(&eng,"Audio/Crash_Bandicoot.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_crash_bandicoot);
+	ma_sound_set_looping(&s_crash_bandicoot, MA_TRUE);
+	ma_sound_set_volume(&s_crash_bandicoot, 0.5f);
+	// Configurar atenuación: min_distance = 50 unidades de audio (500 en mundo), rolloff = 1.0
+	ma_sound_set_min_distance(&s_crash_bandicoot, 3.0f);
+	ma_sound_set_rolloff(&s_crash_bandicoot, 4.0f);
+	ma_sound_start(&s_crash_bandicoot);
+
 	return MA_SUCCESS;
 
 }
@@ -766,9 +776,7 @@ int main()
 	
 	// Asociar sonidos a las animaciones de efectos especiales
 	KeyframeAnimation* bellAnim = g_AnimationManager.GetAnimation("Bell");
-	if(bellAnim) {
-		bellAnim->SetSound(&s_bell);
-	}
+	
 	
 	KeyframeAnimation* ringBellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 	if(ringBellAnim) {
@@ -776,9 +784,7 @@ int main()
 	}
 	
 	KeyframeAnimation* relojAnim = g_AnimationManager.GetAnimation("Reloj");
-	if(relojAnim) {
-		relojAnim->SetSound(&s_clock);
-	}
+	
 	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 	
@@ -872,9 +878,9 @@ int main()
 	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
 	gemaAmarilla = Model();
 	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
-	/*
+	
 	//personajes
-	akuaku = Model();	
+	/*akuaku = Model();	
 	akuaku.LoadModel("Models/Aku-Aku.obj");
 	crash = Model();
 	crash.LoadModel("Models/CrashBandicoot.obj");
@@ -1506,6 +1512,14 @@ int main()
 		model = glm::translate(model, glm::vec3(640.59, 0.00, 456.90));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		casa_aku_aku.RenderModel();
+		
+		// Posicionar sonido ambiental de Crash Bandicoot en la casa
+		glm::vec3 casaWorldPos = glm::vec3(model[3]);
+		ma_sound_set_position(&s_crash_bandicoot, 
+			casaWorldPos.x * AUDIO_SCALE, 
+			casaWorldPos.y * AUDIO_SCALE, 
+			casaWorldPos.z * AUDIO_SCALE);
+		
 		//Animacion gemas orbitando
 		gemRotationAngle += 0.001f;
 		for (int i = 0; i < 4; i++) {
