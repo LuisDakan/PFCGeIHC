@@ -679,7 +679,7 @@ int loadSounds() {
 	//Ambientales
 	result = ma_sound_init_from_file(&eng,"Audio/Crash_Bandicoot.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_crash_bandicoot);
 	ma_sound_set_looping(&s_crash_bandicoot, MA_TRUE);
-	ma_sound_set_volume(&s_crash_bandicoot, 0.5f);
+	ma_sound_set_volume(&s_crash_bandicoot, 0.35f);
 	// Configurar atenuación: min_distance = 50 unidades de audio (500 en mundo), rolloff = 1.0
 	ma_sound_set_min_distance(&s_crash_bandicoot, 3.0f);
 	ma_sound_set_rolloff(&s_crash_bandicoot, 4.0f);
