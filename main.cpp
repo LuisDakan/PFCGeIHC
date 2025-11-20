@@ -853,8 +853,8 @@ int main()
 	arbol_tronco.LoadModel("Models/Arbol12.obj");*/
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
-	/*piramide = Model();
-	piramide.LoadModel("Models/Piramide.obj");
+	piramide = Model();
+	piramide.LoadModel("Models/Piramide.obj");/*
 	cabeza_olmeca = Model();
 	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
 	bote_basura = Model();
@@ -872,7 +872,7 @@ int main()
 	cajas_tnt = Model();
 	cajas_tnt.LoadModel("Models/Caja_TNT.obj");
 	jumping = Model();
-	jumping.LoadModel("Models/jumping.obj");
+	jumping.LoadModel("Models/jumping.obj");*/
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
@@ -880,7 +880,7 @@ int main()
 	valla_juzgado = Model();
 	valla_juzgado.LoadModel("Models/VallaJuzgado.obj");
 	silla_juzgado = Model();
-	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");*/
+	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	casa_aku_aku = Model();
 	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
 	gemaAzul = Model();
@@ -1168,6 +1168,12 @@ int main()
 			SetWalkingActive(false); // Detener animación al cambiar de cámara
 		}
 
+		// Guardar ubicación de cámara con tecla G (solo en modo FREE_CAMERA)
+		if (mainWindow.getsKeys()[GLFW_KEY_G] && camera.getCameraMode() == FREE_CAMERA)
+		{
+			camera.saveCameraLocation();
+		}
+
 		// Control específico según el modo de cámara
 		CameraMode currentMode = camera.getCameraMode();
 		
@@ -1414,12 +1420,12 @@ int main()
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ring.RenderModel();
-		
+		*/
 		//piramide
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(696.86, 0.00, -413.49));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		piramide.RenderModel();
+		piramide.RenderModel();/*
 				//ciclo for para cabezas olmecas
 		for (std::vector <GLfloat> v : coordsOlmechead) {
 			model = glm::mat4(1.0);
@@ -1588,7 +1594,7 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			jumping.RenderModel();
 		}
-
+		*/
 		//juzgado
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-678.49, 0.00, 345.40));
@@ -1609,7 +1615,7 @@ int main()
 		model = modeljuz;
 		model = glm::translate(model, glm::vec3(9.78f, 0.0f, 218.68f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla_juzgado.RenderModel();*/
+		silla_juzgado.RenderModel();
 
 		//escenario aku aku 
 		model = glm::mat4(1.0);

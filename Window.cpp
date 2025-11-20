@@ -134,34 +134,28 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_1)
 	{
 		theWindow->articulacion1 += 0.1f;
-		printf("art1:%f\n", theWindow->articulacion1);
 	}
 
 	if (key == GLFW_KEY_2)
 	{
 		theWindow->articulacion1 -= 0.1f;
-		printf("art1:%f\n", theWindow->articulacion1);
 	}
 	if (key == GLFW_KEY_3)
 	{
 
 		theWindow->articulacion2 += 0.1;
-		printf("art2:%f\n", theWindow->articulacion2);
 	}
 	if (key == GLFW_KEY_4)
 	{
 
 		theWindow->articulacion2 -= 0.1;
-		printf("art2:%f\n", theWindow->articulacion2);
 	}
 	if (key == GLFW_KEY_5)
 	{
-		printf("art3:%f\n", theWindow->articulacion3);
 		theWindow->articulacion3 += 0.1;
 	}
 	if (key == GLFW_KEY_6)
 	{
-		printf("art3:%f\n", theWindow->articulacion3);
 		theWindow->articulacion3 -= 0.1;
 	}
 	if (key == GLFW_KEY_Z) {

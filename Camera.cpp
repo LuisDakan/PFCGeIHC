@@ -225,6 +225,14 @@ void Camera::setCameraMode(CameraMode mode)
 	}
 }
 
+// Guardar ubicación de cámara
+void Camera::saveCameraLocation()
+{
+	printf("Posicion: (%.2f, %.2f, %.2f) Direccion: (%.2f, %.2f, %.2f)\n",
+		position.x, position.y, position.z,
+		front.x, front.y, front.z);
+}
+
 Camera::~Camera()
 {
 }
