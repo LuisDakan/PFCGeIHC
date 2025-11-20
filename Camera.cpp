@@ -228,9 +228,12 @@ void Camera::setCameraMode(CameraMode mode)
 // Guardar ubicación de cámara
 void Camera::saveCameraLocation()
 {
-	printf("Posicion: (%.2f, %.2f, %.2f) Direccion: (%.2f, %.2f, %.2f)\n",
+	// Calcular el punto hacia donde mira la cámara (lookAt)
+	glm::vec3 lookAt = position + front * 100.0f; // Punto a 100 unidades adelante
+	
+	printf("camera.addPointOfInterest(glm::vec3(%.2ff, %.2ff, %.2ff), glm::vec3(%.2ff, %.2ff, %.2ff), \"Nombre\");\n",
 		position.x, position.y, position.z,
-		front.x, front.y, front.z);
+		lookAt.x, lookAt.y, lookAt.z);
 }
 
 Camera::~Camera()
