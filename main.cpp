@@ -853,7 +853,7 @@ int main()
 		lights.push_back(
 			PointLight(1.0f, 1.0f, 0.0f,
 			0.0f, 1.0f,
-			v[0], v[1]+4.0, v[2],
+			v[0], v[1]+14.0, v[2]*2.0f/1.5f,
 			0.01f, 0.01f, 0.001f)
 		);
 	}
