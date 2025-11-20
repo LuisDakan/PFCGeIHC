@@ -118,7 +118,7 @@ std::vector<PointLight> lights;
 //material del personaje
 Material Material_personaje;
 
-ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell,s_crash_bandicoot,s_boat,s_judge,s_box_ring,s_pyramid;
+ma_sound s_explosion,s_soundtrack,s_box_bell,s_clock,s_bell,s_crash_bandicoot,s_boat,s_judge,s_box_ring,s_pyramid,s_gema;
 ma_result result;
 ma_engine eng;
 ma_sound_group ambiental, effects;
@@ -657,8 +657,7 @@ int loadSounds() {
 	VERIFY(result);
 	ma_sound_set_volume(&s_soundtrack,0.2);
 
-	//efectos de sonido
-
+	
 	result = ma_sound_init_from_file(&eng, "Audio/explosion.wav", MA_SOUND_FLAG_DECODE, &effects, NULL, &s_explosion);
 	VERIFY(result);
 	ma_sound_set_volume(&s_explosion,0.5);
@@ -674,6 +673,13 @@ int loadSounds() {
 
 	result = ma_sound_init_from_file(&eng,"Audio/Sonido_Campana.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_bell);
 	ma_sound_set_volume(&s_bell,0.3);
+	VERIFY(result);
+	
+	// Comentado temporalmente - usa s_bell dos veces
+	result = ma_sound_init_from_file(&eng,"Audio/Crash_gema.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_gema);
+	ma_sound_set_volume(&s_gema,0.1f);
+	ma_sound_set_looping(&s_gema, MA_TRUE);
+
 	VERIFY(result);
 
 	//Ambientales
@@ -735,6 +741,53 @@ void unloadSounds() {
 		ma_sound_stop(&s_soundtrack);
 	}
 	ma_sound_uninit(&s_soundtrack);
+
+	// Limpiar sonidos de efectos
+	if(ma_sound_is_playing(&s_box_bell)==MA_TRUE){
+		ma_sound_stop(&s_box_bell);
+	}
+	ma_sound_uninit(&s_box_bell);
+
+	if(ma_sound_is_playing(&s_clock)==MA_TRUE){
+		ma_sound_stop(&s_clock);
+	}
+	ma_sound_uninit(&s_clock);
+
+	if(ma_sound_is_playing(&s_bell)==MA_TRUE){
+		ma_sound_stop(&s_bell);
+	}
+	ma_sound_uninit(&s_bell);
+
+	// Limpiar sonidos ambientales
+	if(ma_sound_is_looping(&s_crash_bandicoot)==MA_TRUE){
+		ma_sound_set_looping(&s_crash_bandicoot,MA_FALSE);
+		ma_sound_stop(&s_crash_bandicoot);
+	}
+	ma_sound_uninit(&s_crash_bandicoot);
+
+	if(ma_sound_is_looping(&s_boat)==MA_TRUE){
+		ma_sound_set_looping(&s_boat,MA_FALSE);
+		ma_sound_stop(&s_boat);
+	}
+	ma_sound_uninit(&s_boat);
+
+	if(ma_sound_is_looping(&s_judge)==MA_TRUE){
+		ma_sound_set_looping(&s_judge,MA_FALSE);
+		ma_sound_stop(&s_judge);
+	}
+	ma_sound_uninit(&s_judge);
+
+	if(ma_sound_is_looping(&s_box_ring)==MA_TRUE){
+		ma_sound_set_looping(&s_box_ring,MA_FALSE);
+		ma_sound_stop(&s_box_ring);
+	}
+	ma_sound_uninit(&s_box_ring);
+
+	if(ma_sound_is_looping(&s_pyramid)==MA_TRUE){
+		ma_sound_set_looping(&s_pyramid,MA_FALSE);
+		ma_sound_stop(&s_pyramid);
+	}
+	ma_sound_uninit(&s_pyramid);
 }
 
 //funciones para el ciclo de día
@@ -903,7 +956,7 @@ int main()
 	silla_juzgado = Model();
 	silla_juzgado.LoadModel("Models/SillaJuzgado.obj");
 	casa_aku_aku = Model();
-	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");/*
+	casa_aku_aku.LoadModel("Models/CasaAkuAku.obj");
 	gemaAzul = Model();
 	gemaAzul.LoadModel("Models/GemaAzul.obj");
 	gemaRoja = Model();
@@ -911,7 +964,7 @@ int main()
 	gemaPurpura = Model();
 	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
 	gemaAmarilla = Model();
-	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");*/
+	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
 	
 	//personajes
 	/*akuaku = Model();	
@@ -1083,6 +1136,7 @@ int main()
 	
 	//Area de sonidos
 	ma_sound_set_looping(&s_soundtrack,MA_TRUE);
+	ma_sound_start(&s_gema);
     ma_sound_start(&s_soundtrack);
 
 	glm::vec2 offset;
@@ -1582,6 +1636,11 @@ int main()
 			casaWorldPos.y * AUDIO_SCALE, 
 			casaWorldPos.z * AUDIO_SCALE);
 		
+		ma_sound_set_position(&s_gema,
+			centerPosition.x*AUDIO_SCALE,
+			centerPosition.y*AUDIO_SCALE,
+			centerPosition.z*AUDIO_SCALE
+		);
 		//Animacion gemas orbitando
 		gemRotationAngle += 0.001f;
 		for (int i = 0; i < 4; i++) {
