@@ -129,6 +129,12 @@ bool clockSoundPlayed = false;
 float lastClockRotation = 0.0f;
 bool bellSoundPlayed = false;
 
+// Variables para el personaje principal (Ace)
+glm::vec3 characterPosition = glm::vec3(1300.0f, 19.5f, 0.0f);
+GLfloat characterRotation = -90.0f; // Ace empieza mirando hacia -90 grados
+GLfloat characterMoveSpeed = 2.0f; // Velocidad ajustada
+bool characterIsMoving = false;
+
 // Escala para audio 3D
 const float AUDIO_SCALE = 0.01f;
 
@@ -875,6 +881,14 @@ int main()
 	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 	
+	// Configurar puntos de interés para la cámara
+	camera.addPointOfInterest(glm::vec3(8.47f, 76.42f, 218.42f), glm::vec3(6.75f, 59.06f, 119.95f), "Ring de lucha");
+	camera.addPointOfInterest(glm::vec3(-690.08f, 196.69f, -29.28f), glm::vec3(-688.41f, 167.45f, -124.89f), "Barco");
+	camera.addPointOfInterest(glm::vec3(373.02f, 67.41f, -97.56f), glm::vec3(443.72f, 65.66f, -168.26f), "Piramide");
+	camera.addPointOfInterest(glm::vec3(661.21f, 40.04f, 211.61f), glm::vec3(666.44f, 38.29f, 311.45f), "Casa crash");
+	camera.addPointOfInterest(glm::vec3(-444.85f, 49.15f, 619.07f), glm::vec3(-527.30f, 38.70f, 563.46f), "Juzgado");
+	camera.addPointOfInterest(glm::vec3(247.47f, 28.32f, 87.69f), glm::vec3(240.76f, 0.76f, -8.21f), "TNT");
+	camera.addPointOfInterest(glm::vec3(-325.49f, 99.74f, -85.75f), glm::vec3(-231.58f, 65.54f, -89.03f), "Opa-Opa");
 	
 	barco = Model();
 	barco.LoadModel("Models/Barco.obj");
@@ -982,13 +996,13 @@ int main()
 	dbjoe = Model();
 	dbjoe.LoadModel("Models/DBJoe.obj");*/
 	opaopa = Model();
-	opaopa.LoadModel("Models/Opa-Opa.obj");/*
+	opaopa.LoadModel("Models/Opa-Opa.obj");
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
 	"MusloDerechoAce","MusloIzquierdoAce","PiernaDerechaAce","PiernaIzquierdaAce"};
 	for(std::string s:ModelAce){
 		ace[s] = Model();
 		ace[s].LoadModel("Models/Principal/"+s+".obj");
-	}*/
+	}
 
 		//Cycle day
 
@@ -1221,8 +1235,99 @@ int main()
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
-		camera.keyControl(mainWindow.getsKeys(), deltaTime);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		
+		// Cambio de modo de cámara con teclas numéricas
+		if (mainWindow.getsKeys()[GLFW_KEY_1])
+		{
+			camera.setCameraMode(THIRD_PERSON);
+		}
+		if (mainWindow.getsKeys()[GLFW_KEY_2])
+		{
+			camera.setCameraMode(AERIAL_FREE);
+			SetWalkingActive(false); // Detener animación al cambiar de cámara
+		}
+		if (mainWindow.getsKeys()[GLFW_KEY_3])
+		{
+			camera.setCameraMode(POINT_OF_INTEREST);
+			SetWalkingActive(false); // Detener animación al cambiar de cámara
+		}
+		if (mainWindow.getsKeys()[GLFW_KEY_4])
+		{
+			camera.setCameraMode(FREE_CAMERA);
+			SetWalkingActive(false); // Detener animación al cambiar de cámara
+		}
+
+		// Control específico según el modo de cámara
+		CameraMode currentMode = camera.getCameraMode();
+		
+		if (currentMode == THIRD_PERSON)
+		{
+			// Control del personaje en modo tercera persona
+			characterIsMoving = false;
+			GLfloat velocity = characterMoveSpeed * deltaTime;
+			glm::vec3 cameraForward = camera.getCameraDirection();
+			cameraForward.y = 0.0f;
+			cameraForward = glm::normalize(cameraForward);
+
+			if (mainWindow.getsKeys()[GLFW_KEY_W])
+			{
+				characterPosition += cameraForward * velocity;
+				characterIsMoving = true;
+			}
+
+			if (mainWindow.getsKeys()[GLFW_KEY_S])
+			{
+				characterPosition -= cameraForward * velocity;
+				characterIsMoving = true;
+			}
+
+			// Activar/desactivar animación de caminata según el movimiento
+			SetWalkingActive(characterIsMoving);
+
+			// Control del mouse para rotar la cámara (invertido X e Y solo en tercera persona)
+			camera.mouseControl(-mainWindow.getXChange(), -mainWindow.getYChange());
+			
+			// Actualizar la cámara tercera persona
+			camera.updateThirdPerson(characterPosition, characterRotation, characterIsMoving, deltaTime);
+		}
+		else if (currentMode == AERIAL_FREE)
+		{
+			// Control de cámara aérea libre
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+			camera.updateAerial(mainWindow.getsKeys(), deltaTime);
+		}
+		else if (currentMode == POINT_OF_INTEREST)
+		{
+			// Navegación entre puntos de interés con flechas izquierda/derecha
+			static bool leftKeyPressed = false;
+			static bool rightKeyPressed = false;
+
+			if (mainWindow.getsKeys()[GLFW_KEY_LEFT] && !leftKeyPressed)
+			{
+				camera.previousPointOfInterest();
+				leftKeyPressed = true;
+			}
+			else if (!mainWindow.getsKeys()[GLFW_KEY_LEFT])
+			{
+				leftKeyPressed = false;
+			}
+
+			if (mainWindow.getsKeys()[GLFW_KEY_RIGHT] && !rightKeyPressed)
+			{
+				camera.nextPointOfInterest();
+				rightKeyPressed = true;
+			}
+			else if (!mainWindow.getsKeys()[GLFW_KEY_RIGHT])
+			{
+				rightKeyPressed = false;
+			}
+		}
+		else if (currentMode == FREE_CAMERA)
+		{
+			// Modo cámara libre original (WASD + mouse)
+			camera.keyControl(mainWindow.getsKeys(), deltaTime);
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		}
 
 		// Actualizar animaciones por keyframes
 		UpdateKeyframeAnimations();
@@ -1671,8 +1776,8 @@ int main()
 		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaAmarilla.RenderModel();
-		/*
-				//Personajes
+		
+		//Personajes
 		//Universo Crash
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(541.43, 1.50, 392.59));
@@ -1684,6 +1789,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ukauka.RenderModel();
 
+		// Crash permanece en posición fija (no es el personaje controlable)
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(31.78, 23.00, -11.65));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1713,9 +1819,6 @@ int main()
 		model = glm::rotate(model, glm::radians(125.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		dbjoe.RenderModel();
-
-
-		glDisable(GL_BLEND);*/
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(248.0f, 0.0f, 31.0f));
@@ -1926,15 +2029,16 @@ int main()
 			clockSoundPlayed = false;
 			lastClockRotation = 0.0f;
 		}
-		/*
+		
 		// (El else se eliminó para permitir loop infinito)
 
-		// Posición base del personaje
-		acePosition = glm::vec3(-150.0f, 19.5f, 0.0f);
+		// Posición base del personaje (ahora usa la variable dinámica)
+		acePosition = characterPosition;
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 		model = glm::mat4(1.0);
 		model = glm::translate(model, acePosition);
+		model = glm::rotate(model, characterRotation, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model,glm::vec3(0.6f,0.6f,0.6f));
 		model = AnimateBody(model);
 		bodyModel = model; // Guardar la transformación del cuerpo
@@ -2087,7 +2191,7 @@ int main()
 		
 		
 		
-		*/
+	
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		modelaux=model;
