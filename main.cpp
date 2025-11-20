@@ -795,12 +795,13 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 	
 	// Configurar puntos de interés para la cámara
-	camera.addPointOfInterest(glm::vec3(0.0f, 150.0f, 300.0f), glm::vec3(0.0f, 0.0f, 0.0f), "Vista general");
-	camera.addPointOfInterest(glm::vec3(-121.24f, 100.0f, 400.0f), glm::vec3(-121.24f, 0.0f, 271.83f), "Barco");
-	camera.addPointOfInterest(glm::vec3(541.43f, 80.0f, 500.0f), glm::vec3(541.43f, 1.50f, 392.59f), "Casa Aku-Aku");
-	camera.addPointOfInterest(glm::vec3(696.86f, 100.0f, -300.0f), glm::vec3(696.86f, 0.0f, -413.49f), "Pirámide");
-	camera.addPointOfInterest(glm::vec3(-694.59f, 80.0f, -300.0f), glm::vec3(-694.59f, 0.0f, -418.33f), "Juzgado");
-	camera.addPointOfInterest(glm::vec3(248.0f, 100.0f, 150.0f), glm::vec3(248.0f, 0.0f, 31.0f), "Ring de boxeo");
+	camera.addPointOfInterest(glm::vec3(8.47f, 76.42f, 218.42f), glm::vec3(6.75f, 59.06f, 119.95f), "Ring de lucha");
+	camera.addPointOfInterest(glm::vec3(-690.08f, 196.69f, -29.28f), glm::vec3(-688.41f, 167.45f, -124.89f), "Barco");
+	camera.addPointOfInterest(glm::vec3(373.02f, 67.41f, -97.56f), glm::vec3(443.72f, 65.66f, -168.26f), "Piramide");
+	camera.addPointOfInterest(glm::vec3(661.21f, 40.04f, 211.61f), glm::vec3(666.44f, 38.29f, 311.45f), "Casa crash");
+	camera.addPointOfInterest(glm::vec3(-444.85f, 49.15f, 619.07f), glm::vec3(-527.30f, 38.70f, 563.46f), "Juzgado");
+	camera.addPointOfInterest(glm::vec3(247.47f, 28.32f, 87.69f), glm::vec3(240.76f, 0.76f, -8.21f), "TNT");
+	camera.addPointOfInterest(glm::vec3(-325.49f, 99.74f, -85.75f), glm::vec3(-231.58f, 65.54f, -89.03f), "Opa-Opa");
 	
 	barco = Model();
 	barco.LoadModel("Models/Barco.obj");
