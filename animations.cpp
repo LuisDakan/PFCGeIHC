@@ -448,7 +448,21 @@ void ToggleWalking()
     if (!walkingActive) {
         walkCycle = 0.0f; // Resetear el ciclo cuando se detiene
     }
-    printf("Caminata %s\n", walkingActive ? "activada" : "desactivada");
+}
+
+// Función para establecer el estado de caminata
+void SetWalkingActive(bool active)
+{
+    walkingActive = active;
+    if (!walkingActive) {
+        walkCycle = 0.0f; // Resetear el ciclo cuando se detiene
+    }
+}
+
+// Función para obtener el estado de caminata
+bool IsWalkingActive()
+{
+    return walkingActive;
 }
 
 // Animación jerárquica del cuerpo (torso)

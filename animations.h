@@ -57,6 +57,8 @@ void StartOpaAnimation();
 // Declaraciones de funciones de animación de caminata
 void ToggleWalking();
 void UpdateWalkCycle();
+void SetWalkingActive(bool active);
+bool IsWalkingActive();
 glm::mat4 AnimateBody(glm::mat4 model);
 glm::mat4 AnimateRightShoulder(glm::mat4 parentModel);
 glm::mat4 AnimateRightArm(glm::mat4 parentModel);
