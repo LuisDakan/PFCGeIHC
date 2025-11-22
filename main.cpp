@@ -420,29 +420,29 @@ int main()
 	// casi noche
 		//atardecer
 	std::vector<std::string> skyboxAlmostNight;
-	skyboxAlmostNight.push_back("Textures/Skybox/sh_rt_casi_noche.png");
-	skyboxAlmostNight.push_back("Textures/Skybox/sh_lf_casi_noche.png");
-	skyboxAlmostNight.push_back("Textures/Skybox/sh_dn_casi_noche.png");
-	skyboxAlmostNight.push_back("Textures/Skybox/sh_up_casi_noche.png");
-	skyboxAlmostNight.push_back("Textures/Skybox/sh_bk_casi_noche.png");
-	skyboxAlmostNight.push_back("Textures/Skybox/sh_ft_casi_noche.png");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_rt_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_lf_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_dn_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_up_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_bk_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_ft_atardecer.jpg");
 	//noche
 	std::vector<std::string> skyboxNight;
-	skyboxNight.push_back("Textures/Skybox/sh_rt_noche.png");
-	skyboxNight.push_back("Textures/Skybox/sh_lf_noche.png");
-	skyboxNight.push_back("Textures/Skybox/sh_dn_noche.png");
-	skyboxNight.push_back("Textures/Skybox/sh_up_noche.png");
-	skyboxNight.push_back("Textures/Skybox/sh_bk_noche.png");
-	skyboxNight.push_back("Textures/Skybox/sh_ft_noche.png");
+	skyboxNight.push_back("Textures/Skybox/sh_rt_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_lf_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_dn_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_up_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_bk_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_ft_noche.jpg");
 
 	//atardecer
 	std::vector<std::string> skyboxSunset;
-	skyboxSunset.push_back("Textures/Skybox/sh_rt_atardecer.png");
-	skyboxSunset.push_back("Textures/Skybox/sh_lf_atardecer.png");
-	skyboxSunset.push_back("Textures/Skybox/sh_dn_atardecer.png");
-	skyboxSunset.push_back("Textures/Skybox/sh_up_atardecer.png");
-	skyboxSunset.push_back("Textures/Skybox/sh_bk_atardecer.png");
-	skyboxSunset.push_back("Textures/Skybox/sh_ft_atardecer.png");
+	skyboxSunset.push_back("Textures/Skybox/sh_rt_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_lf_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_dn_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_up_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_bk_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_ft_atardecer.jpg");
 
 	//Skybox Day
 	std::vector<std::string> skyboxDay;
@@ -566,7 +566,7 @@ int main()
 			newSkyboxIndex = 1; // Atardecer
 		}
 		else if (sunAngle >= 180.0f && sunAngle < 240.0f) {
-			newSkyboxIndex = 2; // Crepúsculo - casi noche
+			newSkyboxIndex = 3; // Crepúsculo - casi noche
 		}
 		else if (sunAngle >= 240.0f && sunAngle < 320.0f) {
 			newSkyboxIndex = 3; // Noche
