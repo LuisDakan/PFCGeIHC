@@ -48,7 +48,7 @@ float lastCurveAngle = 0.0f; // Ángulo final de la curva
 // Variables para animación de caminata del humanoide
 bool walkingActive = false;
 float walkCycle = 0.0f;
-float walkSpeed = 3.0f;
+float walkSpeed = 4.0f;
 
 // Banderas de sonidos
 bool TNT_explosion = false;
