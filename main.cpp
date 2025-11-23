@@ -1205,9 +1205,9 @@ int main()
 		now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
+		
 		lastTime = now;
 		
-
 		if (now - lastSwitchTime > switchInterval) {
 				day = !day;
 				lastSwitchTime = now;
@@ -1832,7 +1832,8 @@ int main()
 		//ANILLO
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-398.50, 25.00, -253.83));
+		model = AnimateRing(model);
+
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		anillo.RenderModel();
 		// Restaurar material opaco para los demás modelos

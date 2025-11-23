@@ -54,6 +54,7 @@ glm::mat4 AnimationTapa(glm::mat4 model,ma_sound &s);
 glm::mat4 AnimationOpa(glm::mat4 model);
 void StartOpaAnimation();
 
+
 // Declaraciones de funciones de animación de caminata
 void ToggleWalking();
 void UpdateWalkCycle();
@@ -68,6 +69,7 @@ glm::mat4 AnimateRightThigh(glm::mat4 parentModel);
 glm::mat4 AnimateRightLeg(glm::mat4 parentModel);
 glm::mat4 AnimateLeftThigh(glm::mat4 parentModel);
 glm::mat4 AnimateLeftLeg(glm::mat4 parentModel);
+glm::mat4 AnimateRing(glm::mat4 model);
 
 // Manager global de animaciones por keyframes
 extern KeyframeAnimationManager g_AnimationManager;

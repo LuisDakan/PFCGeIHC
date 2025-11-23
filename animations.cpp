@@ -34,6 +34,8 @@ float velocity=0.02;
 float curHigh=0.0f;
 float curWalk=0.0f;
 float maxWalk=25.0f;
+float angulovaria = 0.0f;
+extern float deltaTime;
 int stateOpa = 0;
 // Variables para continuidad entre estados
 glm::vec3 lastSpiralPos = glm::vec3(0.0f);
@@ -53,6 +55,7 @@ bool TNT_explosion = false;
 
 // Funciones de animación
 
+
 glm::mat4 AnimationShip(glm::mat4 model)
 {
     WShip += 0.1f;
@@ -68,27 +71,7 @@ glm::mat4 AnimationShip(glm::mat4 model)
     return model;
 }
 
-glm::mat4 AnimationRing(glm::mat4 model,int id)
-{
-    WRing +=0.1f;
-   
-    model = glm::translate(model, glm::vec3(
-        R * glm::cos(glm::radians(phaseRing * (float)id)),
-        heightR*(1+glm::sin(phaseRing*(float)id)),
-        R * glm::sin(glm::radians(phaseRing * (float)id))
-    ));
 
-    
-    model = glm::translate(model, glm::vec3(
-        R * glm::cos(glm::radians(WRing)),
-        heightR*(1+glm::sin(WRing)),
-        R * glm::sin(glm::radians(WRing))
-    ));
-
-    model = glm::rotate(model,glm::radians(WRing),glm::vec3(0.0f,-1.0f,0.0f));
-
-    return model;
-}
 
 
 
@@ -588,6 +571,15 @@ glm::mat4 AnimateLeftLeg(glm::mat4 parentModel)
         float kneeAngle = glm::min(45 - glm::max(0.0f, 30.0f * glm::sin(glm::radians(walkCycle))), 30.0f);
         model = glm::rotate(model, glm::radians(45.0f-kneeAngle), glm::vec3(1.0f, 0.0f, 0.0f));
     }
+    return model;
+}
+
+//Animacion anillo
+glm::mat4 AnimateRing(glm::mat4 model)
+{
+    angulovaria += 10.0f * deltaTime;
+    model = glm::translate(model, glm::vec3(-398.50, 25.00 + 1 * sin(glm::radians(angulovaria)), -253.83));
+    model = glm::rotate(model, glm::radians(angulovaria) , glm::vec3(0.0f, 1.0f, 0.0f));
     return model;
 }
 
