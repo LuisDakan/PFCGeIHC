@@ -30,7 +30,7 @@ bool TNTAnimationComplete = false;  // Indica si la animación terminó completa
 float opaRadio = 0.0f;
 float maxHigh=25.0f;
 bool animationOpa=false;
-float velocity=0.02;
+float velocity=0.04;
 float curHigh=0.0f;
 float curWalk=0.0f;
 float maxWalk=25.0f;
@@ -48,7 +48,7 @@ float lastCurveAngle = 0.0f; // Ángulo final de la curva
 // Variables para animación de caminata del humanoide
 bool walkingActive = false;
 float walkCycle = 0.0f;
-float walkSpeed = 2.0f;
+float walkSpeed = 3.0f;
 
 // Banderas de sonidos
 bool TNT_explosion = false;
@@ -58,7 +58,7 @@ bool TNT_explosion = false;
 
 glm::mat4 AnimationShip(glm::mat4 model)
 {
-    WShip += 0.1f;
+    WShip += 0.2f * deltaTime;
     model=glm::translate(model,glm::vec3(A*glm::cos(glm::radians(WShip)),C*(1+glm::sin(glm::radians(WShip))),  B*sin(glm::radians(WShip))));
     model=glm::rotate(model,glm::radians(WShip+90.0f),glm::vec3(0.0f,-1.0f,0.0f));
     // Efecto de ola: balanceo lateral (roll - eje Z)
@@ -209,7 +209,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
     {
     case 0: // Estado 1: Elevarse con suavizado (desde altura mínima)
     {
-        curHigh += velocity;
+        curHigh += velocity * deltaTime;
         if (curHigh >= maxHigh) {
             stateOpa = 1; // Pasar a avanzar con espiral
             curWalk = 0.0f; // Resetear contador para avance
@@ -236,7 +236,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
         float velocityMultiplier = 1.0f - (spiralProgress * spiralProgress); // 1.0 → 0.0 cuadrático
         float adjustedVelocity = velocity * glm::max(0.3f, velocityMultiplier); // Mínimo 30% de velocidad
 
-        curWalk += adjustedVelocity;
+        curWalk += adjustedVelocity * deltaTime;
 
         // Ease-in para inicio suave desde estado 0
         float easedProgress = spiralProgress * spiralProgress; // ease-in cuadrático
@@ -283,7 +283,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
 
     case 2: // Estado 3: Dar una vuelta suave (180 grados) con suavizado
     {
-        curWalk += velocity * 0.5f; // Más lento para transición suave
+        curWalk += velocity * 0.5f * deltaTime; // Más lento para transición suave
         float turnDuration = maxWalk * 0.8f;
 
         // Limitar curWalk para evitar overshoot
@@ -340,7 +340,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
 
     case 3: // Estado 4: Regresar al punto de inicio con suavizado
     {
-        curWalk += velocity;
+        curWalk += velocity * deltaTime;
 
         // Limitar returnProgress para evitar overshoot
         float returnProgress = glm::min(curWalk / maxWalk, 1.0f); // 0 a 1
@@ -367,7 +367,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
 
     case 4: // Estado 5: Descender con suavizado (hasta altura mínima)
     {
-        curHigh -= velocity;
+        curHigh -= velocity * deltaTime;
 
         // Guardar la altura de inicio (altura donde terminó estado 3)
         static float startHeight = lastCurvePos.y / SCALE_FACTOR; // Convertir a escala original
@@ -587,7 +587,7 @@ glm::mat4 AnimateRing(glm::mat4 model)
 void UpdateWalkCycle()
 {
     if (walkingActive) {
-        walkCycle += walkSpeed;
+        walkCycle += walkSpeed * deltaTime;
         if (walkCycle >= 360.0f) {
             walkCycle -= 360.0f;
         }
