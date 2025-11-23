@@ -80,6 +80,7 @@ Model arbol_seis;
 Model arbusto_grande;
 Model arbusto_largo;
 Model arbol_tronco;
+Model anillo;
 Model ring;
 Model piramide;
 Model cabeza_olmeca;
@@ -939,6 +940,8 @@ int main()
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
 	arbol_tronco.LoadModel("Models/Arbol12.obj");*/
+	anillo = Model();
+	anillo.LoadModel("Models/Anillo.obj");
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
@@ -1028,8 +1031,8 @@ int main()
 	std::vector<std::string> skyboxFaces = skyboxDay;
 	skybox = Skybox(skyboxFaces);
 
-	Material_brillante = Material(4.0f, 256);
-	Material_opaco = Material(0.3f, 4);
+	Material_brillante = Material(4.0f, 256.0f);
+	Material_opaco = Material(0.0f, 0.0f);  // Sin reflexión especular, como si no tuviera material
 	Material_personaje = Material(0.2f, 14);
 	mascaras = Texture("Textures/Masks.png"); mascaras.LoadTextureA();
 	numeros= Texture("Textures/Numeros.png"); numeros.LoadTextureA();
@@ -1392,8 +1395,11 @@ int main()
 		//Sincronizacion del listener y camara
 		glm::vec3 camPos = camera.getCameraPosition()*0.01f;
 		ma_engine_listener_set_position(&eng, 0, camPos.x, camPos.y, camPos.z);
-		//Piso 
 
+		// Establecer material opaco por defecto para todos los modelos
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+
+		//Piso 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		//model = glm::scale(model, glm::vec3(2.0f, 1.0f, 2.0f));
@@ -1753,6 +1759,7 @@ int main()
 			gemPositions[i] = centerPosition + glm::vec3(cos(angle) * radius, 0.0f, sin(angle) * radius);
 		}
 
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, gemPositions[0]);
 		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1776,6 +1783,8 @@ int main()
 		model = glm::rotate(model, now * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		gemaAmarilla.RenderModel();
+		// Restaurar material opaco para los demás modelos
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		
 		//Personajes
 		//Universo Crash
@@ -1819,6 +1828,15 @@ int main()
 		model = glm::rotate(model, glm::radians(125.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		dbjoe.RenderModel();
+
+		//ANILLO
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-398.50, 25.00, -253.83));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		anillo.RenderModel();
+		// Restaurar material opaco para los demás modelos
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(248.0f, 0.0f, 31.0f));
@@ -1933,7 +1951,7 @@ int main()
 		}
 		bellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
-		   model = glm::mat4(1.0f);
+		    model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(116.f, 4.0f, -80.0f));
 			posCampana_z = bellAnim->GetValue1();
 			rotCampana_x = bellAnim->GetValue2();
@@ -1980,8 +1998,8 @@ int main()
 
 		bellAnim = g_AnimationManager.GetAnimation("Reloj");
 		if(bellAnim && bellAnim->IsPlaying()){
-		   model = glm::mat4(1.0f);
-		   model = glm::translate(model, glm::vec3(640.59f, 15.00f, 466.5f));
+		    model = glm::mat4(1.0f);
+		    model = glm::translate(model, glm::vec3(640.59f, 15.00f, 466.5f));
 			manecilla_hora = bellAnim->GetValue1();
 			manecilla_minuto = bellAnim->GetValue2();
 			model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -2036,6 +2054,10 @@ int main()
 		acePosition = characterPosition;
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
+
+		//Seleccionamos el material del personaje
+		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
+
 		model = glm::mat4(1.0);
 		model = glm::translate(model, acePosition);
 		model = glm::rotate(model, characterRotation, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -2055,7 +2077,6 @@ int main()
 		
 		model = AnimateRightArm(rightShoulderModel);
 		model = glm::translate(model,glm::vec3(1.15075f,1.2403f,0.13481f));
-		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["BrazoDerechoAce"].RenderModel();
 		
@@ -2069,7 +2090,6 @@ int main()
 		
 		model = AnimateLeftArm(leftShoulderModel);
 		model = glm::translate(model,glm::vec3(-0.47100118f,1.2567f,0.28935f));
-		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["BrazoIzquierdoAce"].RenderModel();
 		
@@ -2084,7 +2104,6 @@ int main()
 		model = rightThighModel;
 		model = glm::translate(model,glm::vec3(-3.35244f,-13.1455f,-0.441f));
 		model = AnimateRightLeg(model);
-		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["PiernaDerechaAce"].RenderModel();
 		
@@ -2099,9 +2118,12 @@ int main()
 		model = leftThighModel;
 		model = glm::translate(model, glm::vec3(+3.35244f, -13.1455f, -0.441f));
 		model = AnimateLeftLeg(model);
-		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ace["PiernaIzquierdaAce"].RenderModel();
+
+		// Restaurar material opaco para los demás modelos
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+
 		// ========== Fin animación jerárquica de caminata ==========
 
 		
