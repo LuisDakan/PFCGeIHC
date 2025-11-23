@@ -36,7 +36,7 @@
    - Enlace a carpeta de Google Drive con las texturas
 
 #### Resumen de cambios:
-- **Total de archivos modificados:** 5 archivos
+- **Total de archivos añadidos:** 5 archivos
 - **Líneas añadidas:** 115 líneas
 - **Propósito:** Configuración inicial del repositorio con estructura base, documentación y configuración de control de versiones
 
