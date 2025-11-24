@@ -819,6 +819,61 @@ void setDay(std::vector<std::string> skyboxDay) {
 	);
 }
 
+//Funcion para actualizar el ciclo
+void updateSimpleDayNight(float deltaTime) {
+	// Incrementar el ángulo del sol
+	sunAngle += sunSpeed * deltaTime;
+
+	// Mantener el ángulo entre 0 y 360
+	if (sunAngle >= 360.0f) {
+		sunAngle -= 360.0f;
+	}
+
+	// Convertir a radianes para los cálculos
+	float angleRad = sunAngle * 3.14159265f / 180.0f;
+
+	// Calcular dirección de la luz en el plano YZ
+	float dirY = sin(angleRad);  // Componente Y (altura)
+	float dirZ = cos(angleRad);  // Componente Z (profundidad)
+
+	// Calcular intensidad basada en la altura del sol
+	// Cuando dirY > 0 = día (sol arriba)
+	// Cuando dirY < 0 = noche (sol abajo)
+	float intensity = glm::max(0.0f, dirY);  // Solo positivo cuando está arriba
+
+	// Intensidades para día y noche
+	float ambientIntensity = 0.15f + (intensity * 0.35f);  // De 0.15 a 0.5
+	float diffuseIntensity = 0.2f + (intensity * 0.6f);    // De 0.2 a 0.8
+
+	// Color de la luz (blanco en el día, azulado en la noche)
+	float colorR = 0.2f + (intensity * 0.8f);  // De 0.2 a 1.0
+	float colorG = 0.3f + (intensity * 0.7f);  // De 0.3 a 1.0
+	float colorB = 0.6f + (intensity * 0.4f);  // De 0.6 a 1.0
+
+	// Actualizar la luz direccional
+	mainLight = DirectionalLight(
+		colorR, colorG, colorB,
+		ambientIntensity,
+		diffuseIntensity,
+		0.0f, dirY, dirZ  // Dirección en plano YZ
+	);
+
+	// Cambiar skybox según la posición del sol
+	static bool wasDay = true;
+	bool isDay = (dirY > 0.0f);
+
+	// Solo cambiar skybox cuando cruza el horizonte
+	if (isDay != wasDay) {
+		wasDay = isDay;
+		if (isDay) {
+			printf("Amanecer - Ángulo: %.1f grados\n", sunAngle);
+		}
+		else {
+			printf("Atardecer - Ángulo: %.1f grados\n", sunAngle);
+		}
+	}
+}
+
 // Función para crear una matriz billboard que siempre mira hacia la cámara
 glm::mat4 CreateBillboardMatrix(glm::vec3 position, glm::vec3 cameraPos, glm::vec3 cameraUp,glm::vec3 trans)
 {
@@ -1008,16 +1063,30 @@ int main()
 	}
 
 		//Cycle day
-
-	//Skybox Night
-
+	std::vector<std::string> skyboxAlmostNight;
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_rt_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_lf_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_dn_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_up_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_bk_atardecer.jpg");
+	skyboxAlmostNight.push_back("Textures/Skybox/sh_ft_atardecer.jpg");
+	//noche
 	std::vector<std::string> skyboxNight;
-	skyboxNight.push_back("Textures/Skybox/Zona_Nebulosa.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Planeta.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Luna.png");
+	skyboxNight.push_back("Textures/Skybox/sh_rt_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_lf_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_dn_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_up_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_bk_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_ft_noche.jpg");
+
+	//atardecer
+	std::vector<std::string> skyboxSunset;
+	skyboxSunset.push_back("Textures/Skybox/sh_rt_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_lf_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_dn_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_up_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_bk_atardecer.jpg");
+	skyboxSunset.push_back("Textures/Skybox/sh_ft_atardecer.jpg");
 
 	//Skybox Day
 	std::vector<std::string> skyboxDay;
@@ -1208,18 +1277,52 @@ int main()
 		
 		lastTime = now;
 		
-		if (now - lastSwitchTime > switchInterval) {
-				day = !day;
-				lastSwitchTime = now;
-				if (day) {
-					printf("Llego el dia\n");
-					setDay(skyboxDay);
+		// Actualizar ciclo día/noche
+		updateSimpleDayNight(deltaTime);
+
+
+		newSkyboxIndex=0;
+
+		if (sunAngle >= 0.0f && sunAngle < 45.0f) {
+			newSkyboxIndex = 2; // Amanecer - casi noche
+		}
+		else if (sunAngle >= 45.0f && sunAngle < 120.0f) {
+			newSkyboxIndex = 0; // Día
+		}
+		else if (sunAngle >= 120.0f && sunAngle < 180.0f) {
+			newSkyboxIndex = 1; // Atardecer
+		}
+		else if (sunAngle >= 180.0f && sunAngle < 240.0f) {
+			newSkyboxIndex = 3; // Crepúsculo - casi noche
+		}
+		else if (sunAngle >= 240.0f && sunAngle < 320.0f) {
+			newSkyboxIndex = 3; // Noche
+		}
+		else {
+			newSkyboxIndex = 2; // Pre-amanecer - casi noche
+		}
+
+		// Cambiar skybox solo si es diferente
+		if (newSkyboxIndex != currentSkyboxIndex) {
+			currentSkyboxIndex = newSkyboxIndex;
+
+			if (currentSkyboxIndex == 0) {
+				skybox = Skybox(skyboxDay);
+				printf("DÍA - Ángulo: %.1f°\n", sunAngle);
+			}
+			else if (currentSkyboxIndex == 1) {
+				skybox = Skybox(skyboxSunset);
+				printf("ATARDECER - Ángulo: % .1f°\n", sunAngle);
+			}
+			else if (currentSkyboxIndex == 2) {
+				skybox = Skybox(skyboxAlmostNight);
+				printf("CASI NOCHE - Ángulo: %.1f°\n", sunAngle);
 			}
 			else {
-				printf("Llego la noche\n");
-				setNight(skyboxNight);
-				}
+				skybox = Skybox(skyboxNight);
+				printf("NOCHE - Ángulo: % .1f°\n", sunAngle);
 			}
+		}
 
 		s = 0;
 		if (mainWindow.prendido()) {
