@@ -70,6 +70,7 @@ glm::mat4 AnimateRightLeg(glm::mat4 parentModel);
 glm::mat4 AnimateLeftThigh(glm::mat4 parentModel);
 glm::mat4 AnimateLeftLeg(glm::mat4 parentModel);
 glm::mat4 AnimateRing(glm::mat4 model);
+glm::mat4 AnimateJump(glm::mat4 model,bool isKeyPressed);
 
 // Manager global de animaciones por keyframes
 extern KeyframeAnimationManager g_AnimationManager;

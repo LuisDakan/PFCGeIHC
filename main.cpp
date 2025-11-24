@@ -993,9 +993,9 @@ int main()
 	mayafey = Model();
 	mayafey.LoadModel("Models/Maya Fey.obj");
 	edgeworth = Model();
-	edgeworth.LoadModel("Models/edgeworth.obj");
+	edgeworth.LoadModel("Models/edgeworth.obj");*/
 	alexkid = Model();
-	alexkid.LoadModel("Models/alexKid.obj");
+	alexkid.LoadModel("Models/alexKid.obj");/*
 	dbjoe = Model();
 	dbjoe.LoadModel("Models/DBJoe.obj");*/
 	opaopa = Model();
@@ -1818,8 +1818,15 @@ int main()
 		//Universo Sonic
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-643.37, 0.00, -725.40));
+		model = glm::translate(model,glm::vec3(-640.43, -0.59, -730.31));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		jumping.RenderModel();		
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-640.43, 8.4, -730.31));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		bool yKeyPressed = mainWindow.getsKeys()[GLFW_KEY_Y];
+		model = AnimateJump(model, yKeyPressed);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		alexkid.RenderModel();
 
