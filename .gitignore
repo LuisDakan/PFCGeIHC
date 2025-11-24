@@ -69,3 +69,10 @@ x64/*
 
 #Ignorar zip
 *.zip
+
+#Ignorar audio
+
+Audio/*
+
+#Ignorar vs
+.vscode/*
