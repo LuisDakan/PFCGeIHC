@@ -47,6 +47,7 @@ glm::vec3 g_pendingModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 bool g_removeModelRequest = false;
 glm::vec3 g_removeModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::mat4 projection = glm::mat4(1.0f);
+glm::mat4 view = glm::mat4(1.0f);
 
 //ciclo 
 bool day = true;
@@ -897,7 +898,7 @@ int main()
 	piso.LoadModel("Models/piso.obj");
 	TNT = Model();
 	TNT.LoadModel("Models/Caja_TNT_sin_tapa.obj");
-	tapa = Model();
+	/*tapa = Model();
 	tapa.LoadModel("Models/tapa_TNT.obj");
 	tori = Model();
 	tori.LoadModel("Models/Tori.obj");
@@ -919,7 +920,7 @@ int main()
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
 	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
-	/*
+	
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -961,10 +962,10 @@ int main()
 	cajas_nitro = Model();
 	cajas_nitro.LoadModel("Models/Caja_Nitro.obj");
 	cajas_tnt = Model();
-	cajas_tnt.LoadModel("Models/Caja_TNT.obj");
+	cajas_tnt.LoadModel("Models/Caja_TNT.obj");*/
 	jumping = Model();
-	jumping.LoadModel("Models/jumping.obj");*/
-	columna_juzgado = Model();
+	jumping.LoadModel("Models/jumping.obj");
+	/*columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
 	lugar_juzgado.LoadModel("Models/JuezLugar.obj");
@@ -981,7 +982,7 @@ int main()
 	gemaPurpura = Model();
 	gemaPurpura.LoadModel("Models/GemaPurpura.obj");
 	gemaAmarilla = Model();
-	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
+	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");*/
 	
 	//personajes
 	/*akuaku = Model();	
@@ -993,11 +994,11 @@ int main()
 	mayafey = Model();
 	mayafey.LoadModel("Models/Maya Fey.obj");
 	edgeworth = Model();
-	edgeworth.LoadModel("Models/edgeworth.obj");
+	edgeworth.LoadModel("Models/edgeworth.obj");*/
 	alexkid = Model();
 	alexkid.LoadModel("Models/alexKid.obj");
 	dbjoe = Model();
-	dbjoe.LoadModel("Models/DBJoe.obj");*/
+	dbjoe.LoadModel("Models/DBJoe.obj");
 	opaopa = Model();
 	opaopa.LoadModel("Models/Opa-Opa.obj");
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
@@ -1175,7 +1176,6 @@ int main()
 	
 	// Variables del loop principal declaradas fuera para optimización
 	GLfloat now;
-	glm::mat4 view;
 	glm::vec3 camPos, lowerLight;
 	float da, db;
 	int l;
@@ -1608,7 +1608,7 @@ int main()
 		
 		//reflectores*/
 		//lado del juzgado
-		model = glm::mat4(1.0);
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-253.01, 0.00, 197.44));
 		modelaux = model;
 		spotLights[3].SetPos(glm::vec3(modelaux[3].x, modelaux[3].y + 125.0f, modelaux[3].z));
@@ -1678,7 +1678,7 @@ int main()
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		miniReflector.RenderModel();
-		/*
+		
 		//ciclo for para las cajas TNT
 		for (std::vector <GLfloat> v : coordsBoxtnt) {
 			model = glm::mat4(1.0);
@@ -1696,17 +1696,17 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			cajas_nitro.RenderModel();
 		}
-		
+		*/
 		//ciclo for para los jumping
 		for (std::vector <GLfloat> v : coordsJumping) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			jumping.RenderModel();
-		}*/
+		}
 
 		//juzgado
-		model = glm::mat4(1.0);
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-678.49, 0.00, 345.40));
 		modeljuz = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));	
@@ -1814,16 +1814,22 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-687.69, 0.00, 456.59));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		edgeworth.RenderModel();
+		edgeworth.RenderModel();*/
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model,glm::vec3(-640.43, -0.59, -730.31));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		jumping.RenderModel();		
+
 		//Universo Sonic
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-643.37, 0.00, -725.40));
+		model = glm::translate(model, glm::vec3(-640.43, 10.0, -730.31));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		alexkid.RenderModel();
 
-		model = glm::mat4(1.0);
+		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-1043.61, 0.00, -183.27));
 		model = glm::rotate(model, glm::radians(125.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1976,7 +1982,7 @@ int main()
 				ma_sound_set_looping(&s_box_bell,MA_TRUE);
 				ma_sound_start(&s_box_bell);
 				ringBellSoundPlayed = true;
-			}*/
+			}
 		
 			model = glm::translate(model, glm::vec3(0.0f,3.5f, posCampana_z));
 			model = glm::rotate(model, rotCampana_x * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -2120,11 +2126,11 @@ int main()
 		model = glm::translate(model, glm::vec3(+3.35244f, -13.1455f, -0.441f));
 		model = AnimateLeftLeg(model);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		ace["PiernaIzquierdaAce"].RenderModel();
+		ace["PiernaIzquierdaAce"].RenderModel();*/
 
 		// Restaurar material opaco para los demás modelos
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-
+		
 		// ========== Fin animación jerárquica de caminata ==========
 
 		

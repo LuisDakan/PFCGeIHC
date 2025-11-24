@@ -105,6 +105,7 @@ void Window::createCallbacks()
 {
 	glfwSetKeyCallback(mainWindow, ManejaTeclado);
 	glfwSetCursorPosCallback(mainWindow, ManejaMouse);
+	glfwSetMouseButtonCallback(mainWindow, ManejaMouseClick);
 }
 GLfloat Window::getXChange()
 {
@@ -228,6 +229,50 @@ void Window::ManejaMouse(GLFWwindow* window, double xPos, double yPos)
 	// Guardar posición global del mouse
 	theWindow->lastMouseX = xPos;
 	theWindow->lastMouseY = yPos;
+}
+
+void Window::ManejaMouseClick(GLFWwindow* window, int button, int action, int mods)
+{
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		// Obtener las coordenadas del mouse en pantalla
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		
+		// Convertir coordenadas de pantalla (0 a width/height) a NDC (-1 a 1)
+		float x = (2.0f * xpos) / theWindow->bufferWidth - 1.0f;
+		float y = 1.0f - (2.0f * ypos) / theWindow->bufferHeight;
+		
+		// Leer profundidad del buffer en esa posición
+		float depth;
+		glReadPixels((int)xpos, theWindow->bufferHeight - (int)ypos, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+		
+		// Si depth es 1.0, no hay geometría en ese pixel (fondo)
+		if (depth >= 0.9999f) {
+			printf("Click en el fondo (sin geometria)\n");
+			return;
+		}
+		
+		// Convertir depth de [0,1] a NDC [-1,1]
+		float z = depth * 2.0f - 1.0f;
+		
+		// Crear vector en espacio de clip
+		glm::vec4 clipCoords = glm::vec4(x, y, z, 1.0f);
+		
+		// Obtener matrices de vista y proyección (necesitas exportarlas desde main)
+		extern glm::mat4 projection;
+		extern glm::mat4 view;
+		
+		// Calcular matriz inversa
+		glm::mat4 invProjView = glm::inverse(projection * view);
+		
+		// Transformar a espacio de mundo
+		glm::vec4 worldCoords = invProjView * clipCoords;
+		worldCoords /= worldCoords.w; // División de perspectiva
+		
+		printf("Click en: (%.2f, %.2f, %.2f)\n", worldCoords.x, worldCoords.y, worldCoords.z);
+	}
 }
 
 
