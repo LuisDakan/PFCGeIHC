@@ -138,6 +138,10 @@ bool characterIsMoving = false;
 
 // Escala para audio 3D
 const float AUDIO_SCALE = 0.01f;
+//variables para ciclo del dia 
+bool day=true;
+float sunAngle = 0.0f;
+float sunSpeed = 0.3f;
 
 
 //posiciones de antorchas
@@ -1228,8 +1232,9 @@ int main()
 	glm::vec2 offset;
 	int idx,aux;
 	//variables para el ciclo de dia y noche
-	float lastSwitchTime = 0.0f;
-	float switchInterval = 500.0f;//5 minutos
+	int currentSkyboxIndex = -1;  // Inicializar en -1 para forzar primer cambio
+
+	int newSkyboxIndex;
 	//se crean mas luces puntuales y spotlight 
 	glm::mat4 model(1.0);
 	glm::mat4 modelaux(1.0);
