@@ -141,7 +141,7 @@ const float AUDIO_SCALE = 0.01f;
 //variables para ciclo del dia 
 bool day=true;
 float sunAngle = 0.0f;
-float sunSpeed = 0.3f;
+float sunSpeed = 0.01f;
 
 
 //posiciones de antorchas
@@ -1297,10 +1297,7 @@ int main()
 		else if (sunAngle >= 120.0f && sunAngle < 180.0f) {
 			newSkyboxIndex = 1; // Atardecer
 		}
-		else if (sunAngle >= 180.0f && sunAngle < 240.0f) {
-			newSkyboxIndex = 3; // Crepúsculo - casi noche
-		}
-		else if (sunAngle >= 240.0f && sunAngle < 320.0f) {
+		else if (sunAngle >= 180.0f && sunAngle < 320.0f) {
 			newSkyboxIndex = 3; // Noche
 		}
 		else {
