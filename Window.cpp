@@ -131,47 +131,6 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
     	glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 	
-	if (key == GLFW_KEY_1)
-	{
-		theWindow->articulacion1 += 0.1f;
-		printf("art1:%f\n", theWindow->articulacion1);
-	}
-
-	if (key == GLFW_KEY_2)
-	{
-		theWindow->articulacion1 -= 0.1f;
-		printf("art1:%f\n", theWindow->articulacion1);
-	}
-	if (key == GLFW_KEY_3)
-	{
-
-		theWindow->articulacion2 += 0.1;
-		printf("art2:%f\n", theWindow->articulacion2);
-	}
-	if (key == GLFW_KEY_4)
-	{
-
-		theWindow->articulacion2 -= 0.1;
-		printf("art2:%f\n", theWindow->articulacion2);
-	}
-	if (key == GLFW_KEY_5)
-	{
-		printf("art3:%f\n", theWindow->articulacion3);
-		theWindow->articulacion3 += 0.1;
-	}
-	if (key == GLFW_KEY_6)
-	{
-		printf("art3:%f\n", theWindow->articulacion3);
-		theWindow->articulacion3 -= 0.1;
-	}
-	if (key == GLFW_KEY_Z) {
-		theWindow->articulacion4 += 1.0;
-	}
-	if (key == GLFW_KEY_X) {
-		theWindow->articulacion4 -= 1.0;
-	}
-	
-	
 	// Control del contador de rounds (tecla Q para incrementar)
 	if (key == GLFW_KEY_Q && action == GLFW_RELEASE) {
 		printf("Presionado\n");
@@ -179,7 +138,7 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	
 	// Tecla W para rotar texturas de máscaras en las paredes del ring
-	if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+	if (key == GLFW_KEY_M && action == GLFW_RELEASE) {
 		maskRotation = (maskRotation + 1) % 4;  // Ciclar entre 0-3
 		printf("Rotacion de mascaras: %d\n", maskRotation);
 	}

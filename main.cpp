@@ -49,7 +49,6 @@ glm::vec3 g_removeModelPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::mat4 projection = glm::mat4(1.0f);
 
 //ciclo 
-bool day = true;
 float lastGemRotationTime = 0.0f;
 float gemRotationInterval = 3.0f;
 // Variable para contador de rounds (0 a 14)
@@ -704,8 +703,8 @@ int loadSounds() {
 
 	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Barco.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_boat);
 	ma_sound_set_looping(&s_boat, MA_TRUE);
-	ma_sound_set_volume(&s_boat, 5.0f);
-	ma_sound_set_min_distance(&s_boat, 5.0f);
+	ma_sound_set_volume(&s_boat, 2.5f);
+	ma_sound_set_min_distance(&s_boat, 1.7f);
 	ma_sound_set_rolloff(&s_boat, 1.0f);
 	ma_sound_start(&s_boat);
 	
@@ -1963,6 +1962,7 @@ int main()
 
 		// Animación tapa: elevación
 		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f, 13.0f, 0.0f));
 		model = AnimationTapa(model,s_explosion);  // Aplicar elevación
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tapa.RenderModel();
@@ -1977,7 +1977,7 @@ int main()
 			model = modelaux; // modelaux tiene la posición y animación de la TNT
 			
 			// Offset relativo respecto a la TNT (subir 15 unidades en Y)
-			explosionOffset = glm::vec3(0.0f, 15.0f, 0.0f);
+			explosionOffset = glm::vec3(0.0f, 10.0f, 0.0f);
 			model = glm::translate(model, explosionOffset);
 			
 			// Extraer la posición mundial del billboard para calcular dirección a cámara

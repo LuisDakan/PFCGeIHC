@@ -220,7 +220,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
     {
     case 0: // Estado 1: Elevarse con suavizado (desde altura mínima)
     {
-        curHigh += velocity * deltaTime;
+        curHigh += velocity; //* deltaTime;
         if (curHigh >= maxHigh) {
             stateOpa = 1; // Pasar a avanzar con espiral
             curWalk = 0.0f; // Resetear contador para avance
@@ -247,7 +247,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
         float velocityMultiplier = 1.0f - (spiralProgress * spiralProgress); // 1.0 → 0.0 cuadrático
         float adjustedVelocity = velocity * glm::max(0.3f, velocityMultiplier); // Mínimo 30% de velocidad
 
-        curWalk += adjustedVelocity * deltaTime;
+        curWalk += adjustedVelocity; //*deltaTime;
 
         // Ease-in para inicio suave desde estado 0
         float easedProgress = spiralProgress * spiralProgress; // ease-in cuadrático
@@ -294,7 +294,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
 
     case 2: // Estado 3: Dar una vuelta suave (180 grados) con suavizado
     {
-        curWalk += velocity * 0.5f * deltaTime; // Más lento para transición suave
+        curWalk += velocity * 0.5f;// *deltaTime; // Más lento para transición suave
         float turnDuration = maxWalk * 0.8f;
 
         // Limitar curWalk para evitar overshoot
@@ -351,7 +351,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
 
     case 3: // Estado 4: Regresar al punto de inicio con suavizado
     {
-        curWalk += velocity * deltaTime;
+        curWalk += velocity;// *deltaTime;
 
         // Limitar returnProgress para evitar overshoot
         float returnProgress = glm::min(curWalk / maxWalk, 1.0f); // 0 a 1
@@ -378,7 +378,7 @@ glm::mat4 AnimationOpa(glm::mat4 model)
 
     case 4: // Estado 5: Descender con suavizado (hasta altura mínima)
     {
-        curHigh -= velocity * deltaTime;
+        curHigh -= velocity;// *deltaTime;
 
         // Guardar la altura de inicio (altura donde terminó estado 3)
         static float startHeight = lastCurvePos.y / SCALE_FACTOR; // Convertir a escala original
@@ -588,7 +588,7 @@ glm::mat4 AnimateLeftLeg(glm::mat4 parentModel)
 //Animacion anillo
 glm::mat4 AnimateRing(glm::mat4 model)
 {
-    angulovaria += 10.0f * deltaTime;
+    angulovaria += 5.0f * deltaTime;
     model = glm::translate(model, glm::vec3(-398.50, 25.00 + 1 * sin(glm::radians(angulovaria)), -253.83));
     model = glm::rotate(model, glm::radians(angulovaria) , glm::vec3(0.0f, 1.0f, 0.0f));
     return model;
