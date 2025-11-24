@@ -50,6 +50,17 @@ bool walkingActive = false;
 float walkCycle = 0.0f;
 float walkSpeed = 4.0f;
 
+// Variables para animación de salto con inercia
+float jumpCharge = 0.0f;           // Inercia acumulada (0.0 a 1.0)
+const float MAX_JUMP_CHARGE = 1.0f;
+const float CHARGE_RATE = 0.005f;    // Velocidad de carga por segundo (tarda ~3.3s en llenarse)
+const float MAX_JUMP_HEIGHT = 500.0f; // Altura máxima de salto (aumentada para ser más visible)
+const float JUMP_SPEED = 5.0f;     // Velocidad constante de subida/bajada
+float jumpVelocity = 0.0f;         // Velocidad vertical actual
+float jumpHeight = 0.0f;           // Altura actual del salto
+bool isJumping = false;            // Estado de salto
+bool wasKeyPressed = false;        // Para detectar cuando se suelta la tecla
+
 // Banderas de sonidos
 bool TNT_explosion = false;
 
@@ -592,6 +603,89 @@ void UpdateWalkCycle()
             walkCycle -= 360.0f;
         }
     }
+}
+
+// Animación de salto con acumulación de inercia
+glm::mat4 AnimateJump(glm::mat4 model, bool isKeyPressed)
+{
+    // Fase 1: Acumular inercia mientras la tecla está presionada
+    static float giro=0.0f,deltaGiro=0.0f;
+    if (isKeyPressed && !isJumping) {
+        
+        // Incrementar la carga de salto
+        jumpCharge += CHARGE_RATE * deltaTime;
+        if (jumpCharge > MAX_JUMP_CHARGE) {
+            jumpCharge = MAX_JUMP_CHARGE;
+        }
+        wasKeyPressed = true;
+        
+        // Debug: mostrar carga acumulada
+        static float lastPrintTime = 0.0f;
+        lastPrintTime += deltaTime;
+        if (lastPrintTime >= 0.5f) { // Imprimir cada 0.5 segundos
+            printf("Carga acumulada: %.2f%%\n", jumpCharge * 100.0f);
+            lastPrintTime = 0.0f;
+        }
+    }
+    // Fase 2: Iniciar salto cuando se suelta la tecla
+    else if (!isKeyPressed && wasKeyPressed && !isJumping) {
+        jumpCharge = glm::max(jumpCharge,0.15f);
+        printf("Salto iniciado con carga: %.2f%% (Altura objetivo: %.2f)\n", 
+               jumpCharge * 100.0f, MAX_JUMP_HEIGHT * jumpCharge);
+        
+        // Calcular incremento de giro por segundo para completar 360° durante todo el salto
+        // Duración total del salto = 2 * jumpCharge * MAX_JUMP_HEIGHT / JUMP_SPEED
+        // deltaGiro es grados por segundo
+        deltaGiro = 360.0f * JUMP_SPEED / (2.0f * jumpCharge * MAX_JUMP_HEIGHT);
+        
+        isJumping = true;
+        jumpHeight = 0.0f;
+        giro = 0.0f; // Resetear giro al inicio del salto
+        wasKeyPressed = false;
+        // NO resetear jumpCharge aquí, se usará durante el salto
+    }
+    
+    // Fase 3: Ejecutar salto (subir mientras hay carga, luego bajar)
+    if (isJumping) {
+        // Incrementar giro multiplicado por deltaTime para independencia del framerate
+        giro += deltaGiro * deltaTime;
+        
+        if (jumpCharge > 0.0f) {
+            // Subir: decrementar carga y aumentar altura
+            float increment = JUMP_SPEED * deltaTime;
+            jumpCharge -= increment / MAX_JUMP_HEIGHT; // Decrementar proporcionalmente
+            
+            if (jumpCharge < 0.0f) {
+                jumpCharge = 0.0f;
+            }
+            
+            jumpHeight += increment;
+        }
+        else {
+            // Bajar: decrementar altura a la misma velocidad
+            jumpHeight -= JUMP_SPEED * deltaTime;
+            
+            // Detectar aterrizaje
+            if (jumpHeight <= 0.0f) {
+                jumpHeight = 0.0f;
+                isJumping = false;
+                giro = 0.0f;  // Resetear giro al aterrizar
+                deltaGiro = 0.0f;
+                printf("Aterrizaje completado (Giro final: %.2f grados)\n", giro);
+            }
+        }
+    }
+    
+    // Aplicar desplazamiento vertical al modelo
+    model = glm::translate(model, glm::vec3(0.0f, jumpHeight, 0.0f));
+    model = glm::rotate(model,glm::radians(giro),glm::vec3(1.0f,0.0f,0.0f));
+    return model;
+}
+
+// Función auxiliar para obtener la carga actual (para visualización)
+float GetJumpCharge()
+{
+    return jumpCharge;
 }
 
 // ========== Sistema de Animaciones por Keyframes ==========

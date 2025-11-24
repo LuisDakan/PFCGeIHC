@@ -54,7 +54,7 @@ int Window::Initialise()
 	raygun = false;
 	prenderspot=false;
 	prenderspot2=false;
-
+	muevex=0.0f;
 	//Asignando variables de GLFW y propiedades de ventana
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -132,16 +132,18 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
     	glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 	
-	if (key == GLFW_KEY_1)
+	if (key == GLFW_KEY_0)
 	{
 		theWindow->articulacion1 += 0.1f;
-		printf("art1:%f\n", theWindow->articulacion1);
+		theWindow->muevex+=0.1f;
+		printf("art1:%f\n", theWindow->muevex);
 	}
 
-	if (key == GLFW_KEY_2)
+	if (key == GLFW_KEY_9)
 	{
 		theWindow->articulacion1 -= 0.1f;
-		printf("art1:%f\n", theWindow->articulacion1);
+		theWindow->muevex-=0.1f;
+		printf("art1:%f\n", theWindow->muevex);
 	}
 	if (key == GLFW_KEY_3)
 	{

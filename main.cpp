@@ -701,8 +701,8 @@ int loadSounds() {
 
 	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Barco.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_boat);
 	ma_sound_set_looping(&s_boat, MA_TRUE);
-	ma_sound_set_volume(&s_boat, 5.0f);
-	ma_sound_set_min_distance(&s_boat, 5.0f);
+	ma_sound_set_volume(&s_boat, 1.7f);
+	ma_sound_set_min_distance(&s_boat, 3.0f);
 	ma_sound_set_rolloff(&s_boat, 1.0f);
 	ma_sound_start(&s_boat);
 	
@@ -1819,13 +1819,16 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model,glm::vec3(-640.43, -0.59, -730.31));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		
 		jumping.RenderModel();		
 
 		//Universo Sonic
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-640.43, 10.0, -730.31));
+		model = glm::translate(model, glm::vec3(-640.43, 8.4, -730.31));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		bool yKeyPressed = mainWindow.getsKeys()[GLFW_KEY_Y];
+		model = AnimateJump(model, yKeyPressed);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		alexkid.RenderModel();
 

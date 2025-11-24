@@ -45,6 +45,12 @@ extern bool walkingActive;
 extern float walkCycle;
 extern float walkSpeed;
 
+// Variables para animación de salto con inercia
+extern float jumpCharge;
+extern float jumpVelocity;
+extern float jumpHeight;
+extern bool isJumping;
+
 // Declaraciones de funciones de animación
 glm::mat4 AnimationShip(glm::mat4 model);
 glm::mat4 AnimationRing(glm::mat4 model, int id);
@@ -70,6 +76,10 @@ glm::mat4 AnimateRightLeg(glm::mat4 parentModel);
 glm::mat4 AnimateLeftThigh(glm::mat4 parentModel);
 glm::mat4 AnimateLeftLeg(glm::mat4 parentModel);
 glm::mat4 AnimateRing(glm::mat4 model);
+
+// Declaraciones de funciones de salto
+glm::mat4 AnimateJump(glm::mat4 model, bool isKeyPressed);
+float GetJumpCharge();
 
 // Manager global de animaciones por keyframes
 extern KeyframeAnimationManager g_AnimationManager;
