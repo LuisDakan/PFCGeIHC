@@ -728,7 +728,7 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// Configurar modelo actual a colocar
-	SetCurrentModel("Models/Tori.obj");
+	SetCurrentModel("Models/Wumpa.obj");
 	currentModel = Model();
 	currentModel.LoadModel(currentModelPath.c_str());
 
@@ -823,12 +823,12 @@ int main()
 	//Skybox Night
 
 	std::vector<std::string> skyboxNight;
-	skyboxNight.push_back("Textures/Skybox/Zona_Nebulosa.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Estrellas.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Planeta.png");
-	skyboxNight.push_back("Textures/Skybox/Zona_Luna.png");
+	skyboxNight.push_back("Textures/Skybox/sh_rt_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_lf_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_dn_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_up_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_bk_noche.jpg");
+	skyboxNight.push_back("Textures/Skybox/sh_ft_noche.jpg");
 
 	//Skybox Day
 	std::vector<std::string> skyboxDay;
