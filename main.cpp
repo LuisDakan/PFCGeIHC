@@ -977,7 +977,7 @@ int main()
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
 	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
-	/*
+	
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -997,13 +997,13 @@ int main()
 	arbusto_largo = Model();
 	arbusto_largo.LoadModel("Models/Arbusto_largo.obj");
 	arbol_tronco = Model();
-	arbol_tronco.LoadModel("Models/Arbol12.obj");*/
+	arbol_tronco.LoadModel("Models/Arbol12.obj");
 	anillo = Model();
 	anillo.LoadModel("Models/Anillo.obj");
 	ring = Model();
 	ring.LoadModel("Models/Boxing Ring.obj");
 	piramide = Model();
-	piramide.LoadModel("Models/Piramide.obj");/*
+	piramide.LoadModel("Models/Piramide.obj");
 	cabeza_olmeca = Model();
 	cabeza_olmeca.LoadModel("Models/CabezaOlmeca.obj");
 	bote_basura = Model();
@@ -1021,7 +1021,7 @@ int main()
 	cajas_tnt = Model();
 	cajas_tnt.LoadModel("Models/Caja_TNT.obj");
 	jumping = Model();
-	jumping.LoadModel("Models/jumping.obj");*/
+	jumping.LoadModel("Models/jumping.obj");
 	columna_juzgado = Model();
 	columna_juzgado.LoadModel("Models/ColumnaJuzgado.obj");
 	lugar_juzgado = Model();
@@ -1042,7 +1042,7 @@ int main()
 	gemaAmarilla.LoadModel("Models/GemaAmarillo.obj");
 	
 	//personajes
-	/*akuaku = Model();	
+	akuaku = Model();	
 	akuaku.LoadModel("Models/Aku-Aku.obj");
 	crash = Model();
 	crash.LoadModel("Models/CrashBandicoot.obj");
@@ -1051,11 +1051,11 @@ int main()
 	mayafey = Model();
 	mayafey.LoadModel("Models/Maya Fey.obj");
 	edgeworth = Model();
-	edgeworth.LoadModel("Models/edgeworth.obj");*/
+	edgeworth.LoadModel("Models/edgeworth.obj");
 	alexkid = Model();
-	alexkid.LoadModel("Models/alexKid.obj");/*
+	alexkid.LoadModel("Models/alexKid.obj");
 	dbjoe = Model();
-	dbjoe.LoadModel("Models/DBJoe.obj");*/
+	dbjoe.LoadModel("Models/DBJoe.obj");
 	opaopa = Model();
 	opaopa.LoadModel("Models/Opa-Opa.obj");
 	std::vector<std::string> ModelAce={"BrazoDerechoAce","BrazoIzquierdoAce","CuerpoAce","HombroDerechoAce","HombroIzquierdoAce",
@@ -1486,8 +1486,12 @@ int main()
 		
 		//información al shader de fuentes de iluminación
 		shaderList[0].SetDirectionalLight(&mainLight);
-		if(!day)
+		if (sunAngle > 10.0f && sunAngle <= 45.0 ||
+			sunAngle > 150.0 && sunAngle <= 310.0) {
 			shaderList[0].SetPointLights(pointLights, pointLightCount);
+
+		}
+			
 			shaderList[0].SetSpotLights(spotlighttemp, s);
 		
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
@@ -1521,7 +1525,7 @@ int main()
 			barcoWorldPos.z * AUDIO_SCALE);
 
 		//ciclo for para las toris
-		/*for (std::vector <GLfloat> v : coordsToris) {
+		for (std::vector <GLfloat> v : coordsToris) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			model = glm::rotate(model, glm::radians(v[3]), glm::vec3(0.0, 1.0, 0.0));
@@ -1610,7 +1614,7 @@ int main()
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			arbol_tronco.RenderModel();
 		}
-	    */
+	    
 		//ring
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
@@ -1637,7 +1641,7 @@ int main()
 			piramideWorldPos.y * AUDIO_SCALE, 
 			piramideWorldPos.z * AUDIO_SCALE);
 				//ciclo for para cabezas olmecas
-		/*for (std::vector <GLfloat> v : coordsOlmechead) {
+		for (std::vector <GLfloat> v : coordsOlmechead) {
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1778,7 +1782,7 @@ int main()
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		miniReflector.RenderModel();
-		/*
+		
 		//ciclo for para las cajas TNT
 		for (std::vector <GLfloat> v : coordsBoxtnt) {
 			model = glm::mat4(1.0);
@@ -1803,7 +1807,7 @@ int main()
 			model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			jumping.RenderModel();
-		}*/
+		}
 
 		//juzgado
 		model = glm::mat4(1.0);
@@ -2076,11 +2080,11 @@ int main()
 			model = modelaux;
 			
 			// Reproducir sonido cuando la campana comienza a moverse
-			/*if (!ringBellSoundPlayed && (fabs(posCampana_z) > 0.1f || fabs(rotCampana_x) > 0.5f)) {
+			if (!ringBellSoundPlayed && (fabs(posCampana_z) > 0.1f || fabs(rotCampana_x) > 0.5f)) {
 				ma_sound_set_looping(&s_box_bell,MA_TRUE);
 				ma_sound_start(&s_box_bell);
 				ringBellSoundPlayed = true;
-			}*/
+			}
 		
 			model = glm::translate(model, glm::vec3(0.0f,3.5f, posCampana_z));
 			model = glm::rotate(model, rotCampana_x * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -2322,7 +2326,7 @@ int main()
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
 		modelaux=model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		ring.RenderModel(); /*
+		ring.RenderModel(); 
 
 		// Renderizar paredes del ring con texturas de máscaras
 		mascaras.UseTexture();
@@ -2386,7 +2390,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
 		numeros.UseTexture();
-		meshList[4]->RenderMesh();*/
+		meshList[4]->RenderMesh();
 
 		offset = glm::vec2(0.0f,0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(offset));
