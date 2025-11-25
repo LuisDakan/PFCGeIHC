@@ -453,12 +453,6 @@ void SetWalkingActive(bool active)
     }
 }
 
-// Función para obtener el estado de caminata
-bool IsWalkingActive()
-{
-    return walkingActive;
-}
-
 // Animación jerárquica del cuerpo (torso)
 glm::mat4 AnimateBody(glm::mat4 model)
 {

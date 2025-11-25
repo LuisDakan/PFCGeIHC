@@ -131,7 +131,7 @@ bool bellSoundPlayed = false;
 
 // Variables para el personaje principal (Ace)
 glm::vec3 characterPosition = glm::vec3(1300.0f, 19.5f, 0.0f);
-GLfloat characterRotation = -90.0f; // Ace empieza mirando hacia -90 grados
+GLfloat characterRotation = 80.0f; // Ace empieza mirando al ring
 GLfloat characterMoveSpeed = 2.0f; // Velocidad ajustada
 bool characterIsMoving = false;
 
@@ -1258,7 +1258,6 @@ int main()
 	float currentScale;
 	float rotateZ=0.0f, posCampana_z, rotCampana_x, rotPalanca_x;
 	float manecilla_hora, manecilla_minuto;
-	glm::vec3 acePosition;
 	glm::mat4 bodyModel, rightShoulderModel, leftShoulderModel;
 	glm::mat4 rightThighModel, leftThighModel;
 	
@@ -1268,6 +1267,10 @@ int main()
 	float gemRotationAngle = 0.0f;
 	float angle = 0.0f;
 	// Tomando como Centro la posicion de la casa de aku aku 
+
+	bool leftKeyPressed = false;
+	bool rightKeyPressed = false;
+
 	glm::vec3 centerPosition = glm::vec3(640.59, 20.0f, 456.90);
 	projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 5000.0f);
 	
@@ -1391,7 +1394,7 @@ int main()
 			// Activar/desactivar animación de caminata según el movimiento
 			SetWalkingActive(characterIsMoving);
 
-			// Control del mouse para rotar la cámara (invertido X e Y solo en tercera persona)
+			// Control del mouse para rotar la cámara (invertido X e Y)
 			camera.mouseControl(-mainWindow.getXChange(), -mainWindow.getYChange());
 			
 			// Actualizar la cámara tercera persona
@@ -1406,8 +1409,6 @@ int main()
 		else if (currentMode == POINT_OF_INTEREST)
 		{
 			// Navegación entre puntos de interés con flechas izquierda/derecha
-			static bool leftKeyPressed = false;
-			static bool rightKeyPressed = false;
 
 			if (mainWindow.getsKeys()[GLFW_KEY_LEFT] && !leftKeyPressed)
 			{
@@ -1469,7 +1470,7 @@ int main()
 			return da < db;
 		});
 		
-		// Copiar las 11 luces más cercanas al arreglo pointLights
+		// Copiar las 7 luces más cercanas al arreglo pointLights
 		// Solo si están a menos de 300 metros
 		pointLightCount = 0;
 		for(int i = 0; i < lights.size() && pointLightCount < MAX_POINT_LIGHTS; i++){
@@ -1483,11 +1484,6 @@ int main()
 			}
 		}
 		
-		// luz ligada a la cámara de tipo flash
-		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
-		lowerLight = camera.getCameraPosition();
-		lowerLight.y -= 0.3f;
-		
 		//información al shader de fuentes de iluminación
 		shaderList[0].SetDirectionalLight(&mainLight);
 		if(!day)
@@ -1497,7 +1493,7 @@ int main()
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
 		//Sincronizacion del listener y camara
-		glm::vec3 camPos = camera.getCameraPosition()*0.01f;
+		glm::vec3 camPos = camera.getCameraPosition() * AUDIO_SCALE;
 		ma_engine_listener_set_position(&eng, 0, camPos.x, camPos.y, camPos.z);
 
 		// Establecer material opaco por defecto para todos los modelos
@@ -2022,10 +2018,6 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		opaopa.RenderModel();
 		
-		// ========== Animación jerárquica de caminata (Ace) ==========
-		// Actualizar el ciclo de caminata
-		UpdateWalkCycle();
-		
 		// ========== Renderizado con animación por keyframes (Bell) ==========
 		bellAnim = g_AnimationManager.GetAnimation("Bell");
 		if(bellAnim && bellAnim->IsPlaying()){
@@ -2161,10 +2153,9 @@ int main()
 			lastClockRotation = 0.0f;
 		}
 		
-		// (El else se eliminó para permitir loop infinito)
-
-		// Posición base del personaje (ahora usa la variable dinámica)
-		acePosition = characterPosition;
+		// ========== Animación jerárquica de caminata (Ace) ==========
+		// Actualizar el ciclo de caminata
+		UpdateWalkCycle();
 		
 		// 1. Renderizar el cuerpo (raíz de la jerarquía)
 
@@ -2172,7 +2163,7 @@ int main()
 		Material_personaje.UseMaterial(uniformSpecularIntensity, uniformShininess);
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, acePosition);
+		model = glm::translate(model, characterPosition);
 		model = glm::rotate(model, characterRotation, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model,glm::vec3(0.6f,0.6f,0.6f));
 		model = AnimateBody(model);
