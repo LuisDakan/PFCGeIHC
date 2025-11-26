@@ -69,3 +69,12 @@ x64/*
 
 #Ignorar zip
 *.zip
+
+#Ignorar .vscode
+
+.vscode/*
+
+#Ignorar sounds
+*.mp3
+*.wav
+*.flac
