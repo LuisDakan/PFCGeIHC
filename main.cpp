@@ -71,7 +71,6 @@ Model currentModel;
 Model barco;
 Model tori;
 Model miniReflector;
-Model torchModel;
 Model torchAce, torchCrash, torchSonic;
 Model palmera_doble;
 Model palmera_tres;
@@ -141,6 +140,7 @@ const float AUDIO_SCALE = 0.01f;
 bool day=true;
 float sunAngle = 0.0f;
 float sunSpeed = 0.01f;
+float currentDiffuseIntensity = 0.8f; // Intensidad difusa actual de la luz direccional
 
 
 //posiciones de antorchas
@@ -185,8 +185,6 @@ std::vector<std::vector<float>> coordTorch = {
 	{240.17, 0.00, -599.78},
 	{668.71, 0.00, -474.49},
 	{927.73, -0.00, -334.00},
-	{542.86, 0.00, -200.93},
-	{711.57, 0.00, -179.81},
 	{897.09, 0.00, -488.01},
 	{941.59, 0.00, -444.43},
 	{1175.34, 0.00, -570.88},
@@ -671,18 +669,23 @@ int loadSounds() {
 	result = ma_sound_init_from_file(&eng, "Audio/explosion.wav", MA_SOUND_FLAG_DECODE, &effects, NULL, &s_explosion);
 	VERIFY(result);
 	ma_sound_set_volume(&s_explosion,0.5);
+	ma_sound_set_min_distance(&s_explosion, 2.0f);
+
 	
 	result = ma_sound_init_from_file(&eng,"Audio/Box_Bell.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_box_bell);
-	ma_sound_set_volume(&s_box_bell,0.3);
+	ma_sound_set_volume(&s_box_bell,0.4);
+	ma_sound_set_min_distance(&s_box_bell, 1.0f);
 
 	VERIFY(result);
 	
 	result = ma_sound_init_from_file(&eng,"Audio/clock.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_clock);
+	ma_sound_set_min_distance(&s_clock, 1.0f);
 	ma_sound_set_volume(&s_clock,0.5);
 	VERIFY(result);
 
 	result = ma_sound_init_from_file(&eng,"Audio/Sonido_Campana.wav",MA_SOUND_FLAG_DECODE,&effects,NULL,&s_bell);
-	ma_sound_set_volume(&s_bell,0.3);
+	ma_sound_set_volume(&s_bell,0.4);
+	ma_sound_set_min_distance(&s_clock, 1.0f);
 	VERIFY(result);
 	
 	// Comentado temporalmente - usa s_bell dos veces
@@ -703,7 +706,7 @@ int loadSounds() {
 
 	result = ma_sound_init_from_file(&eng,"Audio/Ambiental_Barco.mp3",MA_SOUND_FLAG_DECODE,&ambiental,NULL,&s_boat);
 	ma_sound_set_looping(&s_boat, MA_TRUE);
-	ma_sound_set_volume(&s_boat, 2.5f);
+	ma_sound_set_volume(&s_boat, 3.0f);
 	ma_sound_set_min_distance(&s_boat, 1.7f);
 	ma_sound_set_rolloff(&s_boat, 1.0f);
 	ma_sound_start(&s_boat);
@@ -847,6 +850,9 @@ void updateSimpleDayNight(float deltaTime) {
 	// Intensidades para día y noche
 	float ambientIntensity = 0.15f + (intensity * 0.35f);  // De 0.15 a 0.5
 	float diffuseIntensity = 0.2f + (intensity * 0.6f);    // De 0.2 a 0.8
+	
+	// Guardar la intensidad difusa en variable global para control de antorchas
+	currentDiffuseIntensity = diffuseIntensity;
 
 	// Color de la luz (blanco en el día, azulado en la noche)
 	float colorR = 0.2f + (intensity * 0.8f);  // De 0.2 a 1.0
@@ -869,10 +875,10 @@ void updateSimpleDayNight(float deltaTime) {
 	if (isDay != wasDay) {
 		wasDay = isDay;
 		if (isDay) {
-			printf("Amanecer - Ángulo: %.1f grados\n", sunAngle);
+			//printf("Amanecer - Ángulo: %.1f grados\n", sunAngle);
 		}
 		else {
-			printf("Atardecer - Ángulo: %.1f grados\n", sunAngle);
+			//printf("Atardecer - Ángulo: %.1f grados\n", sunAngle);
 		}
 	}
 }
@@ -918,7 +924,7 @@ int main()
 		lights.push_back(
 			PointLight(1.0f, 1.0f, 0.0f,
 			0.0f, 1.0f,
-			v[0], v[1]+14.0, v[2]*2.0f/1.5f,
+			v[0], v[1]+17.0, v[2]*2.0f/1.5f,
 			0.01f, 0.01f, 0.001f)
 		);
 	}
@@ -926,16 +932,16 @@ int main()
 	// Inicializar sistema de animaciones por keyframes*/
 	InitKeyframeAnimations();
 	
+	// Declarar punteros para animaciones (se usarán más adelante)
+	KeyframeAnimation* bellAnim = nullptr;
+	KeyframeAnimation* ringBellAnim = nullptr;
+	KeyframeAnimation* relojAnim = nullptr;
+	
 	// Asociar sonidos a las animaciones de efectos especiales
-	KeyframeAnimation* bellAnim = g_AnimationManager.GetAnimation("Bell");
-	
-	
-	KeyframeAnimation* ringBellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
+	ringBellAnim = g_AnimationManager.GetAnimation("Ring_Bell");
 	if(ringBellAnim) {
 		ringBellAnim->SetSound(&s_box_bell);
 	}
-	
-	KeyframeAnimation* relojAnim = g_AnimationManager.GetAnimation("Reloj");
 	
 	
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
@@ -977,7 +983,6 @@ int main()
 	Reloj_Minuto.LoadModel("Models/reloj_minutero.obj");
 	Reloj_Hora = Model();
 	Reloj_Hora.LoadModel("Models/reloj_flecha.obj");
-	
 	torchAce = Model();
 	torchAce.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	torchCrash = Model();
@@ -986,8 +991,6 @@ int main()
 	torchSonic.LoadModel("Models/Antorcha_Sonic.obj");
 	palmera_doble = Model();
 	palmera_doble.LoadModel("Models/PalmeraDoble.obj");
-	torchModel = Model();
-	torchModel.LoadModel("Models/Antorcha_Ace_Attorney.obj");
 	palmera_tres = Model();
 	palmera_tres.LoadModel("Models/Palmera3.obj");
 	arbol_seis = Model();
@@ -1262,6 +1265,14 @@ int main()
 	glm::mat4 rightThighModel, leftThighModel;
 	
 	int pointLightCount,spotLightCount=0;
+	
+	// Variables adicionales que estaban dentro del while
+	bool yKeyPressed = false;
+	int firstDigit = 0;
+	int secondDigit = 0;
+	glm::vec3 barcoWorldPos, ringWorldPos, piramideWorldPos, juzgadoWorldPos, casaWorldPos;
+	glm::vec3 bellWorldPos, boxBellWorldPos, clockWorldPos;
+	float distanceToCamera = 0.0f;
 	//para animacion de las gemas
 	float radius = 200.0f;
 	float gemRotationAngle = 0.0f;
@@ -1312,19 +1323,19 @@ int main()
 
 			if (currentSkyboxIndex == 0) {
 				skybox = Skybox(skyboxDay);
-				printf("DÍA - Ángulo: %.1f°\n", sunAngle);
+				//printf("DÍA - Ángulo: %.1f°\n", sunAngle);
 			}
 			else if (currentSkyboxIndex == 1) {
 				skybox = Skybox(skyboxSunset);
-				printf("ATARDECER - Ángulo: % .1f°\n", sunAngle);
+				//printf("ATARDECER - Ángulo: % .1f°\n", sunAngle);
 			}
 			else if (currentSkyboxIndex == 2) {
 				skybox = Skybox(skyboxAlmostNight);
-				printf("CASI NOCHE - Ángulo: %.1f°\n", sunAngle);
+				//printf("CASI NOCHE - Ángulo: %.1f°\n", sunAngle);
 			}
 			else {
 				skybox = Skybox(skyboxNight);
-				printf("NOCHE - Ángulo: % .1f°\n", sunAngle);
+				//printf("NOCHE - Ángulo: % .1f°\n", sunAngle);
 			}
 		}
 
@@ -1474,7 +1485,7 @@ int main()
 		// Solo si están a menos de 300 metros
 		pointLightCount = 0;
 		for(int i = 0; i < lights.size() && pointLightCount < MAX_POINT_LIGHTS; i++){
-			float distanceToCamera = glm::distance(lights[i].GetPosition(), camera.getCameraPosition());
+			distanceToCamera = glm::distance(lights[i].GetPosition(), camera.getCameraPosition());
 			if(distanceToCamera < 300.0f){
 				pointLights[pointLightCount] = lights[i];
 				pointLightCount++;
@@ -1484,17 +1495,18 @@ int main()
 			}
 		}
 		
-		//información al shader de fuentes de iluminación
-		shaderList[0].SetDirectionalLight(&mainLight);
-		if (sunAngle > 10.0f && sunAngle <= 45.0 ||
-			sunAngle > 150.0 && sunAngle <= 310.0) {
-			shaderList[0].SetPointLights(pointLights, pointLightCount);
-
-		}
-			
-			shaderList[0].SetSpotLights(spotlighttemp, s);
+	//información al shader de fuentes de iluminación
+	shaderList[0].SetDirectionalLight(&mainLight);
+	// Encender antorchas cuando la intensidad de luz direccional es baja
+	// Umbral: 0.4 (ajustable según preferencia)
+	if (currentDiffuseIntensity < 0.45f) {
+		shaderList[0].SetPointLights(pointLights, pointLightCount);
+	} else {
+		// Luz suficiente, apagar antorchas
+		shaderList[0].SetPointLights(pointLights, 0);
+	}
 		
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+	shaderList[0].SetSpotLights(spotlighttemp, s);		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
 		//Sincronizacion del listener y camara
 		glm::vec3 camPos = camera.getCameraPosition() * AUDIO_SCALE;
@@ -1518,7 +1530,7 @@ int main()
 		barco.RenderModel();
 		
 		// Posicionar sonido ambiental del barco
-		glm::vec3 barcoWorldPos = glm::vec3(model[3]);
+		barcoWorldPos = glm::vec3(model[3]);
 		ma_sound_set_position(&s_boat, 
 			barcoWorldPos.x * AUDIO_SCALE, 
 			barcoWorldPos.y * AUDIO_SCALE, 
@@ -1622,7 +1634,7 @@ int main()
 		ring.RenderModel();
 		
 		// Posicionar sonido ambiental del ring de boxeo
-		glm::vec3 ringWorldPos = glm::vec3(model[3]);
+		ringWorldPos = glm::vec3(model[3]);
 		ma_sound_set_position(&s_box_ring, 
 			ringWorldPos.x * AUDIO_SCALE, 
 			ringWorldPos.y * AUDIO_SCALE, 
@@ -1635,7 +1647,7 @@ int main()
 		piramide.RenderModel();
 		
 		// Posicionar sonido ambiental de la pirámide
-		glm::vec3 piramideWorldPos = glm::vec3(model[3]);
+		piramideWorldPos = glm::vec3(model[3]);
 		ma_sound_set_position(&s_pyramid, 
 			piramideWorldPos.x * AUDIO_SCALE, 
 			piramideWorldPos.y * AUDIO_SCALE, 
@@ -1822,7 +1834,7 @@ int main()
 		lugar_juzgado.RenderModel();
 		
 		// Posicionar sonido ambiental del juzgado
-		glm::vec3 juzgadoWorldPos = glm::vec3(model[3]);
+		juzgadoWorldPos = glm::vec3(model[3]);
 		ma_sound_set_position(&s_judge, 
 			juzgadoWorldPos.x * AUDIO_SCALE, 
 			juzgadoWorldPos.y * AUDIO_SCALE, 
@@ -1845,7 +1857,7 @@ int main()
 		casa_aku_aku.RenderModel();
 		
 		// Posicionar sonido ambiental de Crash Bandicoot en la casa
-		glm::vec3 casaWorldPos = glm::vec3(model[3]);
+		casaWorldPos = glm::vec3(model[3]);
 		ma_sound_set_position(&s_crash_bandicoot, 
 			casaWorldPos.x * AUDIO_SCALE, 
 			casaWorldPos.y * AUDIO_SCALE, 
@@ -1929,7 +1941,7 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-640.43, 8.4, -730.31));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		bool yKeyPressed = mainWindow.getsKeys()[GLFW_KEY_Y];
+		yKeyPressed = mainWindow.getsKeys()[GLFW_KEY_Y];
 		model = AnimateJump(model, yKeyPressed);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		alexkid.RenderModel();
@@ -2038,7 +2050,7 @@ int main()
 			model = modelboat;
 			model = glm::translate(model, glm::vec3(31.174f, 84.0f, 10.257f));
 			// Posicionar el sonido de bell ligado por jerarquía
-			glm::vec3 bellWorldPos = glm::vec3(model[3]);
+			bellWorldPos = glm::vec3(model[3]);
 			ma_sound_set_position(&s_bell, bellWorldPos.x * AUDIO_SCALE, bellWorldPos.y * AUDIO_SCALE, bellWorldPos.z * AUDIO_SCALE);
 			
 			rotateZ = bellAnim->GetValue1();
@@ -2070,7 +2082,7 @@ int main()
 			modelaux = model;
 			
 			// Posicionar el sonido de box_bell ligado por jerarquía
-			glm::vec3 boxBellWorldPos = glm::vec3(model[3]);
+			boxBellWorldPos = glm::vec3(model[3]);
 			ma_sound_set_position(&s_box_bell, boxBellWorldPos.x * AUDIO_SCALE, boxBellWorldPos.y * AUDIO_SCALE, boxBellWorldPos.z * AUDIO_SCALE);
 			
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -2117,7 +2129,7 @@ int main()
 			modelaux = model;
 			
 			// Posicionar el sonido del reloj ligado por jerarquía
-			glm::vec3 clockWorldPos = glm::vec3(modelaux[3]);
+			clockWorldPos = glm::vec3(modelaux[3]);
 			ma_sound_set_position(&s_clock, clockWorldPos.x * AUDIO_SCALE, clockWorldPos.y * AUDIO_SCALE, clockWorldPos.z * AUDIO_SCALE);
 			
 			// Reproducir sonido cada vez que la manecilla del minuto cambia significativamente
@@ -2234,93 +2246,6 @@ int main()
 
 		// ========== Fin animación jerárquica de caminata ==========
 
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
-
-		
-		
-		
-		
 	
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.55, 0.00, -12.67));
